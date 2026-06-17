@@ -21,6 +21,37 @@
 
 <body>
 
+  <!-- PASSWORD -->
+
+  <div id="lockScreen">
+
+    <div class="lock-box">
+
+      <h1>
+        Private Page ❤️
+      </h1>
+
+      <p>
+        Enter password to continue
+      </p>
+
+      <input
+        type="password"
+        id="passwordInput"
+        placeholder="Password">
+
+      <button id="unlockBtn">
+
+        Unlock
+
+      </button>
+
+      <small id="errorText"></small>
+
+    </div>
+
+  </div>
+
   <!-- BACKGROUND -->
 
   <div class="stars"></div>
@@ -54,9 +85,7 @@
 
       </button>
 
-      <button
-        class="menu-btn"
-        data-section="distance">
+      <button id="distanceBtn">
 
         🌍 Distance
 
@@ -64,16 +93,16 @@
 
       <button id="futureBtn">
 
-  ✨ Future
+        ✨ Future
 
-    </button>
+      </button>
 
     </section>
 
     <!-- DISTANCE -->
 
     <section
-      id="distance"
+      id="distanceSection"
       class="content hidden">
 
       <h2>
@@ -107,7 +136,8 @@
       <p class="content-text">
 
         Maybe we're far apart,
-        but talking to you still feels comforting.
+        but somehow talking to you
+        still feels comforting.
 
       </p>
 
@@ -115,13 +145,17 @@
 
   </main>
 
-  <!-- POPUP -->
+  <!-- QR POPUP -->
 
-  <div id="popup" class="popup hidden">
+  <div
+    id="qrPopup"
+    class="popup hidden">
 
     <div class="popup-card">
 
-      <button id="closeBtn">
+      <button
+        class="closeBtn"
+        data-close="qrPopup">
 
         ×
 
@@ -143,6 +177,80 @@
         Scan this QR code.
 
       </p>
+
+    </div>
+
+  </div>
+
+  <!-- FUTURE POPUP -->
+
+  <div
+    id="futurePopup"
+    class="popup hidden">
+
+    <div class="popup-card">
+
+      <button
+        class="closeBtn"
+        data-close="futurePopup">
+
+        ×
+
+      </button>
+
+      <h2>
+
+        Will you stay with me
+        a little longer? ❤️
+
+      </h2>
+
+      <div class="future-buttons">
+
+        <button id="yesBtn">
+
+          Yes
+
+        </button>
+
+        <button id="noBtn">
+
+          No
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- SUCCESS POPUP -->
+
+  <div
+    id="successPopup"
+    class="popup hidden">
+
+    <div class="popup-card success-card">
+
+      <h1 class="success-title">
+
+        Thank You ❤️
+
+      </h1>
+
+      <p class="popup-text">
+
+        You don't know
+        how happy that makes me feel.
+
+      </p>
+
+      <div class="sparkles">
+
+        ✨ ✨ ✨
+
+      </div>
 
     </div>
 
