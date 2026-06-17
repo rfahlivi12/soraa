@@ -1,26 +1,26 @@
-const text = "Hi Sora ❤️";
+const titleText = "Hi Sora ❤️";
 
-let index = 0;
+let titleIndex = 0;
 
-/* TYPING EFFECT */
+/* TITLE TYPING */
 
-function typeEffect() {
+function typeTitle() {
 
-  if (index < text.length) {
+  if (titleIndex < titleText.length) {
 
     document
       .getElementById("typing")
-      .innerHTML += text.charAt(index);
+      .innerHTML += titleText.charAt(titleIndex);
 
-    index++;
+    titleIndex++;
 
-    setTimeout(typeEffect, 100);
+    setTimeout(typeTitle, 100);
   }
 }
 
-typeEffect();
+typeTitle();
 
-/* MENU */
+/* SECTION */
 
 function showSection(sectionId) {
 
@@ -35,53 +35,63 @@ function showSection(sectionId) {
   document
     .getElementById(sectionId)
     .classList.remove("hidden");
-
-  createHearts();
 }
 
-/* HEART EFFECT */
+/* POPUP */
 
-function createHearts() {
+const message = `
+Even though we've never met in person,
+somehow you still became someone important to me.
 
-  for (let i = 0; i < 20; i++) {
+I like our conversations,
+the way you respond,
+and the comfort you bring into ordinary days.
 
-    const heart =
-      document.createElement("div");
+Distance is strange sometimes,
+because even from far away,
+you still manage to make me smile.
 
-    heart.innerHTML = "❤️";
+Maybe one day,
+we'll finally meet for real.
 
-    heart.style.position = "absolute";
+And honestly,
+I think I'd really like that.
+`;
 
-    heart.style.left =
-      Math.random() * 100 + "vw";
+let messageIndex = 0;
 
-    heart.style.top = "100vh";
+function showPopup() {
 
-    heart.style.fontSize =
-      Math.random() * 20 + 15 + "px";
+  document
+    .getElementById("popup")
+    .classList.remove("hidden");
 
-    heart.style.opacity = "0.8";
+  document
+    .getElementById("messageText")
+    .innerHTML = "";
 
-    heart.style.pointerEvents = "none";
+  messageIndex = 0;
 
-    document.body.appendChild(heart);
+  typeMessage();
+}
 
-    let position = 100;
+function closePopup() {
 
-    const interval = setInterval(() => {
+  document
+    .getElementById("popup")
+    .classList.add("hidden");
+}
 
-      position--;
+function typeMessage() {
 
-      heart.style.top =
-        position + "vh";
+  if (messageIndex < message.length) {
 
-      if (position < -10) {
+    document
+      .getElementById("messageText")
+      .innerHTML += message.charAt(messageIndex);
 
-        clearInterval(interval);
+    messageIndex++;
 
-        heart.remove();
-      }
-
-    }, 20);
+    setTimeout(typeMessage, 35);
   }
 }
