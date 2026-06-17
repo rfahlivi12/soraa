@@ -10,7 +10,7 @@
     content="width=device-width, initial-scale=1.0">
 
   <title>
-    For Sora ❤️
+    For Sora 
   </title>
 
   <link
@@ -21,7 +21,11 @@
 
 <body>
 
+  <!-- BACKGROUND -->
+
   <div class="stars"></div>
+
+  <!-- MAIN -->
 
   <div class="container">
 
@@ -29,14 +33,14 @@
 
     <p class="subtitle">
       Even though we've never met,
-      somehow you already feel special to me.
+      somehow you still became important to me.
     </p>
 
     <!-- MENU -->
 
     <div class="menu">
 
-      <button onclick="showSection('message')">
+      <button onclick="showPopup()">
         💌 Message
       </button>
 
@@ -50,38 +54,13 @@
 
     </div>
 
-    <!-- MESSAGE -->
-
-    <div id="message" class="section">
-
-      <h2>Dear Sora ✨</h2>
-
-      <p>
-        Talking to you became one of
-        my favorite parts of the day.
-      </p>
-
-      <p>
-        Somehow you make ordinary moments
-        feel calmer and brighter.
-      </p>
-
-      <p>
-        Maybe we're far away from each other,
-        but I genuinely enjoy having you in my life.
-      </p>
-
-      <h3>
-        I hope we can meet someday ❤️
-      </h3>
-
-    </div>
-
     <!-- DISTANCE -->
 
     <div id="distance" class="section hidden">
 
-      <h2>🌍 Distance Between Us</h2>
+      <h2>
+        🌍 Distance Between Us
+      </h2>
 
       <p class="distance-text">
         Purwokerto 📍
@@ -112,7 +91,9 @@
 
     <div id="future" class="section hidden">
 
-      <h2>✨ Future</h2>
+      <h2>
+        ✨ Future
+      </h2>
 
       <p>
         Maybe one day,
@@ -128,6 +109,30 @@
         And honestly...
         I'd really love that.
       </h3>
+
+    </div>
+
+  </div>
+
+  <!-- POPUP MESSAGE -->
+
+  <div id="popup" class="popup hidden">
+
+    <div class="popup-content">
+
+      <span
+        class="close"
+        onclick="closePopup()">
+
+        ×
+
+      </span>
+
+      <h2>
+         Message For Sora
+      </h2>
+
+      <div id="messageText"></div>
 
     </div>
 
