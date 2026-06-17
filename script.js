@@ -1,9 +1,10 @@
-const title = "Hi Sora ❤️";
+const title =
+  "Hi Sora ❤️";
+
+const titleElement =
+  document.getElementById("title");
 
 let index = 0;
-
-const typing =
-  document.getElementById("typing");
 
 /* TYPING */
 
@@ -11,7 +12,7 @@ function typeText() {
 
   if (index < title.length) {
 
-    typing.innerHTML +=
+    titleElement.innerHTML +=
       title.charAt(index);
 
     index++;
@@ -24,37 +25,29 @@ typeText();
 
 /* SECTION */
 
-const buttons =
-  document.querySelectorAll(
-    "[data-target]"
-  );
+const menuButtons =
+  document.querySelectorAll(".menu-btn");
 
 const sections =
-  document.querySelectorAll(
-    ".content"
-  );
+  document.querySelectorAll(".content");
 
-buttons.forEach(button => {
+menuButtons.forEach(button => {
 
   button.addEventListener(
     "click",
     () => {
 
       const target =
-        button.dataset.target;
+        button.dataset.section;
 
       sections.forEach(section => {
 
-        section.classList.add(
-          "hidden"
-        );
+        section.classList.add("hidden");
       });
 
       document
         .getElementById(target)
-        .classList.remove(
-          "hidden"
-        );
+        .classList.remove("hidden");
     }
   );
 });
@@ -62,51 +55,37 @@ buttons.forEach(button => {
 /* POPUP */
 
 const popup =
-  document.getElementById(
-    "popup"
-  );
+  document.getElementById("popup");
 
-const messageBtn =
-  document.getElementById(
-    "messageBtn"
-  );
+const scanBtn =
+  document.getElementById("scanBtn");
 
-const closePopup =
-  document.getElementById(
-    "closePopup"
-  );
+const closeBtn =
+  document.getElementById("closeBtn");
 
-messageBtn.addEventListener(
+scanBtn.addEventListener(
   "click",
   () => {
 
-    popup.classList.remove(
-      "hidden"
-    );
+    popup.classList.remove("hidden");
   }
 );
 
-closePopup.addEventListener(
+closeBtn.addEventListener(
   "click",
   () => {
 
-    popup.classList.add(
-      "hidden"
-    );
+    popup.classList.add("hidden");
   }
 );
-
-/* CLOSE OUTSIDE */
 
 popup.addEventListener(
   "click",
-  (e) => {
+  (event) => {
 
-    if (e.target === popup) {
+    if (event.target === popup) {
 
-      popup.classList.add(
-        "hidden"
-      );
+      popup.classList.add("hidden");
     }
   }
 );
