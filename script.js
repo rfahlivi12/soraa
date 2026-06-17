@@ -1,7 +1,7 @@
 /* TITLE */
 
 const title =
-  "Hi Sora";
+  "Hi Sora ❤️";
 
 const titleElement =
   document.getElementById(
@@ -59,6 +59,13 @@ unlockBtn.addEventListener(
       lockScreen.style.display =
         "none";
 
+      music.play();
+
+      musicBtn.innerHTML =
+        "❚❚";
+
+      isPlaying = true;
+
     } else {
 
       errorText.innerHTML =
@@ -89,7 +96,7 @@ distanceBtn.addEventListener(
   }
 );
 
-/* QR POPUP */
+/* QR */
 
 const scanBtn =
   document.getElementById(
@@ -217,6 +224,45 @@ window.addEventListener(
       event.target.classList.add(
         "hidden"
       );
+    }
+  }
+);
+
+/* MUSIC */
+
+const music =
+  document.getElementById(
+    "bgMusic"
+  );
+
+const musicBtn =
+  document.getElementById(
+    "musicBtn"
+  );
+
+let isPlaying = false;
+
+musicBtn.addEventListener(
+  "click",
+  () => {
+
+    if (!isPlaying) {
+
+      music.play();
+
+      musicBtn.innerHTML =
+        "❚❚";
+
+      isPlaying = true;
+
+    } else {
+
+      music.pause();
+
+      musicBtn.innerHTML =
+        "♫";
+
+      isPlaying = false;
     }
   }
 );
