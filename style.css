@@ -24,8 +24,8 @@ body {
   background:
     radial-gradient(
       circle at top,
-      #14213d,
-      #020617
+      #1a1a1a,
+      #050505
     );
 
   color: white;
@@ -46,11 +46,11 @@ body {
 
   background-image:
     radial-gradient(
-      rgba(255,255,255,0.15) 1px,
+      rgba(255,255,255,0.08) 1px,
       transparent 1px
     );
 
-  background-size: 50px 50px;
+  background-size: 45px 45px;
 
   animation:
     starsMove 120s linear infinite;
@@ -59,16 +59,19 @@ body {
 @keyframes starsMove {
 
   from {
-    transform: translate(0,0);
+
+    transform:
+      translate(0,0);
   }
 
   to {
+
     transform:
       translate(-500px,-500px);
   }
 }
 
-/* LOCK SCREEN */
+/* LOCK */
 
 #lockScreen {
 
@@ -86,8 +89,8 @@ body {
   background:
     radial-gradient(
       circle at top,
-      #0f172a,
-      #020617
+      #111,
+      #000
     );
 }
 
@@ -102,24 +105,29 @@ body {
   border-radius: 30px;
 
   background:
-    rgba(255,255,255,0.06);
+    rgba(255,255,255,0.04);
 
   border:
     1px solid rgba(255,255,255,0.08);
 
-  backdrop-filter: blur(15px);
+  backdrop-filter: blur(20px);
 
   text-align: center;
+
+  box-shadow:
+    0 0 40px rgba(255,255,255,0.03);
 }
 
 .lock-box h1 {
+
+  font-size: 2.2rem;
 
   margin-bottom: 15px;
 }
 
 .lock-box p {
 
-  opacity: 0.8;
+  opacity: 0.7;
 
   margin-bottom: 25px;
 }
@@ -137,7 +145,7 @@ body {
   border-radius: 15px;
 
   background:
-    rgba(255,255,255,0.08);
+    rgba(255,255,255,0.06);
 
   color: white;
 
@@ -161,17 +169,22 @@ body {
   border-radius: 15px;
 
   background:
-    linear-gradient(
-      45deg,
-      #ff4d6d,
-      #ff758f
-    );
+    white;
 
-  color: white;
+  color: black;
 
   font-size: 1rem;
 
+  font-weight: bold;
+
   cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.lock-box button:hover {
+
+  opacity: 0.85;
 }
 
 #errorText {
@@ -180,7 +193,7 @@ body {
 
   margin-top: 15px;
 
-  color: #ff8fa3;
+  color: #bbb;
 }
 
 /* CONTAINER */
@@ -196,7 +209,7 @@ body {
   border-radius: 35px;
 
   background:
-    rgba(255,255,255,0.06);
+    rgba(255,255,255,0.04);
 
   border:
     1px solid rgba(255,255,255,0.08);
@@ -204,7 +217,7 @@ body {
   backdrop-filter: blur(15px);
 
   box-shadow:
-    0 0 40px rgba(0,0,0,0.4);
+    0 0 50px rgba(255,255,255,0.03);
 
   position: relative;
 
@@ -225,7 +238,7 @@ body {
   margin-bottom: 20px;
 
   text-shadow:
-    0 0 20px rgba(255,255,255,0.3);
+    0 0 20px rgba(255,255,255,0.15);
 }
 
 .subtitle {
@@ -234,7 +247,7 @@ body {
 
   line-height: 1.8;
 
-  opacity: 0.9;
+  opacity: 0.8;
 }
 
 /* MENU */
@@ -254,18 +267,14 @@ body {
 
 .menu button {
 
-  border: none;
+  border: 1px solid rgba(255,255,255,0.08);
 
   padding: 14px 28px;
 
   border-radius: 999px;
 
   background:
-    linear-gradient(
-      45deg,
-      #ff4d6d,
-      #ff758f
-    );
+    rgba(255,255,255,0.06);
 
   color: white;
 
@@ -281,6 +290,11 @@ body {
 }
 
 .menu button:hover {
+
+  background:
+    white;
+
+  color: black;
 
   transform:
     translateY(-3px);
@@ -340,7 +354,7 @@ body {
   border-radius: 999px;
 
   background:
-    rgba(255,255,255,0.15);
+    rgba(255,255,255,0.1);
 
   overflow: hidden;
 
@@ -358,8 +372,9 @@ body {
   background:
     linear-gradient(
       90deg,
-      #ff4d6d,
-      #ffd1dc
+      white,
+      #777,
+      white
     );
 
   animation:
@@ -369,11 +384,13 @@ body {
 @keyframes travel {
 
   from {
+
     transform:
       translateX(-100%);
   }
 
   to {
+
     transform:
       translateX(100%);
   }
@@ -386,7 +403,7 @@ body {
 
   border-radius: 50%;
 
-  background: #ff4d6d;
+  background: white;
 
   position: absolute;
 
@@ -417,6 +434,8 @@ body {
   line-height: 1.8;
 
   font-size: 1.1rem;
+
+  opacity: 0.85;
 }
 
 /* POPUP */
@@ -433,7 +452,7 @@ body {
   align-items: center;
 
   background:
-    rgba(0,0,0,0.7);
+    rgba(0,0,0,0.82);
 
   z-index: 999;
 }
@@ -449,10 +468,12 @@ body {
   border-radius: 30px;
 
   background:
-    rgba(15,23,42,0.96);
+    rgba(255,255,255,0.05);
 
   border:
     1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter: blur(15px);
 
   position: relative;
 
@@ -495,7 +516,7 @@ body {
 
   margin-top: 20px;
 
-  opacity: 0.8;
+  opacity: 0.7;
 }
 
 /* FUTURE */
@@ -534,14 +555,9 @@ body {
 
 #yesBtn {
 
-  background:
-    linear-gradient(
-      45deg,
-      #ff4d6d,
-      #ff758f
-    );
+  background: white;
 
-  color: white;
+  color: black;
 }
 
 #noBtn {
@@ -554,14 +570,18 @@ body {
   position: relative;
 }
 
+.future-buttons button:hover {
+
+  transform:
+    scale(1.05);
+}
+
 .success-title {
 
   font-size: 3rem;
 
-  color: #ff8fa3;
-
   text-shadow:
-    0 0 20px rgba(255,143,163,0.4);
+    0 0 20px rgba(255,255,255,0.2);
 }
 
 .sparkles {
@@ -585,7 +605,7 @@ body {
   to {
 
     transform:
-      scale(1.2);
+      scale(1.15);
   }
 }
 
@@ -611,5 +631,15 @@ body {
   .menu button {
 
     width: 100%;
+  }
+
+  .distance-km {
+
+    font-size: 2rem;
+  }
+
+  .success-title {
+
+    font-size: 2.3rem;
   }
 }
