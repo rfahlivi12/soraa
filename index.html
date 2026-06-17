@@ -33,7 +33,7 @@
 
     <section class="hero">
 
-      <h1 id="typing"></h1>
+      <h1 id="title"></h1>
 
       <p class="subtitle">
 
@@ -46,21 +46,31 @@
 
     <!-- MENU -->
 
-    <nav class="menu">
+    <section class="menu">
 
-      <button id="messageBtn">
-        💌 Message
+      <button id="scanBtn">
+
+        💌 Scan
+
       </button>
 
-      <button data-target="distance">
+      <button
+        class="menu-btn"
+        data-section="distance">
+
         🌍 Distance
+
       </button>
 
-      <button data-target="future">
+      <button
+        class="menu-btn"
+        data-section="future">
+
         ✨ Future
+
       </button>
 
-    </nav>
+    </section>
 
     <!-- DISTANCE -->
 
@@ -69,7 +79,9 @@
       class="content hidden">
 
       <h2>
+
         🌍 Distance Between Us
+
       </h2>
 
       <p class="location">
@@ -80,7 +92,7 @@
 
       </p>
 
-      <div class="line">
+      <div class="distance-line">
 
         <div class="dot left"></div>
 
@@ -89,14 +101,15 @@
       </div>
 
       <h3 class="distance-km">
+
         800+ KM
+
       </h3>
 
-      <p class="text">
+      <p class="content-text">
 
         Maybe we're far apart,
-        but somehow talking to you
-        still feels comforting.
+        but talking to you still feels comforting.
 
       </p>
 
@@ -109,24 +122,26 @@
       class="content hidden">
 
       <h2>
+
         ✨ Future
+
       </h2>
 
-      <p class="text">
+      <p class="content-text">
 
         Maybe one day,
         there will be no more distance.
 
       </p>
 
-      <p class="text">
+      <p class="content-text">
 
         Just two people finally meeting
         after countless conversations.
 
       </p>
 
-      <p class="text">
+      <p class="content-text">
 
         And honestly,
         I'd really love that.
@@ -143,12 +158,16 @@
 
     <div class="popup-card">
 
-      <button id="closePopup">
+      <button id="closeBtn">
+
         ×
+
       </button>
 
       <h2>
+
         Scan This ❤️
+
       </h2>
 
       <img
