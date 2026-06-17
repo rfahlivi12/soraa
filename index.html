@@ -10,7 +10,7 @@
     content="width=device-width, initial-scale=1.0">
 
   <title>
-    For Sora 
+    For Sora ❤️
   </title>
 
   <link
@@ -27,112 +27,140 @@
 
   <!-- MAIN -->
 
-  <div class="container">
+  <main class="container">
 
-    <h1 id="typing"></h1>
+    <!-- HERO -->
 
-    <p class="subtitle">
-      Even though we've never met,
-      somehow you still became important to me.
-    </p>
+    <section class="hero">
+
+      <h1 id="typing"></h1>
+
+      <p class="subtitle">
+
+        Even from far away,
+        you still became someone important to me.
+
+      </p>
+
+    </section>
 
     <!-- MENU -->
 
-    <div class="menu">
+    <nav class="menu">
 
-      <button onclick="showPopup()">
+      <button id="messageBtn">
         💌 Message
       </button>
 
-      <button onclick="showSection('distance')">
+      <button data-target="distance">
         🌍 Distance
       </button>
 
-      <button onclick="showSection('future')">
+      <button data-target="future">
         ✨ Future
       </button>
 
-    </div>
+    </nav>
 
     <!-- DISTANCE -->
 
-    <div id="distance" class="section hidden">
+    <section
+      id="distance"
+      class="content hidden">
 
       <h2>
         🌍 Distance Between Us
       </h2>
 
-      <p class="distance-text">
+      <p class="location">
+
         Purwokerto 📍
         <span>→</span>
         Kubu Raya 📍
+
       </p>
 
       <div class="line">
 
-        <div class="dot"></div>
+        <div class="dot left"></div>
 
         <div class="dot right"></div>
 
       </div>
 
-      <h1 class="km">
+      <h3 class="distance-km">
         800+ KM
-      </h1>
+      </h3>
 
-      <small>
+      <p class="text">
+
         Maybe we're far apart,
-        but talking to you still feels comforting.
-      </small>
+        but somehow talking to you
+        still feels comforting.
 
-    </div>
+      </p>
+
+    </section>
 
     <!-- FUTURE -->
 
-    <div id="future" class="section hidden">
+    <section
+      id="future"
+      class="content hidden">
 
       <h2>
         ✨ Future
       </h2>
 
-      <p>
+      <p class="text">
+
         Maybe one day,
         there will be no more distance.
+
       </p>
 
-      <p>
+      <p class="text">
+
         Just two people finally meeting
-        after countless late-night conversations.
+        after countless conversations.
+
       </p>
 
-      <h3>
-        And honestly...
+      <p class="text">
+
+        And honestly,
         I'd really love that.
-      </h3>
 
-    </div>
+      </p>
 
-  </div>
+    </section>
 
-  <!-- POPUP MESSAGE -->
+  </main>
+
+  <!-- POPUP -->
 
   <div id="popup" class="popup hidden">
 
-    <div class="popup-content">
+    <div class="popup-card">
 
-      <span
-        class="close"
-        onclick="closePopup()">
-
+      <button id="closePopup">
         ×
-
-      </span>
+      </button>
 
       <h2>
-         Message For Sora
+        Scan This ❤️
       </h2>
 
-      <div id="messageText"></div>
+      <img
+        src="IMG_9358.png"
+        alt="QR Code"
+        class="qr-image">
+
+      <p class="popup-text">
+
+        Scan this QR code.
+
+      </p>
 
     </div>
 
