@@ -1,91 +1,222 @@
+/* TITLE */
+
 const title =
   "Hi Sora ❤️";
 
 const titleElement =
-  document.getElementById("title");
+  document.getElementById(
+    "title"
+  );
 
-let index = 0;
+let titleIndex = 0;
 
-/* TYPING */
+function typeTitle() {
 
-function typeText() {
-
-  if (index < title.length) {
+  if (titleIndex < title.length) {
 
     titleElement.innerHTML +=
-      title.charAt(index);
+      title.charAt(titleIndex);
 
-    index++;
+    titleIndex++;
 
-    setTimeout(typeText, 100);
+    setTimeout(typeTitle, 100);
   }
 }
 
-typeText();
+typeTitle();
 
-/* SECTION */
+/* PASSWORD */
 
-const menuButtons =
-  document.querySelectorAll(".menu-btn");
+const unlockBtn =
+  document.getElementById(
+    "unlockBtn"
+  );
 
-const sections =
-  document.querySelectorAll(".content");
+const passwordInput =
+  document.getElementById(
+    "passwordInput"
+  );
 
-menuButtons.forEach(button => {
+const lockScreen =
+  document.getElementById(
+    "lockScreen"
+  );
+
+const errorText =
+  document.getElementById(
+    "errorText"
+  );
+
+unlockBtn.addEventListener(
+  "click",
+  () => {
+
+    if (
+      passwordInput.value ===
+      "1102"
+    ) {
+
+      lockScreen.style.display =
+        "none";
+
+    } else {
+
+      errorText.innerHTML =
+        "Wrong password";
+    }
+  }
+);
+
+/* DISTANCE */
+
+const distanceBtn =
+  document.getElementById(
+    "distanceBtn"
+  );
+
+const distanceSection =
+  document.getElementById(
+    "distanceSection"
+  );
+
+distanceBtn.addEventListener(
+  "click",
+  () => {
+
+    distanceSection.classList.toggle(
+      "hidden"
+    );
+  }
+);
+
+/* QR POPUP */
+
+const scanBtn =
+  document.getElementById(
+    "scanBtn"
+  );
+
+const qrPopup =
+  document.getElementById(
+    "qrPopup"
+  );
+
+scanBtn.addEventListener(
+  "click",
+  () => {
+
+    qrPopup.classList.remove(
+      "hidden"
+    );
+  }
+);
+
+/* FUTURE */
+
+const futureBtn =
+  document.getElementById(
+    "futureBtn"
+  );
+
+const futurePopup =
+  document.getElementById(
+    "futurePopup"
+  );
+
+const successPopup =
+  document.getElementById(
+    "successPopup"
+  );
+
+const yesBtn =
+  document.getElementById(
+    "yesBtn"
+  );
+
+const noBtn =
+  document.getElementById(
+    "noBtn"
+  );
+
+futureBtn.addEventListener(
+  "click",
+  () => {
+
+    futurePopup.classList.remove(
+      "hidden"
+    );
+  }
+);
+
+yesBtn.addEventListener(
+  "click",
+  () => {
+
+    futurePopup.classList.add(
+      "hidden"
+    );
+
+    successPopup.classList.remove(
+      "hidden"
+    );
+  }
+);
+
+noBtn.addEventListener(
+  "mouseover",
+  () => {
+
+    const x =
+      Math.random() * 200 - 100;
+
+    const y =
+      Math.random() * 200 - 100;
+
+    noBtn.style.transform =
+      `translate(${x}px, ${y}px)`;
+  }
+);
+
+/* CLOSE */
+
+const closeButtons =
+  document.querySelectorAll(
+    ".closeBtn"
+  );
+
+closeButtons.forEach(button => {
 
   button.addEventListener(
     "click",
     () => {
 
       const target =
-        button.dataset.section;
-
-      sections.forEach(section => {
-
-        section.classList.add("hidden");
-      });
+        button.dataset.close;
 
       document
         .getElementById(target)
-        .classList.remove("hidden");
+        .classList.add(
+          "hidden"
+        );
     }
   );
 });
 
-/* POPUP */
+/* OUTSIDE CLICK */
 
-const popup =
-  document.getElementById("popup");
-
-const scanBtn =
-  document.getElementById("scanBtn");
-
-const closeBtn =
-  document.getElementById("closeBtn");
-
-scanBtn.addEventListener(
-  "click",
-  () => {
-
-    popup.classList.remove("hidden");
-  }
-);
-
-closeBtn.addEventListener(
-  "click",
-  () => {
-
-    popup.classList.add("hidden");
-  }
-);
-
-popup.addEventListener(
+window.addEventListener(
   "click",
   (event) => {
 
-    if (event.target === popup) {
+    if (
+      event.target.classList.contains(
+        "popup"
+      )
+    ) {
 
-      popup.classList.add("hidden");
+      event.target.classList.add(
+        "hidden"
+      );
     }
   }
 );
