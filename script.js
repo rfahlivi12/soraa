@@ -17,48 +17,41 @@ function typeEffect() {
 
 typeEffect();
 
+/* SHOW MESSAGE */
+
 function showLove() {
 
   document.getElementById("loveMessage")
     .classList.remove("hidden");
 
-  for (let i = 0; i < 35; i++) {
+  for (let i = 0; i < 50; i++) {
     createHeart();
   }
 }
 
+/* HEART ANIMATION */
+
 function createHeart() {
 
-  const heart = document.createElement("div");
+  const heart =
+    document.createElement("div");
+
+  heart.classList.add("heart");
 
   heart.innerHTML = "💖";
-
-  heart.style.position = "absolute";
 
   heart.style.left =
     Math.random() * 100 + "vw";
 
-  heart.style.top = "100vh";
-
   heart.style.fontSize =
-    Math.random() * 20 + 20 + "px";
+    Math.random() * 25 + 20 + "px";
+
+  heart.style.animationDuration =
+    Math.random() * 3 + 3 + "s";
 
   document.body.appendChild(heart);
 
-  let position = 100;
-
-  const interval = setInterval(() => {
-
-    position--;
-
-    heart.style.top = position + "vh";
-
-    if (position < -10) {
-
-      clearInterval(interval);
-
-      heart.remove();
-    }
-
-  }, 20);
+  setTimeout(() => {
+    heart.remove();
+  }, 6000);
 }
