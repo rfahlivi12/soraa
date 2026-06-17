@@ -94,7 +94,7 @@ body {
     );
 }
 
-.lock-box {
+.lockBox {
 
   width: 90%;
 
@@ -113,26 +113,21 @@ body {
   backdrop-filter: blur(20px);
 
   text-align: center;
-
-  box-shadow:
-    0 0 40px rgba(255,255,255,0.03);
 }
 
-.lock-box h1 {
-
-  font-size: 2.2rem;
+.lockBox h1 {
 
   margin-bottom: 15px;
 }
 
-.lock-box p {
+.lockBox p {
 
   opacity: 0.7;
 
   margin-bottom: 25px;
 }
 
-.lock-box input {
+.lockBox input {
 
   width: 100%;
 
@@ -156,7 +151,7 @@ body {
     serif;
 }
 
-.lock-box button {
+.lockBox button {
 
   width: 100%;
 
@@ -168,23 +163,13 @@ body {
 
   border-radius: 15px;
 
-  background:
-    white;
+  background: white;
 
   color: black;
 
-  font-size: 1rem;
-
-  font-weight: bold;
-
   cursor: pointer;
 
-  transition: 0.3s;
-}
-
-.lock-box button:hover {
-
-  opacity: 0.85;
+  font-weight: bold;
 }
 
 #errorText {
@@ -193,7 +178,7 @@ body {
 
   margin-top: 15px;
 
-  color: #bbb;
+  color: #ccc;
 }
 
 /* CONTAINER */
@@ -215,9 +200,6 @@ body {
     1px solid rgba(255,255,255,0.08);
 
   backdrop-filter: blur(15px);
-
-  box-shadow:
-    0 0 50px rgba(255,255,255,0.03);
 
   position: relative;
 
@@ -243,11 +225,11 @@ body {
 
 .subtitle {
 
-  font-size: 1.2rem;
-
   line-height: 1.8;
 
   opacity: 0.8;
+
+  font-size: 1.2rem;
 }
 
 /* MENU */
@@ -258,16 +240,17 @@ body {
 
   display: flex;
 
-  flex-wrap: wrap;
-
   justify-content: center;
+
+  flex-wrap: wrap;
 
   gap: 15px;
 }
 
 .menu button {
 
-  border: 1px solid rgba(255,255,255,0.08);
+  border:
+    1px solid rgba(255,255,255,0.08);
 
   padding: 14px 28px;
 
@@ -291,8 +274,7 @@ body {
 
 .menu button:hover {
 
-  background:
-    white;
+  background: white;
 
   color: black;
 
@@ -343,7 +325,7 @@ body {
   font-size: 1.2rem;
 }
 
-.distance-line {
+.distanceLine {
 
   width: 100%;
 
@@ -361,7 +343,7 @@ body {
   position: relative;
 }
 
-.distance-line::before {
+.distanceLine::before {
 
   content: "";
 
@@ -420,22 +402,20 @@ body {
   right: 0;
 }
 
-.distance-km {
+.distanceKm {
 
   margin-top: 25px;
 
   font-size: 2.5rem;
 }
 
-.content-text {
+.contentText {
 
   margin-top: 20px;
 
   line-height: 1.8;
 
-  font-size: 1.1rem;
-
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
 /* POPUP */
@@ -452,12 +432,12 @@ body {
   align-items: center;
 
   background:
-    rgba(0,0,0,0.82);
+    rgba(0,0,0,0.8);
 
   z-index: 999;
 }
 
-.popup-card {
+.popupCard {
 
   width: 90%;
 
@@ -475,9 +455,9 @@ body {
 
   backdrop-filter: blur(15px);
 
-  position: relative;
-
   text-align: center;
+
+  position: relative;
 }
 
 .closeBtn {
@@ -486,9 +466,6 @@ body {
 
   top: 10px;
   right: 15px;
-
-  width: 42px;
-  height: 42px;
 
   border: none;
 
@@ -501,7 +478,7 @@ body {
   cursor: pointer;
 }
 
-.qr-image {
+.qrImage {
 
   width: 230px;
 
@@ -512,7 +489,7 @@ body {
   border-radius: 20px;
 }
 
-.popup-text {
+.popupText {
 
   margin-top: 20px;
 
@@ -521,7 +498,7 @@ body {
 
 /* FUTURE */
 
-.future-buttons {
+.futureButtons {
 
   display: flex;
 
@@ -534,7 +511,7 @@ body {
   flex-wrap: wrap;
 }
 
-.future-buttons button {
+.futureButtons button {
 
   border: none;
 
@@ -549,8 +526,6 @@ body {
   font-family:
     Cambria,
     serif;
-
-  transition: 0.3s;
 }
 
 #yesBtn {
@@ -570,18 +545,9 @@ body {
   position: relative;
 }
 
-.future-buttons button:hover {
-
-  transform:
-    scale(1.05);
-}
-
-.success-title {
+.successTitle {
 
   font-size: 3rem;
-
-  text-shadow:
-    0 0 20px rgba(255,255,255,0.2);
 }
 
 .sparkles {
@@ -609,6 +575,48 @@ body {
   }
 }
 
+/* MUSIC */
+
+#musicBtn {
+
+  position: fixed;
+
+  bottom: 20px;
+  right: 20px;
+
+  width: 55px;
+  height: 55px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background:
+    rgba(255,255,255,0.08);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter: blur(10px);
+
+  color: white;
+
+  font-size: 1.4rem;
+
+  cursor: pointer;
+
+  z-index: 999;
+
+  transition: 0.3s;
+}
+
+#musicBtn:hover {
+
+  background: white;
+
+  color: black;
+}
+
 /* MOBILE */
 
 @media (max-width: 768px) {
@@ -631,15 +639,5 @@ body {
   .menu button {
 
     width: 100%;
-  }
-
-  .distance-km {
-
-    font-size: 2rem;
-  }
-
-  .success-title {
-
-    font-size: 2.3rem;
   }
 }
