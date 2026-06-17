@@ -1,7 +1,7 @@
 /* TITLE */
 
 const title =
-  "Hi Sora ❤️";
+  "Hi Sora";
 
 const titleElement =
   document.getElementById(
