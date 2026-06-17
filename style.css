@@ -10,20 +10,6 @@ body {
 
   min-height: 100vh;
 
-  background:
-    radial-gradient(
-      circle at top,
-      #14213d,
-      #020617
-    );
-
-  color: white;
-
-  font-family:
-    Cambria,
-    "Times New Roman",
-    serif;
-
   display: flex;
 
   justify-content: center;
@@ -34,6 +20,20 @@ body {
   overflow-x: hidden;
 
   position: relative;
+
+  background:
+    radial-gradient(
+      circle at top,
+      #14213d,
+      #020617
+    );
+
+  font-family:
+    Cambria,
+    "Times New Roman",
+    serif;
+
+  color: white;
 }
 
 /* STARS */
@@ -46,17 +46,17 @@ body {
 
   background-image:
     radial-gradient(
-      rgba(255,255,255,0.2) 1px,
+      rgba(255,255,255,0.15) 1px,
       transparent 1px
     );
 
   background-size: 50px 50px;
 
   animation:
-    moveStars 100s linear infinite;
+    starsMove 120s linear infinite;
 }
 
-@keyframes moveStars {
+@keyframes starsMove {
 
   from {
     transform: translate(0,0);
@@ -83,10 +83,10 @@ body {
   background:
     rgba(255,255,255,0.06);
 
-  backdrop-filter: blur(15px);
-
   border:
     1px solid rgba(255,255,255,0.08);
+
+  backdrop-filter: blur(15px);
 
   box-shadow:
     0 0 40px rgba(0,0,0,0.4);
@@ -115,7 +115,7 @@ body {
 
 .subtitle {
 
-  font-size: 1.3rem;
+  font-size: 1.2rem;
 
   line-height: 1.8;
 
@@ -185,7 +185,7 @@ body {
 
 .hidden {
 
-  display: none;
+  display: none !important;
 }
 
 @keyframes fadeIn {
@@ -207,7 +207,7 @@ body {
   }
 }
 
-.text {
+.content-text {
 
   margin-top: 15px;
 
@@ -220,30 +220,30 @@ body {
 
 .location {
 
-  font-size: 1.2rem;
-
   margin-top: 15px;
+
+  font-size: 1.2rem;
 }
 
-.line {
+.distance-line {
 
   width: 100%;
 
   height: 4px;
 
-  background:
-    rgba(255,255,255,0.15);
+  margin-top: 25px;
 
   border-radius: 999px;
 
-  margin-top: 25px;
-
-  position: relative;
+  background:
+    rgba(255,255,255,0.15);
 
   overflow: hidden;
+
+  position: relative;
 }
 
-.line::before {
+.distance-line::before {
 
   content: "";
 
@@ -280,9 +280,9 @@ body {
   width: 14px;
   height: 14px;
 
-  background: #ff4d6d;
-
   border-radius: 50%;
+
+  background: #ff4d6d;
 
   position: absolute;
 
@@ -314,13 +314,13 @@ body {
 
   inset: 0;
 
-  background:
-    rgba(0,0,0,0.7);
-
   display: flex;
 
   justify-content: center;
   align-items: center;
+
+  background:
+    rgba(0,0,0,0.7);
 
   z-index: 999;
 }
@@ -341,16 +341,16 @@ body {
   border:
     1px solid rgba(255,255,255,0.08);
 
-  position: relative;
-
   text-align: center;
+
+  position: relative;
 }
 
-#closePopup {
+#closeBtn {
 
   position: absolute;
 
-  top: 12px;
+  top: 10px;
   right: 15px;
 
   width: 42px;
@@ -396,7 +396,7 @@ body {
 
   .hero h1 {
 
-    font-size: 2.7rem;
+    font-size: 2.6rem;
   }
 
   .subtitle {
