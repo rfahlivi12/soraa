@@ -2,11 +2,14 @@ const text = "Hi Sora ❤️";
 
 let index = 0;
 
+/* TYPING EFFECT */
+
 function typeEffect() {
 
   if (index < text.length) {
 
-    document.getElementById("typing")
+    document
+      .getElementById("typing")
       .innerHTML += text.charAt(index);
 
     index++;
@@ -17,41 +20,68 @@ function typeEffect() {
 
 typeEffect();
 
-/* SHOW MESSAGE */
+/* MENU SECTION */
 
-function showLove() {
+function showSection(id) {
 
-  document.getElementById("loveMessage")
+  const sections =
+    document.querySelectorAll(".section");
+
+  sections.forEach(section => {
+
+    section.classList.add("hidden");
+  });
+
+  document
+    .getElementById(id)
     .classList.remove("hidden");
 
-  for (let i = 0; i < 50; i++) {
-    createHeart();
-  }
+  createHearts();
 }
 
-/* HEART ANIMATION */
+/* HEARTS */
 
-function createHeart() {
+function createHearts() {
 
-  const heart =
-    document.createElement("div");
+  for (let i = 0; i < 20; i++) {
 
-  heart.classList.add("heart");
+    const heart =
+      document.createElement("div");
 
-  heart.innerHTML = "💖";
+    heart.innerHTML = "💖";
 
-  heart.style.left =
-    Math.random() * 100 + "vw";
+    heart.style.position = "absolute";
 
-  heart.style.fontSize =
-    Math.random() * 25 + 20 + "px";
+    heart.style.left =
+      Math.random() * 100 + "vw";
 
-  heart.style.animationDuration =
-    Math.random() * 3 + 3 + "s";
+    heart.style.top = "100vh";
 
-  document.body.appendChild(heart);
+    heart.style.fontSize =
+      Math.random() * 20 + 20 + "px";
 
-  setTimeout(() => {
-    heart.remove();
-  }, 6000);
+    heart.style.opacity = "0.8";
+
+    heart.style.pointerEvents = "none";
+
+    document.body.appendChild(heart);
+
+    let position = 100;
+
+    const interval = setInterval(() => {
+
+      position--;
+
+      heart.style.top =
+        position + "vh";
+
+      if (position < -10) {
+
+        clearInterval(interval);
+
+        heart.remove();
+      }
+
+    }, 20);
+  }
 }
