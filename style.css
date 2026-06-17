@@ -8,14 +8,16 @@
 
 body {
 
-  height: 100vh;
+  min-height: 100vh;
 
-  overflow: hidden;
+  overflow-x: hidden;
 
   display: flex;
 
   justify-content: center;
   align-items: center;
+
+  padding: 20px;
 
   background:
     radial-gradient(
@@ -38,7 +40,7 @@ body {
 
 .stars {
 
-  position: absolute;
+  position: fixed;
 
   width: 200%;
   height: 200%;
@@ -51,7 +53,7 @@ body {
 
   background-size: 50px 50px;
 
-  opacity: 0.2;
+  opacity: 0.15;
 
   animation:
     moveStars 100s linear infinite;
@@ -77,48 +79,48 @@ body {
 
   z-index: 2;
 
-  width: 90%;
-  max-width: 700px;
+  width: 100%;
+  max-width: 850px;
 
-  padding: 40px;
+  padding: 50px;
 
   border-radius: 35px;
 
   text-align: center;
 
   background:
-    rgba(255,255,255,0.08);
+    rgba(255,255,255,0.07);
 
   backdrop-filter: blur(15px);
 
   border:
-    1px solid rgba(255,255,255,0.1);
+    1px solid rgba(255,255,255,0.08);
 
   box-shadow:
-    0 0 40px rgba(255,255,255,0.08);
+    0 0 40px rgba(0,0,0,0.4);
 }
 
 /* TITLE */
 
 h1 {
 
-  font-size: 4em;
+  font-size: 4rem;
 
   margin-bottom: 20px;
 
   text-shadow:
-    0 0 25px rgba(255,255,255,0.4);
+    0 0 20px rgba(255,255,255,0.3);
 }
 
 .subtitle {
 
-  font-size: 1.4em;
+  font-size: 1.4rem;
 
   line-height: 1.8;
 
   opacity: 0.9;
 
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 }
 
 /* MENU */
@@ -131,14 +133,14 @@ h1 {
 
   flex-wrap: wrap;
 
-  gap: 12px;
+  gap: 15px;
 
   margin-bottom: 30px;
 }
 
 .menu button {
 
-  padding: 14px 25px;
+  padding: 14px 28px;
 
   border: none;
 
@@ -153,32 +155,28 @@ h1 {
 
   color: white;
 
-  font-size: 1em;
-
   font-family:
     Cambria,
     serif;
 
+  font-size: 1rem;
+
   cursor: pointer;
 
   transition: 0.3s;
-
-  box-shadow:
-    0 0 20px rgba(255,77,109,0.4);
 }
 
 .menu button:hover {
 
   transform:
-    scale(1.08);
-
-  box-shadow:
-    0 0 35px rgba(255,77,109,0.8);
+    translateY(-3px);
 }
 
 /* SECTION */
 
 .section {
+
+  margin-top: 25px;
 
   animation:
     fadeIn 0.5s ease;
@@ -196,7 +194,7 @@ h1 {
     opacity: 0;
 
     transform:
-      translateY(20px);
+      translateY(15px);
   }
 
   to {
@@ -214,7 +212,7 @@ h1 {
 
   line-height: 1.9;
 
-  font-size: 1.1em;
+  font-size: 1.1rem;
 }
 
 .section h3 {
@@ -230,7 +228,7 @@ h1 {
 
   margin-top: 20px;
 
-  font-size: 1.2em;
+  font-size: 1.2rem;
 }
 
 .line {
@@ -297,9 +295,6 @@ h1 {
 
   top: -5px;
   left: 0;
-
-  box-shadow:
-    0 0 15px #ff4d6d;
 }
 
 .dot.right {
@@ -310,27 +305,113 @@ h1 {
 
 .km {
 
-  font-size: 2.5em;
-
   margin-top: 20px;
+
+  font-size: 2.5rem;
+}
+
+/* POPUP */
+
+.popup {
+
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    rgba(0,0,0,0.6);
+
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  z-index: 999;
+}
+
+.popup-content {
+
+  width: 90%;
+  max-width: 600px;
+
+  padding: 40px;
+
+  border-radius: 25px;
+
+  background:
+    rgba(15,23,42,0.95);
+
+  border:
+    1px solid rgba(255,255,255,0.08);
+
+  position: relative;
+
+  animation:
+    fadeIn 0.4s ease;
+}
+
+.popup-content h2 {
+
+  margin-bottom: 25px;
+}
+
+.close {
+
+  position: absolute;
+
+  top: 15px;
+  right: 20px;
+
+  font-size: 2rem;
+
+  cursor: pointer;
+}
+
+#messageText {
+
+  line-height: 2;
+
+  font-size: 1.1rem;
+
+  text-align: left;
 }
 
 /* MOBILE */
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+
+  .container {
+
+    padding: 30px 22px;
+  }
 
   h1 {
 
-    font-size: 2.8em;
+    font-size: 2.5rem;
   }
 
   .subtitle {
 
-    font-size: 1.1em;
+    font-size: 1.1rem;
   }
 
-  .container {
+  .menu {
 
-    padding: 25px;
+    gap: 10px;
+  }
+
+  .menu button {
+
+    width: 100%;
+  }
+
+  .popup-content {
+
+    padding: 30px 22px;
+  }
+
+  #messageText {
+
+    font-size: 1rem;
   }
 }
