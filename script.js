@@ -20,9 +20,9 @@ function typeEffect() {
 
 typeEffect();
 
-/* MENU SECTION */
+/* MENU */
 
-function showSection(id) {
+function showSection(sectionId) {
 
   const sections =
     document.querySelectorAll(".section");
@@ -33,13 +33,13 @@ function showSection(id) {
   });
 
   document
-    .getElementById(id)
+    .getElementById(sectionId)
     .classList.remove("hidden");
 
   createHearts();
 }
 
-/* HEARTS */
+/* HEART EFFECT */
 
 function createHearts() {
 
@@ -48,7 +48,7 @@ function createHearts() {
     const heart =
       document.createElement("div");
 
-    heart.innerHTML = "💖";
+    heart.innerHTML = "❤️";
 
     heart.style.position = "absolute";
 
@@ -58,7 +58,7 @@ function createHearts() {
     heart.style.top = "100vh";
 
     heart.style.fontSize =
-      Math.random() * 20 + 20 + "px";
+      Math.random() * 20 + 15 + "px";
 
     heart.style.opacity = "0.8";
 
