@@ -1,51 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>For Sora ❤️</title>
 
-  <link rel="stylesheet" href="style.css">
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <title>
+    For Sora ❤️
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="style.css">
+
 </head>
+
 <body>
+
+  <!-- STARS -->
+
+  <div class="stars"></div>
+
+  <!-- MAIN -->
 
   <div class="container">
 
     <h1 id="typing"></h1>
 
     <p class="sub">
-      Even though we've never met,
-      somehow you already feel special to me.
+      Even from far away,
+      you somehow became close to my heart.
     </p>
 
-    <button onclick="showLove()">
-      Click Me ❤️
-    </button>
+    <!-- MENU -->
 
-    <div id="loveMessage" class="hidden">
+    <div class="menu">
 
-      <h2>Dear Sora ✨</h2>
+      <button onclick="showSection('message')">
+        💌 Message
+      </button>
+
+      <button onclick="showSection('distance')">
+        🌍 Distance
+      </button>
+
+      <button onclick="showSection('song')">
+        🎵 Song
+      </button>
+
+      <button onclick="showSection('future')">
+        ✨ Future
+      </button>
+
+    </div>
+
+    <!-- MESSAGE -->
+
+    <div
+      id="message"
+      class="section hidden">
+
+      <h2>
+        Dear Sora ✨
+      </h2>
 
       <p>
-        Distance is strange.
-        We live far away from each other,
-        yet you still became one of my favorite people.
+        Even though we've never met,
+        talking to you became one of my favorite parts of the day.
       </p>
 
       <p>
-        I like our conversations,
-        your presence,
-        and the way you make my days feel lighter.
+        You make ordinary moments feel softer,
+        calmer,
+        and somehow brighter.
       </p>
 
       <p>
-        Maybe one day,
-        we'll finally meet for real.
+        Maybe distance is difficult,
+        but I still genuinely enjoy having you in my life.
       </p>
 
       <h3>
-        Until then,
-        I'll keep smiling whenever I see your name ❤️
+        I hope we can meet someday ❤️
+      </h3>
+
+    </div>
+
+    <!-- DISTANCE -->
+
+    <div
+      id="distance"
+      class="section hidden">
+
+      <div class="distance-box">
+
+        <h3>
+          🌍 Distance Between Us
+        </h3>
+
+        <p>
+          Purwokerto 📍
+          <span>→</span>
+          Kubu Raya 📍
+        </p>
+
+        <div class="line">
+
+          <div class="dot"></div>
+
+          <div class="dot right"></div>
+
+        </div>
+
+        <h2>
+          800+ KM
+        </h2>
+
+        <small>
+          Maybe we're far apart,
+          but talking to you still feels comforting.
+        </small>
+
+      </div>
+
+    </div>
+
+    <!-- SONG -->
+
+    <div
+      id="song"
+      class="section hidden">
+
+      <h2>
+        🎵 Song For You
+      </h2>
+
+      <p>
+        This song reminds me of you somehow.
+      </p>
+
+      <a
+        href="https://youtu.be/izGwDsrQ1eQ"
+        target="_blank">
+
+        Open Song ❤️
+
+      </a>
+
+    </div>
+
+    <!-- FUTURE -->
+
+    <div
+      id="future"
+      class="section hidden">
+
+      <h2>
+        ✨ Future
+      </h2>
+
+      <p>
+        Maybe one day,
+        there will be no more distance.
+      </p>
+
+      <p>
+        Just two people finally meeting
+        after countless late-night conversations.
+      </p>
+
+      <h3>
+        And honestly...
+        I'd really love that.
       </h3>
 
     </div>
@@ -55,4 +185,5 @@
   <script src="script.js"></script>
 
 </body>
+
 </html>
