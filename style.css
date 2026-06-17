@@ -10,7 +10,19 @@ body {
 
   min-height: 100vh;
 
-  overflow-x: hidden;
+  background:
+    radial-gradient(
+      circle at top,
+      #14213d,
+      #020617
+    );
+
+  color: white;
+
+  font-family:
+    Cambria,
+    "Times New Roman",
+    serif;
 
   display: flex;
 
@@ -19,19 +31,7 @@ body {
 
   padding: 20px;
 
-  background:
-    radial-gradient(
-      circle at top,
-      #14213d,
-      #020617
-    );
-
-  font-family:
-    Cambria,
-    "Times New Roman",
-    serif;
-
-  color: white;
+  overflow-x: hidden;
 
   position: relative;
 }
@@ -42,18 +42,15 @@ body {
 
   position: fixed;
 
-  width: 200%;
-  height: 200%;
+  inset: 0;
 
   background-image:
     radial-gradient(
-      white 1px,
+      rgba(255,255,255,0.2) 1px,
       transparent 1px
     );
 
   background-size: 50px 50px;
-
-  opacity: 0.15;
 
   animation:
     moveStars 100s linear infinite;
@@ -71,25 +68,20 @@ body {
   }
 }
 
-/* MAIN CARD */
+/* CONTAINER */
 
 .container {
 
-  position: relative;
-
-  z-index: 2;
-
   width: 100%;
-  max-width: 850px;
+
+  max-width: 900px;
 
   padding: 50px;
 
   border-radius: 35px;
 
-  text-align: center;
-
   background:
-    rgba(255,255,255,0.07);
+    rgba(255,255,255,0.06);
 
   backdrop-filter: blur(15px);
 
@@ -98,11 +90,20 @@ body {
 
   box-shadow:
     0 0 40px rgba(0,0,0,0.4);
+
+  position: relative;
+
+  z-index: 2;
 }
 
-/* TITLE */
+/* HERO */
 
-h1 {
+.hero {
+
+  text-align: center;
+}
+
+.hero h1 {
 
   font-size: 4rem;
 
@@ -114,18 +115,18 @@ h1 {
 
 .subtitle {
 
-  font-size: 1.4rem;
+  font-size: 1.3rem;
 
   line-height: 1.8;
 
   opacity: 0.9;
-
-  margin-bottom: 35px;
 }
 
 /* MENU */
 
 .menu {
+
+  margin-top: 40px;
 
   display: flex;
 
@@ -134,15 +135,13 @@ h1 {
   flex-wrap: wrap;
 
   gap: 15px;
-
-  margin-bottom: 30px;
 }
 
 .menu button {
 
-  padding: 14px 28px;
-
   border: none;
+
+  padding: 14px 28px;
 
   border-radius: 999px;
 
@@ -155,11 +154,11 @@ h1 {
 
   color: white;
 
+  font-size: 1rem;
+
   font-family:
     Cambria,
     serif;
-
-  font-size: 1rem;
 
   cursor: pointer;
 
@@ -172,14 +171,16 @@ h1 {
     translateY(-3px);
 }
 
-/* SECTION */
+/* CONTENT */
 
-.section {
+.content {
 
-  margin-top: 25px;
+  margin-top: 45px;
+
+  text-align: center;
 
   animation:
-    fadeIn 0.5s ease;
+    fadeIn 0.4s ease;
 }
 
 .hidden {
@@ -206,45 +207,38 @@ h1 {
   }
 }
 
-.section p {
+.text {
 
-  margin-top: 18px;
+  margin-top: 15px;
 
   line-height: 1.9;
 
   font-size: 1.1rem;
 }
 
-.section h3 {
-
-  margin-top: 25px;
-
-  color: #ffd1dc;
-}
-
 /* DISTANCE */
 
-.distance-text {
-
-  margin-top: 20px;
+.location {
 
   font-size: 1.2rem;
+
+  margin-top: 15px;
 }
 
 .line {
-
-  position: relative;
 
   width: 100%;
 
   height: 4px;
 
-  margin-top: 25px;
-
   background:
     rgba(255,255,255,0.15);
 
   border-radius: 999px;
+
+  margin-top: 25px;
+
+  position: relative;
 
   overflow: hidden;
 }
@@ -255,8 +249,7 @@ h1 {
 
   position: absolute;
 
-  width: 100%;
-  height: 100%;
+  inset: 0;
 
   background:
     linear-gradient(
@@ -266,7 +259,7 @@ h1 {
     );
 
   animation:
-    travel 3s infinite linear;
+    travel 3s linear infinite;
 }
 
 @keyframes travel {
@@ -284,8 +277,6 @@ h1 {
 
 .dot {
 
-  position: absolute;
-
   width: 14px;
   height: 14px;
 
@@ -293,21 +284,26 @@ h1 {
 
   border-radius: 50%;
 
+  position: absolute;
+
   top: -5px;
+}
+
+.left {
+
   left: 0;
 }
 
-.dot.right {
+.right {
 
-  left: unset;
   right: 0;
 }
 
-.km {
+.distance-km {
 
-  margin-top: 20px;
+  margin-top: 25px;
 
-  font-size: 2.5rem;
+  font-size: 2rem;
 }
 
 /* POPUP */
@@ -319,7 +315,7 @@ h1 {
   inset: 0;
 
   background:
-    rgba(0,0,0,0.6);
+    rgba(0,0,0,0.7);
 
   display: flex;
 
@@ -329,51 +325,64 @@ h1 {
   z-index: 999;
 }
 
-.popup-content {
+.popup-card {
 
   width: 90%;
-  max-width: 600px;
 
-  padding: 40px;
+  max-width: 500px;
 
-  border-radius: 25px;
+  padding: 35px;
+
+  border-radius: 30px;
 
   background:
-    rgba(15,23,42,0.95);
+    rgba(15,23,42,0.96);
 
   border:
     1px solid rgba(255,255,255,0.08);
 
   position: relative;
 
-  animation:
-    fadeIn 0.4s ease;
+  text-align: center;
 }
 
-.popup-content h2 {
-
-  margin-bottom: 25px;
-}
-
-.close {
+#closePopup {
 
   position: absolute;
 
-  top: 15px;
-  right: 20px;
+  top: 12px;
+  right: 15px;
+
+  width: 42px;
+  height: 42px;
+
+  border: none;
+
+  background: transparent;
+
+  color: white;
 
   font-size: 2rem;
 
   cursor: pointer;
 }
 
-#messageText {
+.qr-image {
 
-  line-height: 2;
+  width: 230px;
 
-  font-size: 1.1rem;
+  max-width: 100%;
 
-  text-align: left;
+  margin-top: 25px;
+
+  border-radius: 20px;
+}
+
+.popup-text {
+
+  margin-top: 20px;
+
+  opacity: 0.8;
 }
 
 /* MOBILE */
@@ -385,33 +394,18 @@ h1 {
     padding: 30px 22px;
   }
 
-  h1 {
+  .hero h1 {
 
-    font-size: 2.5rem;
+    font-size: 2.7rem;
   }
 
   .subtitle {
 
-    font-size: 1.1rem;
-  }
-
-  .menu {
-
-    gap: 10px;
+    font-size: 1rem;
   }
 
   .menu button {
 
     width: 100%;
-  }
-
-  .popup-content {
-
-    padding: 30px 22px;
-  }
-
-  #messageText {
-
-    font-size: 1rem;
   }
 }
