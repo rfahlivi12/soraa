@@ -1,97 +1,112 @@
-const titleText = "Hi Sora ❤️";
+const title = "Hi Sora ❤️";
 
-let titleIndex = 0;
+let index = 0;
 
-/* TITLE TYPING */
+const typing =
+  document.getElementById("typing");
 
-function typeTitle() {
+/* TYPING */
 
-  if (titleIndex < titleText.length) {
+function typeText() {
 
-    document
-      .getElementById("typing")
-      .innerHTML += titleText.charAt(titleIndex);
+  if (index < title.length) {
 
-    titleIndex++;
+    typing.innerHTML +=
+      title.charAt(index);
 
-    setTimeout(typeTitle, 100);
+    index++;
+
+    setTimeout(typeText, 100);
   }
 }
 
-typeTitle();
+typeText();
 
 /* SECTION */
 
-function showSection(sectionId) {
+const buttons =
+  document.querySelectorAll(
+    "[data-target]"
+  );
 
-  const sections =
-    document.querySelectorAll(".section");
+const sections =
+  document.querySelectorAll(
+    ".content"
+  );
 
-  sections.forEach(section => {
+buttons.forEach(button => {
 
-    section.classList.add("hidden");
-  });
+  button.addEventListener(
+    "click",
+    () => {
 
-  document
-    .getElementById(sectionId)
-    .classList.remove("hidden");
-}
+      const target =
+        button.dataset.target;
+
+      sections.forEach(section => {
+
+        section.classList.add(
+          "hidden"
+        );
+      });
+
+      document
+        .getElementById(target)
+        .classList.remove(
+          "hidden"
+        );
+    }
+  );
+});
 
 /* POPUP */
 
-const message = `
-Even though we've never met in person,
-somehow you still became someone important to me.
+const popup =
+  document.getElementById(
+    "popup"
+  );
 
-I like our conversations,
-the way you respond,
-and the comfort you bring into ordinary days.
+const messageBtn =
+  document.getElementById(
+    "messageBtn"
+  );
 
-Distance is strange sometimes,
-because even from far away,
-you still manage to make me smile.
+const closePopup =
+  document.getElementById(
+    "closePopup"
+  );
 
-Maybe one day,
-we'll finally meet for real.
+messageBtn.addEventListener(
+  "click",
+  () => {
 
-And honestly,
-I think I'd really like that.
-`;
-
-let messageIndex = 0;
-
-function showPopup() {
-
-  document
-    .getElementById("popup")
-    .classList.remove("hidden");
-
-  document
-    .getElementById("messageText")
-    .innerHTML = "";
-
-  messageIndex = 0;
-
-  typeMessage();
-}
-
-function closePopup() {
-
-  document
-    .getElementById("popup")
-    .classList.add("hidden");
-}
-
-function typeMessage() {
-
-  if (messageIndex < message.length) {
-
-    document
-      .getElementById("messageText")
-      .innerHTML += message.charAt(messageIndex);
-
-    messageIndex++;
-
-    setTimeout(typeMessage, 35);
+    popup.classList.remove(
+      "hidden"
+    );
   }
-}
+);
+
+closePopup.addEventListener(
+  "click",
+  () => {
+
+    popup.classList.add(
+      "hidden"
+    );
+  }
+);
+
+/* CLOSE OUTSIDE */
+
+popup.addEventListener(
+  "click",
+  (e) => {
+
+    if (e.target === popup) {
+
+      popup.classList.add(
+        "hidden"
+      );
+    }
+  }
+);
