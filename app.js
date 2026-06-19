@@ -195,10 +195,16 @@ async function loadPosts() {
 
       async function loadComments() {
         try {
-          const cq = query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc"));
-          const csnap = await getDocs(cq);
+          // Fetch without orderBy to avoid needing a Firestore composite index,
+          // then sort client-side by createdAt ascending
+          const csnap = await getDocs(collection(db, "posts", postId, "comments"));
+          const docs = csnap.docs.slice().sort((a, b) => {
+            const aTime = a.data().createdAt ? a.data().createdAt.toMillis() : 0;
+            const bTime = b.data().createdAt ? b.data().createdAt.toMillis() : 0;
+            return aTime - bTime;
+          });
           commentsList.innerHTML = "";
-          csnap.docs.forEach(c => {
+          docs.forEach(c => {
             const data = c.data();
             const commentName = data.displayName || data.user || "Anonymous";
             const p = document.createElement("p");
@@ -228,6 +234,10 @@ async function loadPosts() {
         const user = auth.currentUser;
         const commentDisplayName = (currentProfile && currentProfile.displayName) || user.email;
 
+        // Give instant visual feedback while saving
+        commentSubmit.textContent = "...";
+        commentSubmit.disabled = true;
+
         try {
           await addDoc(collection(db, "posts", postId, "comments"), {
             text: commentInput.value.trim(),
@@ -238,9 +248,12 @@ async function loadPosts() {
           await updateDoc(doc(db, "posts", postId), { commentCount: increment(1) });
           commentInput.value = "";
           commentCountEl.textContent = (parseInt(commentCountEl.textContent) || 0) + 1;
-          loadComments();
+          await loadComments();
         } catch (e) {
           console.error("Error posting reply:", e);
+        } finally {
+          commentSubmit.textContent = "Reply";
+          commentSubmit.disabled = false;
         }
       });
 
