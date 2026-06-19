@@ -32,7 +32,8 @@ const composeAvatar = document.getElementById("composeAvatar");
 
 const postsList = document.getElementById("postsList");
 
-let currentProfile = null; // Stores { displayName, avatarEmoji }
+let currentProfile = null;
+let currentUser = null; // Track user in a reliable variable, not auth.currentUser
 
 /* SIGN UP */
 document.getElementById("signupBtn").addEventListener("click", async () => {
@@ -58,6 +59,8 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
 
 /* AUTH STATE MONITOR */
 onAuthStateChanged(auth, async (user) => {
+  currentUser = user; // Always keep this in sync
+
   if (user) {
     authBox.classList.add("hidden");
     postBox.classList.remove("hidden");
@@ -105,16 +108,18 @@ function timeAgo(date) {
 
 /* POST A NEW MESSAGE */
 uploadBtn.addEventListener("click", async () => {
-  if (!textInput.value.trim()) return;
+  if (!textInput.value.trim() || !currentUser) return;
 
-  const user = auth.currentUser;
-  const displayName = (currentProfile && currentProfile.displayName) || user.email;
+  const displayName = (currentProfile && currentProfile.displayName) || currentUser.email;
   const avatarEmoji = (currentProfile && currentProfile.avatarEmoji) || null;
+
+  uploadBtn.textContent = "Posting...";
+  uploadBtn.disabled = true;
 
   try {
     await addDoc(collection(db, "posts"), {
       text: textInput.value.trim(),
-      user: user.email,
+      user: currentUser.email,
       displayName: displayName,
       avatarEmoji: avatarEmoji,
       likes: [],
@@ -125,10 +130,39 @@ uploadBtn.addEventListener("click", async () => {
     loadPosts();
   } catch (err) {
     console.error("Error creating post:", err);
+  } finally {
+    uploadBtn.textContent = "Post Message";
+    uploadBtn.disabled = false;
   }
 });
 
-/* FEED LOADER AND HANDLER */
+/* LOAD COMMENTS — no orderBy so no Firestore index needed, sorted client-side */
+async function loadComments(postId, commentsList) {
+  try {
+    const csnap = await getDocs(collection(db, "posts", postId, "comments"));
+    const docs = csnap.docs.slice().sort((a, b) => {
+      const aTime = a.data().createdAt ? a.data().createdAt.toMillis() : 0;
+      const bTime = b.data().createdAt ? b.data().createdAt.toMillis() : 0;
+      return aTime - bTime;
+    });
+    commentsList.innerHTML = "";
+    docs.forEach(c => {
+      const data = c.data();
+      const commentName = data.displayName || data.user || "Anonymous";
+      const p = document.createElement("p");
+      p.className = "commentItem";
+      const b = document.createElement("b");
+      b.textContent = commentName + ": ";
+      p.appendChild(b);
+      p.append(data.text);
+      commentsList.appendChild(p);
+    });
+  } catch (e) {
+    console.error("Error loading comments:", e);
+  }
+}
+
+/* FEED LOADER */
 async function loadPosts() {
   try {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
@@ -140,7 +174,7 @@ async function loadPosts() {
       const post = docSnap.data();
       const postId = docSnap.id;
       const likes = post.likes || [];
-      const liked = auth.currentUser && post.likes && post.likes.includes(auth.currentUser.email);
+      const liked = currentUser && post.likes && post.likes.includes(currentUser.email);
       const name = post.displayName || post.user || "Anonymous";
       const avatarContent = post.avatarEmoji || name.charAt(0).toUpperCase();
 
@@ -156,110 +190,87 @@ async function loadPosts() {
         </div>
         <p class="tweetText"></p>
         <div class="tweetActions">
-          <button class="likeBtn ${liked ? "liked" : ""}">${liked ? "♥" : "♡"} <span class="likeCount">${likes.length}</span></button>
-          <button class="commentBtn">💬 <span class="commentCount">${post.commentCount || 0}</span></button>
-          <button class="shareBtn">⤴ Share</button>
+          <button type="button" class="likeBtn ${liked ? "liked" : ""}">${liked ? "♥" : "♡"} <span class="likeCount">${likes.length}</span></button>
+          <button type="button" class="commentBtn">💬 <span class="commentCount">${post.commentCount || 0}</span></button>
+          <button type="button" class="shareBtn">⤴ Share</button>
         </div>
         <div class="commentsSection">
           <div class="commentsList"></div>
           <div class="commentCompose">
             <input type="text" class="commentInput" placeholder="Reply...">
-            <button class="commentSubmit">Reply</button>
+            <button type="button" class="commentSubmit">Reply</button>
           </div>
         </div>
       `;
 
-      // Set strings safely to protect against malicious script injections
       tweet.querySelector(".tweetUser").textContent = name;
       tweet.querySelector(".tweetText").textContent = post.text;
 
-      /* LIKE ACTION */
-      const likeBtn = tweet.querySelector(".likeBtn");
-      likeBtn.addEventListener("click", async () => {
-        if (!auth.currentUser) return;
-        const postRef = doc(db, "posts", postId);
-        if (liked) {
-          await updateDoc(postRef, { likes: arrayRemove(auth.currentUser.email) });
-        } else {
-          await updateDoc(postRef, { likes: arrayUnion(auth.currentUser.email) });
-        }
-        loadPosts();
-      });
-
-      /* COMMENT ACTION */
-      const commentBtn = tweet.querySelector(".commentBtn");
       const commentsList = tweet.querySelector(".commentsList");
       const commentCountEl = tweet.querySelector(".commentCount");
       const commentInput = tweet.querySelector(".commentInput");
       const commentSubmit = tweet.querySelector(".commentSubmit");
 
-      async function loadComments() {
-        try {
-          // Fetch without orderBy to avoid needing a Firestore composite index,
-          // then sort client-side by createdAt ascending
-          const csnap = await getDocs(collection(db, "posts", postId, "comments"));
-          const docs = csnap.docs.slice().sort((a, b) => {
-            const aTime = a.data().createdAt ? a.data().createdAt.toMillis() : 0;
-            const bTime = b.data().createdAt ? b.data().createdAt.toMillis() : 0;
-            return aTime - bTime;
-          });
-          commentsList.innerHTML = "";
-          docs.forEach(c => {
-            const data = c.data();
-            const commentName = data.displayName || data.user || "Anonymous";
-            const p = document.createElement("p");
-            p.className = "commentItem";
-            const b = document.createElement("b");
-            b.textContent = commentName + ": ";
-            p.appendChild(b);
-            p.append(data.text);
-            commentsList.appendChild(p);
-          });
-        } catch (e) {
-          console.error("Error loading comments:", e);
+      // Load existing comments
+      loadComments(postId, commentsList);
+
+      /* LIKE ACTION */
+      tweet.querySelector(".likeBtn").addEventListener("click", async () => {
+        if (!currentUser) return;
+        const postRef = doc(db, "posts", postId);
+        if (liked) {
+          await updateDoc(postRef, { likes: arrayRemove(currentUser.email) });
+        } else {
+          await updateDoc(postRef, { likes: arrayUnion(currentUser.email) });
         }
-      }
+        loadPosts();
+      });
 
-      // Automatically load the replies inside the open thread view
-      loadComments();
-
-      // Click to focus reply box instantly
-      commentBtn.addEventListener("click", () => {
+      /* COMMENT FOCUS */
+      tweet.querySelector(".commentBtn").addEventListener("click", () => {
         commentInput.focus();
       });
 
-      commentSubmit.addEventListener("click", async () => {
-        if (!auth.currentUser || !commentInput.value.trim()) return;
+      /* REPLY SUBMIT */
+      commentSubmit.addEventListener("click", async (e) => {
+        e.stopPropagation(); // Prevent event bubbling up
 
-        const user = auth.currentUser;
-        const commentDisplayName = (currentProfile && currentProfile.displayName) || user.email;
+        if (!currentUser) {
+          alert("You must be logged in to reply.");
+          return;
+        }
+        if (!commentInput.value.trim()) return;
 
-        // Give instant visual feedback while saving
+        const commentDisplayName = (currentProfile && currentProfile.displayName) || currentUser.email;
+        const commentText = commentInput.value.trim();
+
         commentSubmit.textContent = "...";
         commentSubmit.disabled = true;
+        commentInput.disabled = true;
 
         try {
           await addDoc(collection(db, "posts", postId, "comments"), {
-            text: commentInput.value.trim(),
-            user: user.email,
+            text: commentText,
+            user: currentUser.email,
             displayName: commentDisplayName,
             createdAt: serverTimestamp()
           });
           await updateDoc(doc(db, "posts", postId), { commentCount: increment(1) });
           commentInput.value = "";
           commentCountEl.textContent = (parseInt(commentCountEl.textContent) || 0) + 1;
-          await loadComments();
+          await loadComments(postId, commentsList);
         } catch (e) {
           console.error("Error posting reply:", e);
+          alert("Failed to post reply. Check console for details.");
         } finally {
           commentSubmit.textContent = "Reply";
           commentSubmit.disabled = false;
+          commentInput.disabled = false;
         }
       });
 
       /* SHARE ACTION */
-      const shareBtn = tweet.querySelector(".shareBtn");
-      shareBtn.addEventListener("click", async () => {
+      tweet.querySelector(".shareBtn").addEventListener("click", async () => {
         const shareData = {
           title: "Guestbook message",
           text: post.text,
