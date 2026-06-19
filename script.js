@@ -31,6 +31,7 @@ function typeTitle() {
 /* GLOBAL SECURITY CHECK (Gated Entry) */
 onAuthStateChanged(auth, (user) => {
   if (user) {
+    sessionStorage.setItem("unlocked", "true");
     authBox.classList.add("hidden");
     mainContent.classList.remove("hidden");
     
@@ -42,6 +43,7 @@ onAuthStateChanged(auth, (user) => {
       typeTitle();
     }
   } else {
+    sessionStorage.removeItem("unlocked");
     authBox.classList.remove("hidden");
     mainContent.classList.add("hidden");
   }
