@@ -608,3 +608,163 @@ body {
   .subtitle { font-size: 1rem; }
   .menu button, .menu .menuLink { width: 100%; text-align: center; }
 }
+
+/* DISTANCE PAGE */
+
+.distancePage {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.topNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* MAP */
+
+.mapWrapper {
+  position: relative;
+  margin: 30px 0;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.mapImage {
+  width: 100%;
+  display: block;
+  border-radius: 20px;
+  filter: brightness(0.85) saturate(1.1);
+}
+
+.mapOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+.mapBadge {
+  font-size: 0.85rem;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+/* STATS */
+
+.distanceStats {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 30px 0;
+}
+
+.statCard {
+  flex: 1;
+  min-width: 120px;
+  padding: 20px 16px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.statValue {
+  font-size: 1.9rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  opacity: 0.55;
+  line-height: 1.4;
+}
+
+/* ANIMATED TRAVEL LINE */
+
+.distanceLineWrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 35px 0 30px;
+}
+
+.cityDot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  min-width: 70px;
+}
+
+.cityDot span {
+  white-space: nowrap;
+}
+
+.cityPulse {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 0 0 rgba(255,255,255,0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+
+.travelLine {
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,0.12);
+  position: relative;
+  overflow: visible;
+  margin-bottom: 22px;
+}
+
+.travelPlane {
+  position: absolute;
+  top: -10px;
+  left: -5%;
+  font-size: 1.1rem;
+  animation: flyAcross 4s linear infinite;
+}
+
+@keyframes flyAcross {
+  0%   { left: -5%; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { left: 105%; opacity: 0; }
+}
+
+/* QUOTE */
+
+.distanceQuote {
+  font-size: 1.1rem;
+  line-height: 2;
+  opacity: 0.65;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .distanceStats { gap: 10px; }
+  .statValue { font-size: 1.5rem; }
+  .mapBadge { font-size: 0.75rem; padding: 5px 10px; }
+}
