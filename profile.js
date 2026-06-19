@@ -1,18 +1,8 @@
 import { auth, db } from "./firebase-init.js";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 /* ELEMENTS */
-
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const authStatus = document.getElementById("authStatus");
-const authBox = document.getElementById("authBox");
-
 const profileBox = document.getElementById("profileBox");
 const avatarPreview = document.getElementById("avatarPreview");
 const displayNameInput = document.getElementById("displayNameInput");
@@ -22,28 +12,7 @@ const profileStatus = document.getElementById("profileStatus");
 
 let selectedEmoji = null;
 
-/* SIGN UP / LOG IN */
-
-document.getElementById("signupBtn").addEventListener("click", async () => {
-  authStatus.textContent = "";
-  try {
-    await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-  } catch (err) {
-    authStatus.textContent = err.message;
-  }
-});
-
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  authStatus.textContent = "";
-  try {
-    await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-  } catch (err) {
-    authStatus.textContent = err.message;
-  }
-});
-
-/* LIVE PREVIEW */
-
+/* LIVE PREVIEW LOGIC */
 function updatePreview() {
   const name = displayNameInput.value.trim() || (auth.currentUser ? auth.currentUser.email : "");
   avatarPreview.textContent = selectedEmoji || (name ? name.charAt(0).toUpperCase() : "?");
@@ -60,11 +29,9 @@ emojiButtons.forEach(btn => {
   });
 });
 
-/* LOAD EXISTING PROFILE */
-
+/* SECURITY AUTH ROUTING CHECK */
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    authBox.classList.add("hidden");
     profileBox.classList.remove("hidden");
 
     try {
@@ -85,13 +52,12 @@ onAuthStateChanged(auth, async (user) => {
 
     updatePreview();
   } else {
-    authBox.classList.remove("hidden");
-    profileBox.classList.add("hidden");
+    // Blocks direct unauthenticated entry and redirects smoothly to secure landing page
+    window.location.href = "index.html";
   }
 });
 
-/* SAVE PROFILE */
-
+/* UPDATE DATA UTILITY */
 saveProfileBtn.addEventListener("click", async () => {
   if (!auth.currentUser) return;
 
