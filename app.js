@@ -1,9 +1,5 @@
 import { auth, db } from "./firebase-init.js";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 import {
   collection,
   addDoc,
@@ -20,48 +16,17 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 /* ELEMENTS */
-
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const authStatus = document.getElementById("authStatus");
-const authBox = document.getElementById("authBox");
-
 const postBox = document.getElementById("postBox");
 const textInput = document.getElementById("textInput");
 const uploadBtn = document.getElementById("uploadBtn");
 const composeAvatar = document.getElementById("composeAvatar");
-
 const postsList = document.getElementById("postsList");
 
-let currentProfile = null; // { displayName, avatarEmoji }
+let currentProfile = null;
 
-/* SIGN UP */
-
-document.getElementById("signupBtn").addEventListener("click", async () => {
-  authStatus.textContent = "";
-  try {
-    await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-  } catch (err) {
-    authStatus.textContent = err.message;
-  }
-});
-
-/* LOG IN */
-
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  authStatus.textContent = "";
-  try {
-    await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-  } catch (err) {
-    authStatus.textContent = err.message;
-  }
-});
-
-/* AUTH STATE */
-
+/* AUTH STATE ROUTING GUARD */
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    authBox.classList.add("hidden");
     postBox.classList.remove("hidden");
 
     currentProfile = null;
@@ -75,15 +40,15 @@ onAuthStateChanged(auth, async (user) => {
     const name = (currentProfile && currentProfile.displayName) || user.email;
     composeAvatar.textContent = (currentProfile && currentProfile.avatarEmoji) || name.charAt(0).toUpperCase();
     composeAvatar.style.background = avatarColor(user.email);
+    
+    loadPosts();
   } else {
-    authBox.classList.remove("hidden");
-    postBox.classList.add("hidden");
+    // If user tries to load guestbook directly without login, force-redirect back to home gate
+    window.location.href = "index.html";
   }
-  loadPosts();
 });
 
 /* HELPERS */
-
 function avatarColor(email) {
   let hash = 0;
   for (let i = 0; i < email.length; i++) {
@@ -107,7 +72,6 @@ function timeAgo(date) {
 }
 
 /* POST A MESSAGE */
-
 uploadBtn.addEventListener("click", async () => {
   if (!textInput.value.trim()) return;
 
@@ -130,7 +94,6 @@ uploadBtn.addEventListener("click", async () => {
 });
 
 /* LOAD + RENDER FEED */
-
 async function loadPosts() {
   const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
   const snap = await getDocs(q);
@@ -256,5 +219,3 @@ async function loadPosts() {
     postsList.appendChild(tweet);
   });
 }
-
-loadPosts();
