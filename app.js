@@ -1,39 +1,27 @@
 import { auth, db } from "./firebase-init.js";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 import {
   collection,
   addDoc,
   getDocs,
-  getDoc,
   doc,
-  updateDoc,
-  increment,
+  getDoc,
   query,
   orderBy,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 /* ELEMENTS */
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
-const authStatus = document.getElementById("authStatus");
-const authBox = document.getElementById("authBox");
-
 const postBox = document.getElementById("postBox");
 const textInput = document.getElementById("textInput");
 const uploadBtn = document.getElementById("uploadBtn");
-const composeAvatar = document.getElementById("composeAvatar");
-
 const postsList = document.getElementById("postsList");
 
-let currentProfile = null; 
+let currentProfile = null;
 
-/* HELPER: GENERATE DEFAULT AVATAR BACKGROUND COLOR */
+/* HELPER: DEFAULT AVATAR COLOR */
 function avatarColor(email) {
+  if (!email) return "#ff6b6b";
   let hash = 0;
   for (let i = 0; i < email.length; i++) {
     hash = email.charCodeAt(i) + ((hash << 5) - hash);
@@ -59,116 +47,80 @@ function timeAgo(date) {
   return "Just now";
 }
 
-/* SIGN UP */
-document.getElementById("signupBtn").addEventListener("click", async () => {
-  authStatus.textContent = "";
-  try {
-    await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-  } catch (err) {
-    authStatus.textContent = err.message;
-  }
-});
-
-/* LOG IN */
-document.getElementById("loginBtn").addEventListener("click", async () => {
-  authStatus.textContent = "";
-  try {
-    await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
-  } catch (err) {
-    authStatus.textContent = err.message;
-  }
-});
-
 /* AUTH MONITOR LOOP */
 onAuthStateChanged(auth, async (user) => {
   if (user) {
-    authBox.classList.add("hidden");
-    postBox.classList.remove("hidden");
-
-    currentProfile = null;
+    if (postBox) postBox.classList.remove("hidden");
     try {
       const snap = await getDoc(doc(db, "users", user.uid));
       if (snap.exists()) currentProfile = snap.data();
     } catch (e) {
       console.error(e);
     }
-
-    const name = (currentProfile && currentProfile.displayName) || user.email;
-    
-    // Renders custom profile picture or falls back to emoji/letter in compose area
-    if (currentProfile && currentProfile.photoURL) {
-      composeAvatar.innerHTML = `<img src="${currentProfile.photoURL}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-    } else {
-      composeAvatar.textContent = (currentProfile && currentProfile.avatarEmoji) || name.charAt(0).toUpperCase();
-      composeAvatar.style.background = avatarColor(user.email);
-    }
   } else {
-    authBox.classList.remove("hidden");
-    postBox.classList.add("hidden");
+    if (postBox) postBox.classList.add("hidden");
   }
   loadPosts();
 });
 
 /* POST ACTION EVENT */
-uploadBtn.addEventListener("click", async () => {
-  if (!textInput.value.trim()) return;
+if (uploadBtn) {
+  uploadBtn.addEventListener("click", async () => {
+    if (!textInput.value.trim()) return;
 
-  const user = auth.currentUser;
-  const displayName = (currentProfile && currentProfile.displayName) || user.email;
-  const avatarEmoji = (currentProfile && currentProfile.avatarEmoji) || null;
-  const photoURL = (currentProfile && currentProfile.photoURL) || null;
+    const user = auth.currentUser;
+    if (!user) return;
 
-  await addDoc(collection(db, "posts"), {
-    text: textInput.value.trim(),
-    user: user.email,
-    displayName,
-    avatarEmoji,
-    photoURL,
-    likes: [],
-    commentCount: 0,
-    createdAt: serverTimestamp()
+    const displayName = (currentProfile && currentProfile.displayName) || user.email;
+    const avatarEmoji = (currentProfile && currentProfile.avatarEmoji) || null;
+
+    try {
+      await addDoc(collection(db, "posts"), {
+        text: textInput.value.trim(),
+        user: user.email,
+        displayName,
+        avatarEmoji,
+        createdAt: serverTimestamp()
+      });
+      textInput.value = "";
+      loadPosts();
+    } catch (e) {
+      console.error("Error creating post: ", e);
+    }
   });
-
-  textInput.value = "";
-  loadPosts();
-});
+}
 
 /* READ DATABASE AND RENDER TIMELINE FEED */
 async function loadPosts() {
-  const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-  const snap = await getDocs(q);
-  postsList.innerHTML = "";
+  if (!postsList) return;
+  try {
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+    postsList.innerHTML = "";
 
-  snap.docs.forEach(docSnap => {
-    const post = docSnap.data();
-    const postId = docSnap.id;
-    const name = post.displayName || post.user;
-
-    // Checks photo layout state dynamically per card
-    let avatarTemplate = "";
-    if (post.photoURL) {
-      avatarTemplate = `<div class="avatar" style="overflow:hidden;"><img src="${post.photoURL}" style="width:100%; height:100%; object-fit:cover;"></div>`;
-    } else {
+    snap.docs.forEach(docSnap => {
+      const post = docSnap.data();
+      const name = post.displayName || post.user;
       const avatarContent = post.avatarEmoji || name.charAt(0).toUpperCase();
-      avatarTemplate = `<div class="avatar" style="background:${avatarColor(post.user)}">${avatarContent}</div>`;
-    }
 
-    const tweet = document.createElement("div");
-    tweet.className = "tweet";
-    tweet.innerHTML = `
-      <div class="tweetHeader">
-        ${avatarTemplate}
-        <div class="tweetMeta">
-          <span class="tweetUser"></span>
-          <span class="tweetTime">${timeAgo(post.createdAt ? post.createdAt.toDate() : null)}</span>
+      const tweet = document.createElement("div");
+      tweet.className = "tweet";
+      tweet.innerHTML = `
+        <div class="tweetHeader">
+          <div class="avatar" style="background:${avatarColor(post.user)}">${avatarContent}</div>
+          <div class="tweetMeta">
+            <span class="tweetUser"></span>
+            <span class="tweetTime">${timeAgo(post.createdAt ? post.createdAt.toDate() : null)}</span>
+          </div>
         </div>
-      </div>
-      <p class="tweetText"></p>
-    `;
+        <p class="tweetText"></p>
+      `;
 
-    tweet.querySelector(".tweetUser").textContent = name;
-    tweet.querySelector(".tweetText").textContent = post.text;
-
-    postsList.appendChild(tweet);
-  });
+      tweet.querySelector(".tweetUser").textContent = name;
+      tweet.querySelector(".tweetText").textContent = post.text;
+      postsList.appendChild(tweet);
+    });
+  } catch (e) {
+    console.error("Error loading posts: ", e);
+  }
 }
