@@ -170,7 +170,6 @@ async function loadPosts() {
       </div>
     `;
 
-    // set text safely (avoids breaking HTML if message contains < >)
     tweet.querySelector(".tweetUser").textContent = name;
     tweet.querySelector(".tweetText").textContent = post.text;
 
