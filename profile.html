@@ -18,7 +18,12 @@
     <!-- Log in elements completely cleaned out. Managed through profile.js routing -->
     <div id="profileBox" class="hidden">
 
-      <div class="avatarPreview" id="avatarPreview"></div>
+      <!-- Clickable Avatar Preview Area -->
+      <div class="avatarPreview" id="avatarPreview" style="cursor: pointer; overflow: hidden; position: relative;"></div>
+      
+      <!-- Hidden file browser input for image files -->
+      <input type="file" id="photoInput" accept="image/*" style="display: none;">
+      <p style="font-size: 0.8rem; opacity: 0.5; margin-top: -10px; margin-bottom: 20px; text-align: center;">Tap circle to upload photo</p>
 
       <input type="text" id="displayNameInput" placeholder="Display name" maxlength="30">
 
