@@ -210,9 +210,7 @@ async function loadPosts() {
       const commentCountEl = tweet.querySelector(".commentCount");
       const commentInput = tweet.querySelector(".commentInput");
       const commentSubmit = tweet.querySelector(".commentSubmit");
-
-      // Load existing comments
-      loadComments(postId, commentsList);
+      const commentsSection = tweet.querySelector(".commentsSection");
 
       /* LIKE ACTION */
       tweet.querySelector(".likeBtn").addEventListener("click", async () => {
@@ -226,9 +224,17 @@ async function loadPosts() {
         loadPosts();
       });
 
-      /* COMMENT FOCUS */
+      /* COMMENT BUTTON — toggle section open/closed, load comments on first open */
+      let commentsLoaded = false;
       tweet.querySelector(".commentBtn").addEventListener("click", () => {
-        commentInput.focus();
+        const isOpen = commentsSection.classList.toggle("open");
+        if (isOpen) {
+          if (!commentsLoaded) {
+            loadComments(postId, commentsList);
+            commentsLoaded = true;
+          }
+          commentInput.focus();
+        }
       });
 
       /* REPLY SUBMIT */
