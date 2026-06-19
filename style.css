@@ -32,62 +32,6 @@ body {
   to { transform: translate(-500px,-500px); }
 }
 
-/* LOCK */
-
-#lockScreen {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: radial-gradient(circle at top, #111, #000);
-}
-
-.lockBox {
-  width: 90%;
-  max-width: 400px;
-  padding: 40px;
-  border-radius: 30px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  backdrop-filter: blur(20px);
-  text-align: center;
-}
-
-.lockBox h1 { margin-bottom: 15px; }
-.lockBox p { opacity: 0.7; margin-bottom: 25px; }
-
-.lockBox input {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  outline: none;
-  border-radius: 15px;
-  background: rgba(255,255,255,0.06);
-  color: white;
-  font-size: 1rem;
-  font-family: Cambria, serif;
-}
-
-.lockBox button {
-  width: 100%;
-  margin-top: 15px;
-  padding: 14px;
-  border: none;
-  border-radius: 15px;
-  background: white;
-  color: black;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-#errorText {
-  display: block;
-  margin-top: 15px;
-  color: #ccc;
-}
-
 /* CONTAINER */
 
 .container {
