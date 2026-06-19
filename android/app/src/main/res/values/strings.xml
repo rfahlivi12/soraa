@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">sora</string>
+    <string name="title_activity_main">sora</string>
+    <string name="package_name">com.rizafahlivi.sora</string>
+    <string name="custom_url_scheme">com.rizafahlivi.sora</string>
+</resources>
