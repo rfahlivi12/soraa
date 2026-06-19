@@ -11,8 +11,19 @@
   <!-- STARS -->
   <div class="stars"></div>
 
-  <!-- MAIN -->
-  <main class="container">
+  <!-- FIRST LAYER: SECURE AUTH GATEWAY (Shown if logged out) -->
+  <div id="authBox" class="container hidden">
+    <h1 style="text-align: center; margin-bottom: 15px;">Private Space</h1>
+    <p style="text-align: center; opacity: 0.7; margin-bottom: 25px;">Please sign up or log in to enter.</p>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button id="signupBtn">Sign up</button>
+    <button id="loginBtn">Log in</button>
+    <small id="authStatus"></small>
+  </div>
+
+  <!-- SECOND LAYER: MAIN PRIVATE CONTENT (Hidden until logged in) -->
+  <main id="mainContent" class="container hidden">
 
     <!-- HERO -->
     <section class="hero">
@@ -94,7 +105,8 @@
   <!-- MUSIC BUTTON -->
   <button id="musicBtn">♫</button>
 
-  <script src="script.js"></script>
+  <!-- Changed to type="module" to allow Firebase authentication tracking -->
+  <script type="module" src="script.js"></script>
 
 </body>
 </html>
