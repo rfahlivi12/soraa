@@ -142,7 +142,7 @@ function renderSongs() {
           } else {
             embedWrap.classList.remove("open");
             embedWrap.innerHTML = "";
-            playToggle.textContent = "▶ Play here";
+            playToggle.textContent = "Play here";
           }
         });
       } else {
@@ -151,7 +151,7 @@ function renderSongs() {
         link.href = song.link;
         link.target = "_blank";
         link.rel = "noopener";
-        link.textContent = "Listen ↗";
+        link.textContent = "Listen";
         meta.appendChild(link);
         card.appendChild(meta);
       }
