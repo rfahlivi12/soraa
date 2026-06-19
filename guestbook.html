@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Lock check: bounce back to index.html if not unlocked this session -->
+  <script>
+    if (sessionStorage.getItem("unlocked") !== "true") {
+      window.location.href = "index.html";
+    }
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guestbook - For Sora</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- STARS -->
+  <div class="stars"></div>
+
+  <main class="container guestbookPage">
+    <a href="index.html" class="backLink">← Back</a>
+    <a href="profile.html" class="backLink editProfileLink">Edit Profile</a>
+    <h1 class="pageTitle">Guestbook</h1>
+
+    <div id="authBox">
+      <input type="email" id="email" placeholder="Email">
+      <input type="password" id="password" placeholder="Password">
+      <button id="signupBtn">Sign up</button>
+      <button id="loginBtn">Log in</button>
+      <small id="authStatus"></small>
+    </div>
+
+    <div id="postBox" class="hidden">
+      <div class="composeRow">
+        <div class="avatar" id="composeAvatar"></div>
+        <textarea id="textInput" placeholder="What's happening?"></textarea>
+      </div>
+      <button id="uploadBtn">Post</button>
+    </div>
+
+    <div id="postsList"></div>
+  </main>
+
+  <script type="module" src="app.js"></script>
+
+</body>
+</html>
