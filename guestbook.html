@@ -31,21 +31,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Guestbook - For Sora</title>
+
+  <!-- Elegant modern sans-serif for this page -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
   <div class="stars"></div>
 
-  <main class="container guestbookPage">
+  <main class="container guestbookPage guestbookV2">
     <nav class="topNav">
       <a href="index.html" class="backLink">← Back</a>
       <a href="profile.html" class="backLink editProfileLink">Edit Profile</a>
     </nav>
-    
-    <h1 class="pageTitle">Guestbook</h1>
 
-    <div id="authBox">
+    <header class="gbHeader">
+      <h1 class="pageTitle">Guestbook</h1>
+      <p class="pageSubtitle">Leave a little note, a memory, or just say hi 💌</p>
+    </header>
+
+    <section id="authBox">
       <input type="email" id="email" placeholder="Email">
       <input type="password" id="password" placeholder="Password">
       <div class="authActions">
@@ -53,18 +62,17 @@
         <button id="loginBtn">Log in</button>
       </div>
       <small id="authStatus"></small>
-    </div>
+    </section>
 
-    <div id="postBox" class="hidden">
+    <section id="postBox" class="hidden">
       <div class="composeRow">
         <div class="avatar" id="composeAvatar"></div>
         <textarea id="textInput" placeholder="Write a message for Sora..."></textarea>
       </div>
       <button id="uploadBtn">Post Message</button>
-    </div>
+    </section>
 
-    <div id="postsList">
-      </div>
+    <section id="postsList" class="gbFeed"></section>
   </main>
 
   <script type="module" src="app.js"></script>

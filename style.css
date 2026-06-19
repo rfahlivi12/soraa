@@ -768,3 +768,298 @@ body {
   .statValue { font-size: 1.5rem; }
   .mapBadge { font-size: 0.75rem; padding: 5px 10px; }
 }
+
+/* =========================================================
+   GUESTBOOK V2 — MODERN REDESIGN
+   Scoped to .guestbookV2 so the original .guestbookPage
+   styles (still used on profile.html) are left untouched.
+   ========================================================= */
+
+.guestbookV2 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+.guestbookV2 .pageTitle {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+}
+
+.gbHeader { margin-bottom: 32px; }
+
+.pageSubtitle {
+  opacity: 0.55;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.guestbookV2 #authBox,
+.guestbookV2 #postBox {
+  max-width: 480px;
+  margin: 0 auto 26px;
+  padding: 26px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.07);
+  text-align: left;
+}
+
+.guestbookV2 #authBox input {
+  font-family: inherit;
+  font-weight: 400;
+  border-radius: 14px;
+  text-align: left;
+}
+
+.authActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.authActions button {
+  flex: 1;
+  width: auto;
+  margin-top: 0;
+  padding: 13px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.guestbookV2 #signupBtn {
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+
+.guestbookV2 #loginBtn {
+  background: white;
+  color: black;
+}
+
+.guestbookV2 #signupBtn:hover { background: rgba(255,255,255,0.16); }
+.guestbookV2 #loginBtn:hover { opacity: 0.85; }
+
+.guestbookV2 #authStatus { font-family: inherit; }
+
+.guestbookV2 .avatar {
+  background: linear-gradient(135deg, #6a82fb, #fc5c8d);
+  font-family: inherit;
+}
+
+.guestbookV2 #postBox textarea {
+  font-family: inherit;
+  border-radius: 14px;
+}
+
+.guestbookV2 #postBox button {
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.gbFeed {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.guestbookV2 .tweet {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  transition: transform 0.2s ease, background 0.2s ease;
+  animation: fadeIn 0.4s ease;
+}
+
+.guestbookV2 .tweet:hover {
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-2px);
+}
+
+.guestbookV2 .tweetUser { font-family: inherit; font-weight: 600; }
+.guestbookV2 .tweetTime { font-family: inherit; }
+.guestbookV2 .tweetText { font-family: inherit; font-weight: 400; }
+.guestbookV2 .tweetActions button { font-family: inherit; font-weight: 500; }
+.guestbookV2 .commentInput,
+.guestbookV2 .commentSubmit { font-family: inherit; }
+
+.guestbookV2 #postsList:empty::after {
+  content: "No messages yet — be the first to leave one 💌";
+  display: block;
+  text-align: center;
+  opacity: 0.4;
+  padding: 50px 0;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .guestbookV2 #authBox,
+  .guestbookV2 #postBox { padding: 20px; }
+}
+
+/* =========================================================
+   FUTURE PAGE
+   ========================================================= */
+
+.futurePage {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.questionCard,
+.thankYouCard {
+  margin: 0 auto 40px;
+}
+
+.bucketSection {
+  text-align: left;
+  margin-top: 40px;
+}
+
+.sectionHeading {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.sectionSub {
+  text-align: center;
+  opacity: 0.6;
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+}
+
+.progressWrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 25px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #fff, #999);
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.progressLabel {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.bucketList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.bucketItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  transition: 0.25s;
+}
+
+.bucketItem.done { opacity: 0.5; }
+.bucketItem.done .bucketText { text-decoration: line-through; }
+
+.bucketCheckbox {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: white;
+  transition: 0.2s;
+  padding: 0;
+}
+
+.bucketCheckbox.checked {
+  background: white;
+  color: black;
+  border-color: white;
+}
+
+.bucketText {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.bucketDelete {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.35);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.bucketDelete:hover { color: #f91880; }
+
+.addGoalRow {
+  display: flex;
+  gap: 10px;
+}
+
+#goalInput {
+  flex: 1;
+  padding: 14px 16px;
+  border: none;
+  outline: none;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 0.95rem;
+  font-family: Cambria, serif;
+}
+
+#addGoalBtn {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 14px;
+  background: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Cambria, serif;
+}
+
+#bucketStatus {
+  display: block;
+  margin-top: 12px;
+  text-align: center;
+  color: #ccc;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .addGoalRow { flex-direction: column; }
+}

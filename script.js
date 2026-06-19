@@ -78,28 +78,6 @@ scanBtn.addEventListener("click", () => {
   qrPopup.classList.remove("hidden");
 });
 
-/* FUTURE LOGIC BUTTONS */
-const futureBtn = document.getElementById("futureBtn");
-const futurePopup = document.getElementById("futurePopup");
-const successPopup = document.getElementById("successPopup");
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-
-futureBtn.addEventListener("click", () => {
-  futurePopup.classList.remove("hidden");
-});
-
-yesBtn.addEventListener("click", () => {
-  futurePopup.classList.add("hidden");
-  successPopup.classList.remove("hidden");
-});
-
-noBtn.addEventListener("mouseover", () => {
-  const x = Math.random() * 200 - 100;
-  const y = Math.random() * 200 - 100;
-  noBtn.style.transform = `translate(${x}px, ${y}px)`;
-});
-
 /* CLOSE UTILITIES */
 const closeButtons = document.querySelectorAll(".closeBtn");
 
