@@ -15,30 +15,6 @@ function typeTitle() {
 
 typeTitle();
 
-/* PASSWORD */
-
-const unlockBtn = document.getElementById("unlockBtn");
-const passwordInput = document.getElementById("passwordInput");
-const lockScreen = document.getElementById("lockScreen");
-const errorText = document.getElementById("errorText");
-
-// 1. Check if they already unlocked it during this session so they don't have to keep re-typing it
-if (sessionStorage.getItem("unlocked") === "true") {
-  lockScreen.style.display = "none";
-}
-
-unlockBtn.addEventListener("click", () => {
-  if (passwordInput.value === "1102") {
-    sessionStorage.setItem("unlocked", "true"); // ✨ This tells the other pages it is unlocked!
-    lockScreen.style.display = "none";
-    music.play();
-    musicBtn.innerHTML = "❚❚";
-    isPlaying = true;
-  } else {
-    errorText.innerHTML = "Wrong password";
-  }
-});
-
 /* DISTANCE */
 
 const distanceBtn = document.getElementById("distanceBtn");
