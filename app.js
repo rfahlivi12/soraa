@@ -1,3 +1,6 @@
+Your original guestbook.html structure maps perfectly to the script. The connection is already correctly established via the module script tag at the bottom of your HTML file (<script type="module" src="app.js"></script>).
+Here is the clean, fully compatible version of **app.js** that handles all the elements in your layout:
+```javascript
 import { auth, db } from "./firebase-init.js";
 import {
   createUserWithEmailAndPassword,
@@ -20,7 +23,6 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 /* ELEMENTS */
-
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const authStatus = document.getElementById("authStatus");
@@ -33,10 +35,9 @@ const composeAvatar = document.getElementById("composeAvatar");
 
 const postsList = document.getElementById("postsList");
 
-let currentProfile = null; // { displayName, avatarEmoji }
+let currentProfile = null; // Stores { displayName, avatarEmoji }
 
 /* SIGN UP */
-
 document.getElementById("signupBtn").addEventListener("click", async () => {
   authStatus.textContent = "";
   try {
@@ -47,7 +48,6 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
 });
 
 /* LOG IN */
-
 document.getElementById("loginBtn").addEventListener("click", async () => {
   authStatus.textContent = "";
   try {
@@ -57,8 +57,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   }
 });
 
-/* AUTH STATE */
-
+/* AUTH STATE MONITOR */
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     authBox.classList.add("hidden");
@@ -83,7 +82,6 @@ onAuthStateChanged(auth, async (user) => {
 });
 
 /* HELPERS */
-
 function avatarColor(email) {
   let hash = 0;
   for (let i = 0; i < email.length; i++) {
@@ -106,8 +104,7 @@ function timeAgo(date) {
   return date.toLocaleDateString();
 }
 
-/* POST A MESSAGE */
-
+/* POST A NEW MESSAGE */
 uploadBtn.addEventListener("click", async () => {
   if (!textInput.value.trim()) return;
 
@@ -115,147 +112,160 @@ uploadBtn.addEventListener("click", async () => {
   const displayName = (currentProfile && currentProfile.displayName) || user.email;
   const avatarEmoji = (currentProfile && currentProfile.avatarEmoji) || null;
 
-  await addDoc(collection(db, "posts"), {
-    text: textInput.value.trim(),
-    user: user.email,
-    displayName,
-    avatarEmoji,
-    likes: [],
-    commentCount: 0,
-    createdAt: serverTimestamp()
-  });
-
-  textInput.value = "";
-  loadPosts();
+  try {
+    await addDoc(collection(db, "posts"), {
+      text: textInput.value.trim(),
+      user: user.email,
+      displayName,
+      avatarEmoji,
+      likes: [],
+      commentCount: 0,
+      createdAt: serverTimestamp()
+    });
+    textInput.value = "";
+    loadPosts();
+  } catch (err) {
+    console.error("Error creating post:", err);
+  }
 });
 
-/* LOAD + RENDER FEED */
-
+/* FEED LOADER AND HANDLER */
 async function loadPosts() {
-  const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
-  const snap = await getDocs(q);
+  try {
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
 
-  postsList.innerHTML = "";
+    postsList.innerHTML = "";
 
-  snap.docs.forEach(docSnap => {
-    const post = docSnap.data();
-    const postId = docSnap.id;
-    const likes = post.likes || [];
-    const liked = auth.currentUser && likes.includes(auth.currentUser.email);
-    const name = post.displayName || post.user;
-    const avatarContent = post.avatarEmoji || name.charAt(0).toUpperCase();
+    snap.docs.forEach(docSnap => {
+      const post = docSnap.data();
+      const postId = docSnap.id;
+      const likes = post.likes || [];
+      const liked = auth.currentUser && likes.includes(auth.currentUser.email);
+      const name = post.displayName || post.user;
+      const avatarContent = post.avatarEmoji || name.charAt(0).toUpperCase();
 
-    const tweet = document.createElement("div");
-    tweet.className = "tweet";
-    tweet.innerHTML = `
-      <div class="tweetHeader">
-        <div class="avatar" style="background:${avatarColor(post.user)}">${avatarContent}</div>
-        <div class="tweetMeta">
-          <span class="tweetUser"></span>
-          <span class="tweetTime">${timeAgo(post.createdAt ? post.createdAt.toDate() : null)}</span>
+      const tweet = document.createElement("div");
+      tweet.className = "tweet";
+      tweet.innerHTML = `
+        <div class="tweetHeader">
+          <div class="avatar" style="background:${avatarColor(post.user)}">${avatarContent}</div>
+          <div class="tweetMeta">
+            <span class="tweetUser"></span>
+            <span class="tweetTime">${timeAgo(post.createdAt ? post.createdAt.toDate() : null)}</span>
+          </div>
         </div>
-      </div>
-      <p class="tweetText"></p>
-      <div class="tweetActions">
-        <button class="likeBtn ${liked ? "liked" : ""}">${liked ? "♥" : "♡"} <span class="likeCount">${likes.length}</span></button>
-        <button class="commentBtn">💬 <span class="commentCount">${post.commentCount || 0}</span></button>
-        <button class="shareBtn">⤴ Share</button>
-      </div>
-      <div class="commentsSection">
-        <div class="commentsList"></div>
-        <div class="commentCompose">
-          <input type="text" class="commentInput" placeholder="Reply...">
-          <button class="commentSubmit">Reply</button>
+        <p class="tweetText"></p>
+        <div class="tweetActions">
+          <button class="likeBtn ${liked ? "liked" : ""}">${liked ? "♥" : "♡"} <span class="likeCount">${likes.length}</span></button>
+          <button class="commentBtn">💬 <span class="commentCount">${post.commentCount || 0}</span></button>
+          <button class="shareBtn">⤴ Share</button>
         </div>
-      </div>
-    `;
+        <div class="commentsSection">
+          <div class="commentsList"></div>
+          <div class="commentCompose">
+            <input type="text" class="commentInput" placeholder="Reply...">
+            <button class="commentSubmit">Reply</button>
+          </div>
+        </div>
+      `;
 
-    // set text safely (avoids breaking HTML if message contains < >)
-    tweet.querySelector(".tweetUser").textContent = name;
-    tweet.querySelector(".tweetText").textContent = post.text;
+      // Set strings safely to protect against malicious script injections
+      tweet.querySelector(".tweetUser").textContent = name;
+      tweet.querySelector(".tweetText").textContent = post.text;
 
-    /* LIKE */
-    const likeBtn = tweet.querySelector(".likeBtn");
-    likeBtn.addEventListener("click", async () => {
-      if (!auth.currentUser) return;
-      const postRef = doc(db, "posts", postId);
-      if (liked) {
-        await updateDoc(postRef, { likes: arrayRemove(auth.currentUser.email) });
-      } else {
-        await updateDoc(postRef, { likes: arrayUnion(auth.currentUser.email) });
+      /* LIKE ACTION */
+      const likeBtn = tweet.querySelector(".likeBtn");
+      likeBtn.addEventListener("click", async () => {
+        if (!auth.currentUser) return;
+        const postRef = doc(db, "posts", postId);
+        if (liked) {
+          await updateDoc(postRef, { likes: arrayRemove(auth.currentUser.email) });
+        } else {
+          await updateDoc(postRef, { likes: arrayUnion(auth.currentUser.email) });
+        }
+        loadPosts();
+      });
+
+      /* COMMENT ACTION */
+      const commentBtn = tweet.querySelector(".commentBtn");
+      const commentsList = tweet.querySelector(".commentsList");
+      const commentCountEl = tweet.querySelector(".commentCount");
+      const commentInput = tweet.querySelector(".commentInput");
+      const commentSubmit = tweet.querySelector(".commentSubmit");
+
+      async function loadComments() {
+        try {
+          const cq = query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc"));
+          const csnap = await getDocs(cq);
+          commentsList.innerHTML = "";
+          csnap.docs.forEach(c => {
+            const data = c.data();
+            const commentName = data.displayName || data.user;
+            const p = document.createElement("p");
+            p.className = "commentItem";
+            const b = document.createElement("b");
+            b.textContent = commentName + ": ";
+            p.appendChild(b);
+            p.append(data.text);
+            commentsList.appendChild(p);
+          });
+        } catch (e) {
+          console.error("Error loading comments:", e);
+        }
       }
-      loadPosts();
-    });
 
-    /* COMMENTS */
-    const commentBtn = tweet.querySelector(".commentBtn");
-    const commentsSection = tweet.querySelector(".commentsSection");
-    const commentsList = tweet.querySelector(".commentsList");
-    const commentCountEl = tweet.querySelector(".commentCount");
-    const commentInput = tweet.querySelector(".commentInput");
-    const commentSubmit = tweet.querySelector(".commentSubmit");
-
-    async function loadComments() {
-      const cq = query(collection(db, "posts", postId, "comments"), orderBy("createdAt", "asc"));
-      const csnap = await getDocs(cq);
-      commentsList.innerHTML = "";
-      csnap.docs.forEach(c => {
-        const data = c.data();
-        const commentName = data.displayName || data.user;
-        const p = document.createElement("p");
-        p.className = "commentItem";
-        const b = document.createElement("b");
-        b.textContent = commentName + ": ";
-        p.appendChild(b);
-        p.append(data.text);
-        commentsList.appendChild(p);
-      });
-    }
-
-    // Auto-loads comments natively under the post card
-    loadComments();
-
-    // Clicking the comment action button automatically focuses the input box
-    commentBtn.addEventListener("click", () => {
-      commentInput.focus();
-    });
-
-    commentSubmit.addEventListener("click", async () => {
-      if (!auth.currentUser || !commentInput.value.trim()) return;
-
-      const user = auth.currentUser;
-      const commentDisplayName = (currentProfile && currentProfile.displayName) || user.email;
-
-      await addDoc(collection(db, "posts", postId, "comments"), {
-        text: commentInput.value.trim(),
-        user: user.email,
-        displayName: commentDisplayName,
-        createdAt: serverTimestamp()
-      });
-      await updateDoc(doc(db, "posts", postId), { commentCount: increment(1) });
-      commentInput.value = "";
-      commentCountEl.textContent = (parseInt(commentCountEl.textContent) || 0) + 1;
+      // Automatically load the replies inside the open thread view
       loadComments();
-    });
 
-    /* SHARE */
-    const shareBtn = tweet.querySelector(".shareBtn");
-    shareBtn.addEventListener("click", async () => {
-      const shareData = {
-        title: "Guestbook message",
-        text: post.text,
-        url: location.href
-      };
-      if (navigator.share) {
-        try { await navigator.share(shareData); } catch (e) { /* user cancelled */ }
-      } else {
-        await navigator.clipboard.writeText(`${post.text} — ${location.href}`);
-        alert("Copied to clipboard!");
-      }
-    });
+      // Click to focus reply box instantly
+      commentBtn.addEventListener("click", () => {
+        commentInput.focus();
+      });
 
-    postsList.appendChild(tweet);
-  });
+      commentSubmit.addEventListener("click", async () => {
+        if (!auth.currentUser || !commentInput.value.trim()) return;
+
+        const user = auth.currentUser;
+        const commentDisplayName = (currentProfile && currentProfile.displayName) || user.email;
+
+        try {
+          await addDoc(collection(db, "posts", postId, "comments"), {
+            text: commentInput.value.trim(),
+            user: user.email,
+            displayName: commentDisplayName,
+            createdAt: serverTimestamp()
+          });
+          await updateDoc(doc(db, "posts", postId), { commentCount: increment(1) });
+          commentInput.value = "";
+          commentCountEl.textContent = (parseInt(commentCountEl.textContent) || 0) + 1;
+          loadComments();
+        } catch (e) {
+          console.error("Error posting reply:", e);
+        }
+      });
+
+      /* SHARE ACTION */
+      const shareBtn = tweet.querySelector(".shareBtn");
+      shareBtn.addEventListener("click", async () => {
+        const shareData = {
+          title: "Guestbook message",
+          text: post.text,
+          url: location.href
+        };
+        if (navigator.share) {
+          try { await navigator.share(shareData); } catch (e) { /* ignored */ }
+        } else {
+          await navigator.clipboard.writeText(`${post.text} — ${location.href}`);
+          alert("Copied to clipboard!");
+        }
+      });
+
+      postsList.appendChild(tweet);
+    });
+  } catch (err) {
+    console.error("Error loading timeline:", err);
+  }
 }
 
-loadPosts();
+```
