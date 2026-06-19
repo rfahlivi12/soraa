@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    body > .stars,
+    body > main { opacity: 0; transition: opacity 0.3s ease; }
+    body.auth-ready > .stars,
+    body.auth-ready > main { opacity: 1; }
+  </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    const app = initializeApp({
+      apiKey: "AIzaSyAIkgVQ2vwi5NZZcH2jmexNkXTsOJg3SXU",
+      authDomain: "sora-1102.firebaseapp.com",
+      projectId: "sora-1102",
+      storageBucket: "sora-1102.firebasestorage.app",
+      messagingSenderId: "310837588219",
+      appId: "1:310837588219:web:5c135df72b3c76269f405e"
+    });
+    onAuthStateChanged(getAuth(app), (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+      } else {
+        document.body.classList.add("auth-ready");
+      }
+    });
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game - For Sora</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="stars"></div>
+
+  <main class="container gamePage">
+
+    <nav class="topNav">
+      <a href="index.html" class="backLink">← Back</a>
+    </nav>
+
+    <h1 class="pageTitle">Meteor Dodge</h1>
+    <p class="pageSubtitle gameHint">Move with your mouse, finger, or arrow keys — dodge the meteors, grab the hearts 💗</p>
+
+    <div class="gameWrapper">
+      <canvas id="gameCanvas" width="400" height="600"></canvas>
+
+      <div class="gameHud">
+        <span class="gameScore" id="gameScore">0</span>
+        <span class="gameLives" id="gameLives">♥♥♥</span>
+      </div>
+
+      <div id="startOverlay" class="gameOverlay">
+        <h2>Meteor Dodge</h2>
+        <p>Avoid the meteors, collect the hearts. Three lives — see how long you can last.</p>
+        <span class="gameHighScore">Best: <span id="startHighScore">0</span></span>
+        <button id="startBtn">Start</button>
+      </div>
+
+      <div id="overOverlay" class="gameOverlay hidden">
+        <h2>Game Over</h2>
+        <p>Score: <span id="finalScore">0</span></p>
+        <span class="gameHighScore">Best: <span id="highScoreDisplay">0</span></span>
+        <button id="retryBtn">Play Again</button>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="game.js"></script>
+
+</body>
+</html>

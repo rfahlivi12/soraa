@@ -1063,3 +1063,110 @@ body {
 @media (max-width: 768px) {
   .addGoalRow { flex-direction: column; }
 }
+
+/* =========================================================
+   GAME PAGE — Meteor Dodge
+   ========================================================= */
+
+.gamePage {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.gameWrapper {
+  position: relative;
+  margin: 30px auto 0;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 2 / 3;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(180deg, #0c0c16, #050507);
+  touch-action: none;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.gameHud {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.gameScore {
+  font-weight: bold;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(6px);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.gameLives {
+  font-size: 1.1rem;
+  color: #f91880;
+  letter-spacing: 2px;
+}
+
+.gameLives .dimHeart {
+  color: rgba(255,255,255,0.25);
+}
+
+.gameOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(5,5,8,0.85);
+  backdrop-filter: blur(6px);
+  text-align: center;
+  padding: 30px;
+  z-index: 3;
+}
+
+.gameOverlay h2 {
+  font-size: 1.6rem;
+}
+
+.gameOverlay p {
+  opacity: 0.7;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.gameHighScore {
+  font-size: 0.8rem;
+  opacity: 0.55;
+}
+
+.gameOverlay button {
+  border: none;
+  padding: 14px 34px;
+  border-radius: 999px;
+  background: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Cambria, serif;
+  font-size: 1rem;
+}
+
+.gameHint {
+  margin-top: -10px;
+  margin-bottom: 0;
+}
