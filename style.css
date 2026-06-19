@@ -1170,3 +1170,175 @@ body {
   margin-top: -10px;
   margin-bottom: 0;
 }
+
+/* =========================================================
+   PLAYLIST PAGE
+   ========================================================= */
+
+.playlistPage {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.shuffleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px auto 30px;
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  cursor: pointer;
+  font-family: Cambria, serif;
+  font-size: 0.95rem;
+  transition: 0.2s;
+}
+
+.shuffleBtn:hover {
+  background: white;
+  color: black;
+}
+
+.formCard {
+  max-width: 480px;
+  margin: 0 auto 16px;
+  padding: 26px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.07);
+  text-align: left;
+}
+
+.formCard input,
+.formCard textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 10px;
+  border: none;
+  outline: none;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 0.95rem;
+  font-family: Cambria, serif;
+}
+
+.formCard textarea {
+  resize: vertical;
+  min-height: 50px;
+}
+
+.formCard button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 13px;
+  border: none;
+  border-radius: 14px;
+  background: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Cambria, serif;
+}
+
+#playlistStatus {
+  display: block;
+  text-align: center;
+  margin: -6px auto 26px;
+  color: #ccc;
+  font-size: 0.85rem;
+}
+
+.songList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.songCard {
+  position: relative;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: transform 0.2s ease, background 0.2s ease;
+  animation: fadeIn 0.4s ease;
+}
+
+.songCard:hover {
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-2px);
+}
+
+.songTitle {
+  font-size: 1.05rem;
+  font-weight: bold;
+  padding-right: 24px;
+}
+
+.songArtist {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin-top: 2px;
+}
+
+.songNote {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  opacity: 0.85;
+  font-style: italic;
+}
+
+.songMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  gap: 12px;
+}
+
+.songAddedBy {
+  font-size: 0.75rem;
+  opacity: 0.45;
+}
+
+.songLink {
+  font-size: 0.8rem;
+  color: white;
+  opacity: 0.7;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  white-space: nowrap;
+}
+
+.songLink:hover { opacity: 1; }
+
+.songDelete {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.3);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.songDelete:hover { color: #f91880; }
+
+#songList:empty::after {
+  content: "No songs yet — add the first one 🎵";
+  display: block;
+  text-align: center;
+  opacity: 0.4;
+  padding: 40px 0;
+  font-size: 0.95rem;
+}
