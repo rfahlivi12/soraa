@@ -98,7 +98,7 @@
 
   <!-- GUESTBOOK POPUP -->
   <div id="guestbookPopup" class="popup hidden">
-    <div class="popupCard">
+    <div class="popupCard guestbookCard">
       <button class="closeBtn" data-close="guestbookPopup">×</button>
       <h2>Guestbook</h2>
 
@@ -111,8 +111,11 @@
       </div>
 
       <div id="postBox" class="hidden">
-        <textarea id="textInput" placeholder="Leave a message..."></textarea>
-        <button id="uploadBtn">Submit</button>
+        <div class="composeRow">
+          <div class="avatar" id="composeAvatar"></div>
+          <textarea id="textInput" placeholder="What's happening?"></textarea>
+        </div>
+        <button id="uploadBtn">Post</button>
       </div>
 
       <div id="postsList"></div>
