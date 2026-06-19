@@ -17,10 +17,10 @@ const progressLabel = document.getElementById("progressLabel");
 /* DEFAULT GOALS — used only the very first time, before anything is saved */
 const DEFAULT_GOALS = [
   { text: "Travel to a new country together", done: false },
-  { text: "Watch the sunrise together", done: false },
+  { text: "Take a smoke break together", done: false },
   { text: "Cook each other's favorite childhood meal", done: false },
-  { text: "Meet each other's best friends", done: false },
-  { text: "Have a whole-night movie marathon", done: false },
+  { text: "Stay up talking until sunrise", done: false },
+  { text: "Have a whole night movie marathon", done: false },
   { text: "Write each other a letter to open in 5 years", done: false }
 ];
 
