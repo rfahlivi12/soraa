@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <style>
+    /* Hide everything until auth resolves — prevents login flash */
+    body > .stars,
+    body > main { opacity: 0; transition: opacity 0.3s ease; }
+    body.auth-ready > .stars,
+    body.auth-ready > main { opacity: 1; }
+  </style>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
     import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
@@ -13,7 +20,12 @@
       appId: "1:310837588219:web:5c135df72b3c76269f405e"
     });
     onAuthStateChanged(getAuth(app), (user) => {
-      if (!user) window.location.href = "index.html";
+      if (!user) {
+        window.location.href = "index.html";
+      } else {
+        // Auth confirmed — fade content in smoothly
+        document.body.classList.add("auth-ready");
+      }
     });
   </script>
   <meta charset="UTF-8">
