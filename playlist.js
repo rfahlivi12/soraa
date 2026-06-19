@@ -104,7 +104,7 @@ function renderSongs() {
         const playToggle = document.createElement("button");
         playToggle.type = "button";
         playToggle.className = "songPlayToggle";
-        playToggle.textContent = "▶ Play here";
+        playToggle.textContent = "Play here";
         meta.appendChild(playToggle);
 
         const externalLink = document.createElement("a");
@@ -138,7 +138,7 @@ function renderSongs() {
             embedWrap.innerHTML = "";
             embedWrap.appendChild(iframe);
             embedWrap.classList.add("open");
-            playToggle.textContent = "✕ Close player";
+            playToggle.textContent = "Close player";
           } else {
             embedWrap.classList.remove("open");
             embedWrap.innerHTML = "";
