@@ -69,13 +69,6 @@ loginBtn.addEventListener("click", async () => {
   }
 });
 
-/* DISTANCE SELECTION */
-const distanceBtn = document.getElementById("distanceBtn");
-const distanceSection = document.getElementById("distanceSection");
-
-distanceBtn.addEventListener("click", () => {
-  distanceSection.classList.toggle("hidden");
-});
 
 /* QR MODAL */
 const scanBtn = document.getElementById("scanBtn");
