@@ -16,6 +16,45 @@ const playlistDocRef = doc(db, "shared", "playlist");
 let songs = [];
 let currentDisplayName = "Someone";
 
+function isValidUrl(value) {
+  try {
+    new URL(value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/* EMBED DETECTION — returns an embeddable iframe src for YouTube/Spotify links, or null */
+function getEmbedSrc(link) {
+  if (!link) return null;
+  let url;
+  try {
+    url = new URL(link);
+  } catch {
+    return null;
+  }
+  const host = url.hostname.replace(/^www\./, "");
+
+  // YouTube: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/shorts/ID
+  if (host === "youtube.com" || host === "m.youtube.com") {
+    const videoId = url.searchParams.get("v") || (url.pathname.includes("/shorts/") ? url.pathname.split("/shorts/")[1] : null);
+    if (videoId) return { type: "youtube", src: `https://www.youtube.com/embed/${videoId.split("/")[0]}?autoplay=1` };
+  }
+  if (host === "youtu.be") {
+    const videoId = url.pathname.slice(1);
+    if (videoId) return { type: "youtube", src: `https://www.youtube.com/embed/${videoId}?autoplay=1` };
+  }
+
+  // Spotify: open.spotify.com/track|album|playlist|episode/ID
+  if (host === "open.spotify.com") {
+    const match = url.pathname.match(/^\/(track|album|playlist|episode)\/([a-zA-Z0-9]+)/);
+    if (match) return { type: "spotify", src: `https://open.spotify.com/embed/${match[1]}/${match[2]}?autoplay=1` };
+  }
+
+  return null;
+}
+
 /* RENDER */
 function renderSongs() {
   songListEl.innerHTML = "";
@@ -58,17 +97,68 @@ function renderSongs() {
     addedBy.textContent = song.addedBy ? `added by ${song.addedBy}` : "";
     meta.appendChild(addedBy);
 
+    const embed = song.link ? getEmbedSrc(song.link) : null;
+
     if (song.link) {
-      const link = document.createElement("a");
-      link.className = "songLink";
-      link.href = song.link;
-      link.target = "_blank";
-      link.rel = "noopener";
-      link.textContent = "Listen ↗";
-      meta.appendChild(link);
+      if (embed) {
+        const playToggle = document.createElement("button");
+        playToggle.type = "button";
+        playToggle.className = "songPlayToggle";
+        playToggle.textContent = "▶ Play here";
+        meta.appendChild(playToggle);
+
+        const externalLink = document.createElement("a");
+        externalLink.className = "songLink";
+        externalLink.href = song.link;
+        externalLink.target = "_blank";
+        externalLink.rel = "noopener";
+        externalLink.textContent = "Open ↗";
+        meta.appendChild(externalLink);
+
+        card.appendChild(meta);
+
+        const embedWrap = document.createElement("div");
+        embedWrap.className = `songEmbed songEmbed-${embed.type}`;
+        card.appendChild(embedWrap);
+
+        let expanded = false;
+        playToggle.addEventListener("click", () => {
+          expanded = !expanded;
+          if (expanded) {
+            const iframe = document.createElement("iframe");
+            iframe.src = embed.src;
+            iframe.allow = "autoplay; encrypted-media; fullscreen; picture-in-picture";
+            iframe.loading = "lazy";
+            iframe.frameBorder = "0";
+            if (embed.type === "spotify") {
+              iframe.allow += "; clipboard-write";
+            } else {
+              iframe.allowFullscreen = true;
+            }
+            embedWrap.innerHTML = "";
+            embedWrap.appendChild(iframe);
+            embedWrap.classList.add("open");
+            playToggle.textContent = "✕ Close player";
+          } else {
+            embedWrap.classList.remove("open");
+            embedWrap.innerHTML = "";
+            playToggle.textContent = "▶ Play here";
+          }
+        });
+      } else {
+        const link = document.createElement("a");
+        link.className = "songLink";
+        link.href = song.link;
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.textContent = "Listen ↗";
+        meta.appendChild(link);
+        card.appendChild(meta);
+      }
+    } else {
+      card.appendChild(meta);
     }
 
-    card.appendChild(meta);
     songListEl.appendChild(card);
   });
 }
@@ -87,15 +177,6 @@ function deleteSong(index) {
   songs.splice(index, 1);
   renderSongs();
   saveSongs();
-}
-
-function isValidUrl(value) {
-  try {
-    new URL(value);
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 /* ADD SONG */

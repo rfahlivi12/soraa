@@ -1301,11 +1301,57 @@ body {
   align-items: center;
   margin-top: 12px;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
 .songAddedBy {
   font-size: 0.75rem;
   opacity: 0.45;
+}
+
+.songPlayToggle {
+  font-size: 0.8rem;
+  color: white;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+  font-family: Cambria, serif;
+  transition: 0.2s;
+  margin-left: auto;
+}
+
+.songPlayToggle:hover {
+  background: white;
+  color: black;
+}
+
+.songEmbed {
+  max-height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  transition: max-height 0.3s ease;
+}
+
+.songEmbed.open {
+  max-height: 400px;
+  margin-top: 14px;
+}
+
+.songEmbed iframe {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  display: block;
+}
+
+.songEmbed-youtube iframe {
+  height: 200px;
+}
+
+.songEmbed-spotify iframe {
+  height: 152px;
 }
 
 .songLink {
