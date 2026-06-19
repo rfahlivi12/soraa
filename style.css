@@ -553,10 +553,15 @@ body {
 .shareBtn:hover { color: #00ba7c; }
 
 .commentsSection {
+  display: none;
   margin-left: 50px;
   margin-top: 12px;
   padding-left: 14px;
   border-left: 2px solid rgba(255,255,255,0.08);
+}
+
+.commentsSection.open {
+  display: block;
 }
 
 .commentItem {
