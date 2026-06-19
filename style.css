@@ -326,8 +326,12 @@ body {
 
 /* GUESTBOOK */
 
-#authBox input,
-#postBox textarea {
+.popupCard.guestbookCard {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+#authBox input {
   width: 100%;
   padding: 14px;
   margin-top: 10px;
@@ -340,13 +344,7 @@ body {
   font-family: Cambria, serif;
 }
 
-#postBox textarea {
-  min-height: 80px;
-  resize: vertical;
-}
-
-#authBox button,
-#postBox button {
+#authBox button {
   width: 100%;
   margin-top: 12px;
   padding: 14px;
@@ -366,19 +364,167 @@ body {
   font-size: 0.85rem;
 }
 
-#postsList {
-  margin-top: 25px;
-  max-height: 250px;
-  overflow-y: auto;
+/* COMPOSE BOX */
+
+.composeRow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 15px;
   text-align: left;
 }
 
-#postsList p {
-  padding: 10px 0;
+.avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-family: Cambria, serif;
+  background: rgba(255,255,255,0.15);
+}
+
+#postBox textarea {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 1rem;
+  font-family: Cambria, serif;
+  min-height: 60px;
+  resize: vertical;
+}
+
+#postBox button {
+  display: block;
+  margin: 12px 0 0 auto;
+  padding: 10px 26px;
+  border: none;
+  border-radius: 999px;
+  background: white;
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: Cambria, serif;
+}
+
+/* FEED */
+
+#postsList {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.tweet {
+  padding: 16px 0;
   border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.tweetHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tweetMeta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.tweetUser {
+  font-weight: bold;
+  font-size: 0.92rem;
+  word-break: break-all;
+}
+
+.tweetTime {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+.tweetText {
+  margin-top: 8px;
+  margin-left: 50px;
+  line-height: 1.6;
   opacity: 0.9;
-  line-height: 1.5;
   font-size: 0.95rem;
+}
+
+.tweetActions {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+  margin-left: 50px;
+}
+
+.tweetActions button {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: Cambria, serif;
+  transition: 0.2s;
+  padding: 0;
+}
+
+.likeBtn:hover { color: #f91880; }
+.likeBtn.liked { color: #f91880; }
+.commentBtn:hover { color: #1d9bf0; }
+.shareBtn:hover { color: #00ba7c; }
+
+.commentsSection {
+  margin-left: 50px;
+  margin-top: 12px;
+  padding-left: 14px;
+  border-left: 2px solid rgba(255,255,255,0.08);
+}
+
+.commentItem {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  padding: 6px 0;
+  line-height: 1.5;
+}
+
+.commentCompose {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.commentInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 0.85rem;
+  font-family: Cambria, serif;
+}
+
+.commentSubmit {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: Cambria, serif;
 }
 
 /* MOBILE */
