@@ -268,11 +268,12 @@ async function loadComments(postId, commentsList) {
   }
 }
 
-/* LIGHTBOX for tapping a photo */
+/* LIGHTBOX for tapping a photo — markup/positioning lives in
+   guestbook-v3-additions.css (.imgLightbox), not inline here. */
 function openLightbox(src) {
   const box = document.createElement("div");
-  box.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;z-index:1000;padding:24px;cursor:zoom-out;";
-  box.innerHTML = `<img src="${src}" style="max-width:100%;max-height:100%;border-radius:12px;display:block;" alt="">`;
+  box.className = "imgLightbox";
+  box.innerHTML = `<img src="${src}" alt="">`;
   box.addEventListener("click", () => box.remove());
   document.body.appendChild(box);
 }
@@ -319,7 +320,7 @@ async function loadPosts() {
           </div>
         </div>
         <p class="tweetText"></p>
-        ${post.imageUrl ? `<img class="postImage" style="display:block;width:100%;max-height:360px;object-fit:cover;border-radius:14px;margin:12px 0 0;cursor:zoom-in;border:1px solid rgba(255,255,255,0.08);" src="${post.imageUrl}" alt="Attached photo" loading="lazy">` : ""}
+        ${post.imageUrl ? `<img class="postImage" src="${post.imageUrl}" alt="Attached photo" loading="lazy">` : ""}
         <div class="tweetActions">
           <button type="button" class="likeBtn ${liked ? "liked" : ""}" aria-label="Like">
             <span class="icon icon-like" aria-hidden="true"></span>
