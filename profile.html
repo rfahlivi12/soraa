@@ -27,20 +27,21 @@
     <h1 class="pageTitle">Edit Profile</h1>
 
     <div id="profileBox" class="hidden">
-      <div class="avatarPreview" id="avatarPreview"></div>
+
+      <!-- Avatar upload area -->
+      <div class="avatarUploadWrap">
+        <div class="avatarPreview" id="avatarPreview">
+          <!-- shows photo or initials -->
+        </div>
+        <button type="button" class="avatarEditBtn" id="avatarEditBtn" aria-label="Change photo">
+          ✎
+        </button>
+        <input type="file" id="photoInput" accept="image/*" class="hidden" aria-label="Upload photo">
+      </div>
+
+      <p class="avatarHint" id="avatarHint">Tap the pencil to change photo</p>
 
       <input type="text" id="displayNameInput" placeholder="Display name" maxlength="30">
-
-      <div class="emojiGrid" id="emojiGrid">
-        <button type="button" class="emojiOption" data-emoji="🌙">🌙</button>
-        <button type="button" class="emojiOption" data-emoji="✨">✨</button>
-        <button type="button" class="emojiOption" data-emoji="💫">💫</button>
-        <button type="button" class="emojiOption" data-emoji="🌸">🌸</button>
-        <button type="button" class="emojiOption" data-emoji="🦋">🦋</button>
-        <button type="button" class="emojiOption" data-emoji="🌊">🌊</button>
-        <button type="button" class="emojiOption" data-emoji="🔥">🔥</button>
-        <button type="button" class="emojiOption" data-emoji="🎀">🎀</button>
-      </div>
 
       <button id="saveProfileBtn">Save Profile</button>
       <small id="profileStatus"></small>
