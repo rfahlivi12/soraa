@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    body > .stars,
+    body > main { opacity: 0; transition: opacity 0.3s ease; }
+    body.auth-ready > .stars,
+    body.auth-ready > main { opacity: 1; }
+  </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+    const app = initializeApp({
+      apiKey: "AIzaSyAIkgVQ2vwi5NZZcH2jmexNkXTsOJg3SXU",
+      authDomain: "sora-1102.firebaseapp.com",
+      projectId: "sora-1102",
+      storageBucket: "sora-1102.firebasestorage.app",
+      messagingSenderId: "310837588219",
+      appId: "1:310837588219:web:5c135df72b3c76269f405e"
+    });
+    onAuthStateChanged(getAuth(app), (user) => {
+      if (!user) {
+        window.location.href = "index.html";
+      } else {
+        document.body.classList.add("auth-ready");
+      }
+    });
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Future - For Sora</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="stars"></div>
+
+  <main class="container futurePage">
+
+    <nav class="topNav">
+      <a href="index.html" class="backLink">← Back</a>
+    </nav>
+
+    <h1 class="pageTitle">Our Future</h1>
+
+    <!-- THE QUESTION -->
+    <section class="popupCard questionCard">
+      <h2>Will you stay with me a little longer??</h2>
+      <div class="futureButtons">
+        <button id="yesBtn">Yes</button>
+        <button id="noBtn">No</button>
+      </div>
+    </section>
+
+    <!-- THANK YOU REVEAL -->
+    <section id="thankYouSection" class="popupCard thankYouCard hidden">
+      <h1 class="successTitle">Thank You</h1>
+      <p class="popupText">You don't know how happy that makes me feel.</p>
+      <div class="sparkles">🌹 🌹 🌹</div>
+    </section>
+
+    <!-- BUCKET LIST -->
+    <section class="bucketSection">
+      <h2 class="sectionHeading">Our Bucket List</h2>
+      <p class="sectionSub">Little dreams and big ones | all the things we still get to do together.</p>
+
+      <div class="progressWrap">
+        <div class="progressBar"><div class="progressFill" id="progressFill"></div></div>
+        <span class="progressLabel" id="progressLabel">0 of 0 done</span>
+      </div>
+
+      <div id="bucketList" class="bucketList"></div>
+
+      <div class="addGoalRow">
+        <input type="text" id="goalInput" placeholder="Add a new dream...">
+        <button id="addGoalBtn">Add</button>
+      </div>
+      <small id="bucketStatus"></small>
+    </section>
+
+  </main>
+
+  <script type="module" src="future.js"></script>
+
+</body>
+</html>

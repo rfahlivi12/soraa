@@ -1,0 +1,1390 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-x: hidden;
+  position: relative;
+  background: radial-gradient(circle at top, #1a1a1a, #050505);
+  color: white;
+  font-family: Cambria, "Times New Roman", serif;
+}
+
+/* STARS */
+
+.stars {
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 45px 45px;
+  animation: starsMove 120s linear infinite;
+}
+
+@keyframes starsMove {
+  from { transform: translate(0,0); }
+  to { transform: translate(-500px,-500px); }
+}
+
+/* CONTAINER */
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  padding: 50px;
+  border-radius: 35px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(15px);
+  position: relative;
+  z-index: 2;
+}
+
+/* HERO */
+
+.hero { text-align: center; }
+
+.hero h1 {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px rgba(255,255,255,0.15);
+}
+
+.subtitle {
+  line-height: 1.8;
+  opacity: 0.8;
+  font-size: 1.2rem;
+}
+
+/* MENU */
+
+.menu {
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.menu button {
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 1rem;
+  font-family: Cambria, serif;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.menu button:hover {
+  background: white;
+  color: black;
+  transform: translateY(-3px);
+}
+
+/* CONTENT */
+
+.content {
+  margin-top: 50px;
+  text-align: center;
+  animation: fadeIn 0.4s ease;
+}
+
+.hidden { display: none !important; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.location {
+  margin-top: 20px;
+  font-size: 1.2rem;
+}
+
+.distanceLine {
+  width: 100%;
+  height: 4px;
+  margin-top: 25px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.distanceLine::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, white, #777, white);
+  animation: travel 3s linear infinite;
+}
+
+@keyframes travel {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+.dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+  top: -5px;
+}
+
+.left { left: 0; }
+.right { right: 0; }
+
+.distanceKm {
+  margin-top: 25px;
+  font-size: 2.5rem;
+}
+
+.contentText {
+  margin-top: 20px;
+  line-height: 1.8;
+  opacity: 0.8;
+}
+
+/* POPUP */
+
+.popup {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,0.8);
+  z-index: 999;
+}
+
+.popupCard {
+  width: 90%;
+  max-width: 500px;
+  padding: 35px;
+  border-radius: 30px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(15px);
+  text-align: center;
+  position: relative;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.qrImage {
+  width: 230px;
+  max-width: 100%;
+  margin-top: 25px;
+  border-radius: 20px;
+}
+
+.popupText {
+  margin-top: 20px;
+  opacity: 0.7;
+}
+
+/* FUTURE */
+
+.futureButtons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.futureButtons button {
+  border: none;
+  padding: 14px 35px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-family: Cambria, serif;
+}
+
+#yesBtn { background: white; color: black; }
+
+#noBtn {
+  background: rgba(255,255,255,0.08);
+  color: white;
+  position: relative;
+}
+
+.successTitle { font-size: 3rem; }
+
+.sparkles {
+  margin-top: 25px;
+  font-size: 2rem;
+  animation: sparkle 1.5s infinite alternate;
+}
+
+@keyframes sparkle {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
+/* MUSIC */
+
+#musicBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 55px;
+  height: 55px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(10px);
+  color: white;
+  font-size: 1.4rem;
+  cursor: pointer;
+  z-index: 999;
+  transition: 0.3s;
+}
+
+#musicBtn:hover {
+  background: white;
+  color: black;
+}
+
+/* GUESTBOOK */
+
+.guestbookPage {
+  text-align: center;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 25px;
+  color: white;
+  opacity: 0.6;
+  text-decoration: none;
+  font-family: Cambria, serif;
+  font-size: 0.95rem;
+  transition: 0.2s;
+}
+
+.backLink:hover {
+  opacity: 1;
+}
+
+.pageTitle {
+  margin-bottom: 25px;
+  font-size: 2.5rem;
+}
+
+.menu .menuLink {
+  border: 1px solid rgba(255,255,255,0.08);
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 1rem;
+  font-family: Cambria, serif;
+  cursor: pointer;
+  transition: 0.3s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.menu .menuLink:hover {
+  background: white;
+  color: black;
+  transform: translateY(-3px);
+}
+
+.editProfileLink {
+  float: right;
+}
+
+/* PROFILE PAGE */
+
+.avatarPreview {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: bold;
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+#profileBox input {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  outline: none;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 1rem;
+  font-family: Cambria, serif;
+  text-align: center;
+}
+
+.emojiGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.emojiOption {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.emojiOption:hover {
+  transform: scale(1.1);
+}
+
+.emojiOption.selected {
+  border-color: white;
+  background: rgba(255,255,255,0.18);
+}
+
+#profileBox button#saveProfileBtn {
+  width: 100%;
+  margin-top: 10px;
+  padding: 14px;
+  border: none;
+  border-radius: 15px;
+  background: white;
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: Cambria, serif;
+}
+
+#profileStatus {
+  display: block;
+  margin-top: 12px;
+  color: #ccc;
+  font-size: 0.85rem;
+}
+
+#authBox input {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  border: none;
+  outline: none;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 1rem;
+  font-family: Cambria, serif;
+}
+
+#authBox button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 14px;
+  border: none;
+  border-radius: 15px;
+  background: white;
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: Cambria, serif;
+}
+
+#authStatus {
+  display: block;
+  margin-top: 10px;
+  color: #ccc;
+  font-size: 0.85rem;
+}
+
+/* COMPOSE BOX */
+
+.composeRow {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 15px;
+  text-align: left;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: white;
+  font-family: Cambria, serif;
+  background: rgba(255,255,255,0.15);
+}
+
+#postBox textarea {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  border-radius: 15px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 1rem;
+  font-family: Cambria, serif;
+  min-height: 60px;
+  resize: vertical;
+}
+
+#postBox button {
+  display: block;
+  margin: 12px 0 0 auto;
+  padding: 10px 26px;
+  border: none;
+  border-radius: 999px;
+  background: white;
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+  font-family: Cambria, serif;
+}
+
+/* FEED */
+
+#postsList {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.tweet {
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.tweetHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.tweetMeta {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.tweetUser {
+  font-weight: bold;
+  font-size: 0.92rem;
+  word-break: break-all;
+}
+
+.tweetTime {
+  font-size: 0.75rem;
+  opacity: 0.5;
+}
+
+.tweetText {
+  margin-top: 8px;
+  margin-left: 50px;
+  line-height: 1.6;
+  opacity: 0.9;
+  font-size: 0.95rem;
+}
+
+.tweetActions {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+  margin-left: 50px;
+}
+
+.tweetActions button {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.55);
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: Cambria, serif;
+  transition: 0.2s;
+  padding: 0;
+}
+
+.likeBtn:hover { color: #f91880; }
+.likeBtn.liked { color: #f91880; }
+.commentBtn:hover { color: #1d9bf0; }
+.shareBtn:hover { color: #00ba7c; }
+
+.commentsSection {
+  display: none;
+  margin-left: 50px;
+  margin-top: 12px;
+  padding-left: 14px;
+  border-left: 2px solid rgba(255,255,255,0.08);
+}
+
+.commentsSection.open {
+  display: block;
+}
+
+.commentItem {
+  font-size: 0.85rem;
+  opacity: 0.85;
+  padding: 6px 0;
+  line-height: 1.5;
+}
+
+.commentCompose {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.commentInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  outline: none;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 0.85rem;
+  font-family: Cambria, serif;
+}
+
+.commentSubmit {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  color: white;
+  cursor: pointer;
+  font-size: 0.8rem;
+  font-family: Cambria, serif;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .container { padding: 30px 22px; }
+  .hero h1 { font-size: 2.6rem; }
+  .subtitle { font-size: 1rem; }
+  .menu button, .menu .menuLink { width: 100%; text-align: center; }
+}
+
+/* DISTANCE PAGE */
+
+.distancePage {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.topNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* MAP */
+
+.mapWrapper {
+  position: relative;
+  margin: 30px 0;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.mapImage {
+  width: 100%;
+  display: block;
+  border-radius: 20px;
+  filter: brightness(0.85) saturate(1.1);
+}
+
+.mapOverlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+}
+
+.mapBadge {
+  font-size: 0.85rem;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+/* STATS */
+
+.distanceStats {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 30px 0;
+}
+
+.statCard {
+  flex: 1;
+  min-width: 120px;
+  padding: 20px 16px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.statValue {
+  font-size: 1.9rem;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  opacity: 0.55;
+  line-height: 1.4;
+}
+
+/* ANIMATED TRAVEL LINE */
+
+.distanceLineWrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 35px 0 30px;
+}
+
+.cityDot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  opacity: 0.7;
+  min-width: 70px;
+}
+
+.cityDot span {
+  white-space: nowrap;
+}
+
+.cityPulse {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 0 0 rgba(255,255,255,0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255,255,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+}
+
+.travelLine {
+  flex: 1;
+  height: 2px;
+  background: rgba(255,255,255,0.12);
+  position: relative;
+  overflow: visible;
+  margin-bottom: 22px;
+}
+
+.travelPlane {
+  position: absolute;
+  top: -10px;
+  left: -5%;
+  font-size: 1.1rem;
+  animation: flyAcross 4s linear infinite;
+}
+
+@keyframes flyAcross {
+  0%   { left: -5%; opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { left: 105%; opacity: 0; }
+}
+
+/* QUOTE */
+
+.distanceQuote {
+  font-size: 1.1rem;
+  line-height: 2;
+  opacity: 0.65;
+  font-style: italic;
+  margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+  .distanceStats { gap: 10px; }
+  .statValue { font-size: 1.5rem; }
+  .mapBadge { font-size: 0.75rem; padding: 5px 10px; }
+}
+
+/* =========================================================
+   GUESTBOOK V2 — MODERN REDESIGN
+   Scoped to .guestbookV2 so the original .guestbookPage
+   styles (still used on profile.html) are left untouched.
+   ========================================================= */
+
+.guestbookV2 {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+}
+
+.guestbookV2 .pageTitle {
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  margin-bottom: 6px;
+}
+
+.gbHeader { margin-bottom: 32px; }
+
+.pageSubtitle {
+  opacity: 0.55;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+.guestbookV2 #authBox,
+.guestbookV2 #postBox {
+  max-width: 480px;
+  margin: 0 auto 26px;
+  padding: 26px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.07);
+  text-align: left;
+}
+
+.guestbookV2 #authBox input {
+  font-family: inherit;
+  font-weight: 400;
+  border-radius: 14px;
+  text-align: left;
+}
+
+.authActions {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.authActions button {
+  flex: 1;
+  width: auto;
+  margin-top: 0;
+  padding: 13px;
+  border-radius: 14px;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.guestbookV2 #signupBtn {
+  background: rgba(255,255,255,0.08);
+  color: white;
+}
+
+.guestbookV2 #loginBtn {
+  background: white;
+  color: black;
+}
+
+.guestbookV2 #signupBtn:hover { background: rgba(255,255,255,0.16); }
+.guestbookV2 #loginBtn:hover { opacity: 0.85; }
+
+.guestbookV2 #authStatus { font-family: inherit; }
+
+.guestbookV2 .avatar {
+  background: linear-gradient(135deg, #6a82fb, #fc5c8d);
+  font-family: inherit;
+}
+
+.guestbookV2 #postBox textarea {
+  font-family: inherit;
+  border-radius: 14px;
+}
+
+.guestbookV2 #postBox button {
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.gbFeed {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.guestbookV2 .tweet {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  transition: transform 0.2s ease, background 0.2s ease;
+  animation: fadeIn 0.4s ease;
+}
+
+.guestbookV2 .tweet:hover {
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-2px);
+}
+
+.guestbookV2 .tweetUser { font-family: inherit; font-weight: 600; }
+.guestbookV2 .tweetTime { font-family: inherit; }
+.guestbookV2 .tweetText { font-family: inherit; font-weight: 400; }
+.guestbookV2 .tweetActions button { font-family: inherit; font-weight: 500; }
+.guestbookV2 .commentInput,
+.guestbookV2 .commentSubmit { font-family: inherit; }
+
+.guestbookV2 #postsList:empty::after {
+  content: "No messages yet — be the first to leave one 💌";
+  display: block;
+  text-align: center;
+  opacity: 0.4;
+  padding: 50px 0;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+@media (max-width: 768px) {
+  .guestbookV2 #authBox,
+  .guestbookV2 #postBox { padding: 20px; }
+}
+
+/* =========================================================
+   FUTURE PAGE
+   ========================================================= */
+
+.futurePage {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.questionCard,
+.thankYouCard {
+  margin: 0 auto 40px;
+}
+
+.bucketSection {
+  text-align: left;
+  margin-top: 40px;
+}
+
+.sectionHeading {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: 8px;
+}
+
+.sectionSub {
+  text-align: center;
+  opacity: 0.6;
+  font-size: 0.95rem;
+  margin-bottom: 30px;
+}
+
+.progressWrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 25px;
+}
+
+.progressBar {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #fff, #999);
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.progressLabel {
+  font-size: 0.8rem;
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.bucketList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.bucketItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  transition: 0.25s;
+}
+
+.bucketItem.done { opacity: 0.5; }
+.bucketItem.done .bucketText { text-decoration: line-through; }
+
+.bucketCheckbox {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.3);
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: white;
+  transition: 0.2s;
+  padding: 0;
+}
+
+.bucketCheckbox.checked {
+  background: white;
+  color: black;
+  border-color: white;
+}
+
+.bucketText {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.bucketDelete {
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.35);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.bucketDelete:hover { color: #f91880; }
+
+.addGoalRow {
+  display: flex;
+  gap: 10px;
+}
+
+#goalInput {
+  flex: 1;
+  padding: 14px 16px;
+  border: none;
+  outline: none;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 0.95rem;
+  font-family: Cambria, serif;
+}
+
+#addGoalBtn {
+  padding: 14px 24px;
+  border: none;
+  border-radius: 14px;
+  background: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Cambria, serif;
+}
+
+#bucketStatus {
+  display: block;
+  margin-top: 12px;
+  text-align: center;
+  color: #ccc;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+  .addGoalRow { flex-direction: column; }
+}
+
+/* =========================================================
+   GAME PAGE — Meteor Dodge
+   ========================================================= */
+
+.gamePage {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.gameWrapper {
+  position: relative;
+  margin: 30px auto 0;
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 2 / 3;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: linear-gradient(180deg, #0c0c16, #050507);
+  touch-action: none;
+}
+
+#gameCanvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.gameHud {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  right: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.gameScore {
+  font-weight: bold;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(6px);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+
+.gameLives {
+  font-size: 1.1rem;
+  color: #f91880;
+  letter-spacing: 2px;
+}
+
+.gameLives .dimHeart {
+  color: rgba(255,255,255,0.25);
+}
+
+.gameOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  background: rgba(5,5,8,0.85);
+  backdrop-filter: blur(6px);
+  text-align: center;
+  padding: 30px;
+  z-index: 3;
+}
+
+.gameOverlay h2 {
+  font-size: 1.6rem;
+}
+
+.gameOverlay p {
+  opacity: 0.7;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.gameHighScore {
+  font-size: 0.8rem;
+  opacity: 0.55;
+}
+
+.gameOverlay button {
+  border: none;
+  padding: 14px 34px;
+  border-radius: 999px;
+  background: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Cambria, serif;
+  font-size: 1rem;
+}
+
+.gameHint {
+  margin-top: -10px;
+  margin-bottom: 0;
+}
+
+/* =========================================================
+   PLAYLIST PAGE
+   ========================================================= */
+
+.playlistPage {
+  text-align: center;
+  padding-bottom: 50px;
+}
+
+.shuffleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px auto 30px;
+  padding: 12px 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  cursor: pointer;
+  font-family: Cambria, serif;
+  font-size: 0.95rem;
+  transition: 0.2s;
+}
+
+.shuffleBtn:hover {
+  background: white;
+  color: black;
+}
+
+.formCard {
+  max-width: 480px;
+  margin: 0 auto 16px;
+  padding: 26px;
+  border-radius: 22px;
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.07);
+  text-align: left;
+}
+
+.formCard input,
+.formCard textarea {
+  width: 100%;
+  padding: 12px 14px;
+  margin-top: 10px;
+  border: none;
+  outline: none;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  color: white;
+  font-size: 0.95rem;
+  font-family: Cambria, serif;
+}
+
+.formCard textarea {
+  resize: vertical;
+  min-height: 50px;
+}
+
+.formCard button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 13px;
+  border: none;
+  border-radius: 14px;
+  background: white;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: Cambria, serif;
+}
+
+#playlistStatus {
+  display: block;
+  text-align: center;
+  margin: -6px auto 26px;
+  color: #ccc;
+  font-size: 0.85rem;
+}
+
+.songList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.songCard {
+  position: relative;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  transition: transform 0.2s ease, background 0.2s ease;
+  animation: fadeIn 0.4s ease;
+}
+
+.songCard:hover {
+  background: rgba(255,255,255,0.05);
+  transform: translateY(-2px);
+}
+
+.songTitle {
+  font-size: 1.05rem;
+  font-weight: bold;
+  padding-right: 24px;
+}
+
+.songArtist {
+  font-size: 0.85rem;
+  opacity: 0.6;
+  margin-top: 2px;
+}
+
+.songNote {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  opacity: 0.85;
+  font-style: italic;
+}
+
+.songMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.songAddedBy {
+  font-size: 0.75rem;
+  opacity: 0.45;
+}
+
+.songPlayToggle {
+  font-size: 0.8rem;
+  color: white;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  padding: 5px 14px;
+  cursor: pointer;
+  font-family: Cambria, serif;
+  transition: 0.2s;
+  margin-left: auto;
+}
+
+.songPlayToggle:hover {
+  background: white;
+  color: black;
+}
+
+.songEmbed {
+  max-height: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  transition: max-height 0.3s ease;
+}
+
+.songEmbed.open {
+  max-height: 400px;
+  margin-top: 14px;
+}
+
+.songEmbed iframe {
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  display: block;
+}
+
+.songEmbed-youtube iframe {
+  height: 200px;
+}
+
+.songEmbed-spotify iframe {
+  height: 152px;
+}
+
+.songLink {
+  font-size: 0.8rem;
+  color: white;
+  opacity: 0.7;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255,255,255,0.3);
+  white-space: nowrap;
+}
+
+.songLink:hover { opacity: 1; }
+
+.songDelete {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.3);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+}
+
+.songDelete:hover { color: #f91880; }
+
+#songList:empty::after {
+  content: "No songs yet — add the first one 🎵";
+  display: block;
+  text-align: center;
+  opacity: 0.4;
+  padding: 40px 0;
+  font-size: 0.95rem;
+}
