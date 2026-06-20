@@ -43,9 +43,11 @@ let currentProfile = null;
 let currentUser = null;
 let selectedImageFile = null;
 
-/* ICONS — inline so no extra SVG assets are needed */
-const ICON_PIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 6 4 4v2H6v-2l4-4-1-6z"/><line x1="12" y1="16" x2="12" y2="22"/></svg>`;
-const ICON_TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13a2 2 0 002 2h6a2 2 0 002-2l1-13"/></svg>`;
+/* ICONS — use the project's existing masked-icon system.
+   Requires icon/pin.svg and icon/delete.svg to exist in the repo,
+   plus the matching .icon-pin / .icon-delete CSS rules. */
+const ICON_PIN = `<span class="icon icon-pin" aria-hidden="true"></span>`;
+const ICON_DELETE = `<span class="icon icon-delete" aria-hidden="true"></span>`;
 
 /* SIGN UP */
 document.getElementById("signupBtn").addEventListener("click", async () => {
@@ -269,8 +271,8 @@ async function loadComments(postId, commentsList) {
 /* LIGHTBOX for tapping a photo */
 function openLightbox(src) {
   const box = document.createElement("div");
-  box.className = "imgLightbox";
-  box.innerHTML = `<img src="${src}" alt="">`;
+  box.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;z-index:1000;padding:24px;cursor:zoom-out;";
+  box.innerHTML = `<img src="${src}" style="max-width:100%;max-height:100%;border-radius:12px;display:block;" alt="">`;
   box.addEventListener("click", () => box.remove());
   document.body.appendChild(box);
 }
@@ -307,7 +309,7 @@ async function loadPosts() {
         ${isPinned ? `<div class="pinnedLabel">${ICON_PIN}Pinned</div>` : ""}
         <div class="cardControls">
           <button type="button" class="cardIconBtn pinToggle ${isPinned ? "active" : ""}" aria-label="${isPinned ? "Unpin" : "Pin"} message">${ICON_PIN}</button>
-          ${isOwner ? `<button type="button" class="cardIconBtn deleteToggle" aria-label="Delete message">${ICON_TRASH}</button>` : ""}
+          ${isOwner ? `<button type="button" class="cardIconBtn deleteToggle" aria-label="Delete message">${ICON_DELETE}</button>` : ""}
         </div>
         <div class="tweetHeader">
           <div class="avatar" style="background:${avatarColor(post.user || "anon")}">${avatarContent}</div>
@@ -317,7 +319,7 @@ async function loadPosts() {
           </div>
         </div>
         <p class="tweetText"></p>
-        ${post.imageUrl ? `<img class="postImage" src="${post.imageUrl}" alt="Attached photo" loading="lazy">` : ""}
+        ${post.imageUrl ? `<img class="postImage" style="display:block;width:100%;max-height:360px;object-fit:cover;border-radius:14px;margin:12px 0 0;cursor:zoom-in;border:1px solid rgba(255,255,255,0.08);" src="${post.imageUrl}" alt="Attached photo" loading="lazy">` : ""}
         <div class="tweetActions">
           <button type="button" class="likeBtn ${liked ? "liked" : ""}" aria-label="Like">
             <span class="icon icon-like" aria-hidden="true"></span>
