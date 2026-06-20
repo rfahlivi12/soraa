@@ -1,5 +1,12 @@
-import { auth } from "./firebase-init.js";
-import { signOut } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+/* ============================================================
+   nav-controls.js
+   Theme cycling + sign-out, wired to every gated page.
+
+   FIX: Firebase is now loaded via dynamic import inside
+   handleSignOut(). This means if firebase-init.js ever has
+   an error, the theme toggle still works — the old static
+   import at the top would kill the ENTIRE module silently.
+   ============================================================ */
 
 /* THEME CYCLE
    Click order: Rose Gold (default) → Lavender → Ocean → Gold → Mint → back to Rose
@@ -26,18 +33,21 @@ function cycleTheme() {
   localStorage.setItem(THEME_KEY, next);
 }
 
-// Apply saved theme immediately (module scripts run before first paint
-// finishes, and content on every page stays hidden until auth resolves
-// anyway, so there's no flash of the wrong theme).
+// Apply saved theme immediately on every page load.
 applyStoredTheme();
 
-/* SIGN OUT */
+/* SIGN OUT — firebase loaded dynamically so a firebase error
+   never prevents the theme button from working */
 async function handleSignOut() {
   try {
+    const { auth } = await import("./firebase-init.js");
+    const { signOut } = await import(
+      "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js"
+    );
     await signOut(auth);
     window.location.href = "index.html";
   } catch (e) {
-    console.error(e);
+    console.error("Sign out failed:", e);
   }
 }
 
