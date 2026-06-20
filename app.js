@@ -1,4 +1,4 @@
-import { auth, db, storage } from "./firebase-init.js";
+import { auth, db } from "./firebase-init.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -19,12 +19,6 @@ import {
   orderBy,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  deleteObject
-} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 
 /* ELEMENTS */
 const emailInput = document.getElementById("email");
@@ -158,6 +152,38 @@ function clearImageSelection() {
 
 removeImageBtn.addEventListener("click", clearImageSelection);
 
+/* Compress + shrink the photo in-browser, then return it as a small
+   base64 data URL — this avoids needing Firebase Storage (which now
+   requires a paid Blaze plan) by storing the photo as text directly
+   inside the Firestore message document instead. */
+function compressImage(file, maxDim = 900, quality = 0.7) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > height && width > maxDim) {
+          height = Math.round(height * (maxDim / width));
+          width = maxDim;
+        } else if (height > maxDim) {
+          width = Math.round(width * (maxDim / height));
+          height = maxDim;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 /* POST A NEW MESSAGE */
 uploadBtn.addEventListener("click", async () => {
   if ((!textInput.value.trim() && !selectedImageFile) || !currentUser) return;
@@ -169,15 +195,21 @@ uploadBtn.addEventListener("click", async () => {
   addPhotoBtn.disabled = true;
 
   let imageUrl = null;
-  let imagePath = null;
 
   try {
     if (selectedImageFile) {
-      uploadBtn.textContent = "Uploading photo...";
-      imagePath = `guestbook/${currentUser.uid}_${Date.now()}_${selectedImageFile.name}`;
-      const storageRef = ref(storage, imagePath);
-      await uploadBytes(storageRef, selectedImageFile);
-      imageUrl = await getDownloadURL(storageRef);
+      uploadBtn.textContent = "Processing photo...";
+      imageUrl = await compressImage(selectedImageFile);
+
+      /* Firestore documents are capped at 1MB total, so keep the
+         encoded photo well under that to leave room for other fields. */
+      if (imageUrl.length > 850000) {
+        alert("That photo is too large even after compression. Try a smaller or simpler photo.");
+        uploadBtn.textContent = "Post Message";
+        uploadBtn.disabled = false;
+        addPhotoBtn.disabled = false;
+        return;
+      }
     }
 
     uploadBtn.textContent = "Posting...";
@@ -192,7 +224,6 @@ uploadBtn.addEventListener("click", async () => {
       commentCount: 0,
       pinned: false,
       imageUrl: imageUrl,
-      imagePath: imagePath,
       createdAt: serverTimestamp()
     });
 
@@ -336,9 +367,6 @@ async function loadPosts() {
           if (!confirm("Delete this message? This can't be undone.")) return;
           try {
             await deleteDoc(doc(db, "posts", postId));
-            if (post.imagePath) {
-              try { await deleteObject(ref(storage, post.imagePath)); } catch (e) { /* image cleanup best-effort */ }
-            }
             loadPosts();
           } catch (e) {
             console.error("Error deleting post:", e);
