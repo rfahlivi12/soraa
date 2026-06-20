@@ -358,6 +358,37 @@ textarea:focus {
   to { transform: scale(1.15); }
 }
 
+/* MUSIC */
+
+#musicBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 56px;
+  height: 56px;
+  border: 1px solid var(--hairline);
+  border-radius: 50%;
+  background: linear-gradient(180deg, var(--glass-3), var(--glass-1));
+  backdrop-filter: blur(14px);
+  color: white;
+  font-size: 1.3rem;
+  cursor: pointer;
+  z-index: 999;
+  box-shadow: var(--shadow-lift);
+}
+
+#musicBtn:hover {
+  background: linear-gradient(180deg, var(--accent-soft), var(--accent));
+  color: #2a1410;
+  border-color: var(--accent);
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: var(--shadow-glow);
+}
+
+#musicBtn:active {
+  transform: scale(0.96);
+}
+
 /* GUESTBOOK */
 
 .guestbookPage {
@@ -403,9 +434,7 @@ textarea:focus {
   font-family: Helvetica, Arial, sans-serif;
   cursor: pointer;
   text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+  display: inline-block;
   box-shadow: var(--shadow-rest);
 }
 
@@ -1704,123 +1733,71 @@ textarea:focus {
   .songLink { padding: 6px 12px; }
 }
 
-/* ===========================================================
+/* =========================================================
    ICON SYSTEM
-   SVGs live in /icon (back.svg, like.svg, comment.svg, share.svg,
-   playlist.svg, future.svg, guestbook.svg, changetheme.svg,
-   signout.svg). They're applied as CSS masks so every icon
-   inherits `color` from its parent button — meaning existing
-   hover states like .likeBtn:hover { color: #f91880 } now tint
-   the icon too automatically, with zero extra code. Icons should
-   be flat, single-color SVGs for masking to render correctly.
-   =========================================================== */
+   SVGs served from the /icon/ folder in the repo.
+   Each .icon element renders as a square mask so it
+   inherits the button's current color automatically.
+   ========================================================= */
 
 .icon {
   display: inline-block;
   width: 18px;
   height: 18px;
-  background-color: currentColor;
-  -webkit-mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-size: contain;
-  mask-repeat: no-repeat;
-  mask-position: center;
   flex-shrink: 0;
-  vertical-align: middle;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  background-color: currentColor;
 }
 
-.icon-back      { -webkit-mask-image: url('icon/back.svg');        mask-image: url('icon/back.svg'); }
-.icon-like      { -webkit-mask-image: url('icon/like.svg');        mask-image: url('icon/like.svg'); }
-.icon-comment   { -webkit-mask-image: url('icon/comment.svg');     mask-image: url('icon/comment.svg'); }
-.icon-share     { -webkit-mask-image: url('icon/share.svg');       mask-image: url('icon/share.svg'); }
-.icon-playlist  { -webkit-mask-image: url('icon/playlist.svg');    mask-image: url('icon/playlist.svg'); }
-.icon-future    { -webkit-mask-image: url('icon/future.svg');      mask-image: url('icon/future.svg'); }
-.icon-guestbook { -webkit-mask-image: url('icon/guestbook.svg');   mask-image: url('icon/guestbook.svg'); }
-.icon-theme     { -webkit-mask-image: url('icon/changetheme.svg'); mask-image: url('icon/changetheme.svg'); }
-.icon-signout   { -webkit-mask-image: url('icon/signout.svg');     mask-image: url('icon/signout.svg'); }
+/* Nav icons */
+.icon-back       { -webkit-mask-image: url(icon/back.svg);        mask-image: url(icon/back.svg); }
+.icon-theme      { -webkit-mask-image: url(icon/changetheme.svg);  mask-image: url(icon/changetheme.svg); }
+.icon-signout    { -webkit-mask-image: url(icon/signout.svg);      mask-image: url(icon/signout.svg); }
 
-.backLink { gap: 8px; }
-.backLink .icon { width: 14px; height: 14px; }
-.menuLink .icon { width: 16px; height: 16px; }
-.tweetActions .icon { width: 16px; height: 16px; }
+/* Feed action icons */
+.icon-like       { -webkit-mask-image: url(icon/like.svg);         mask-image: url(icon/like.svg); }
+.icon-comment    { -webkit-mask-image: url(icon/comment.svg);      mask-image: url(icon/comment.svg); }
+.icon-share      { -webkit-mask-image: url(icon/share.svg);        mask-image: url(icon/share.svg); }
 
-/* ===========================================================
-   TOP NAV — right-side icon group (theme switch + sign out)
-   Sits alongside the existing .backLink on every gated page.
-   =========================================================== */
-
-.navRightGroup {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
+/* Nav icon button wrapper */
 .navIconBtn {
-  width: 40px;
-  height: 40px;
-  border: 1px solid transparent;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--hairline);
   border-radius: 50%;
   background: var(--glass-1);
-  color: white;
+  color: rgba(255,255,255,0.7);
+  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
   flex-shrink: 0;
 }
 
 .navIconBtn:hover {
-  background: linear-gradient(180deg, var(--accent-soft), var(--accent));
-  border-color: var(--accent);
-  color: #2a1410;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-glow);
+  background: var(--glass-3);
+  color: white;
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-1px);
 }
 
-.navIconBtn:active { transform: translateY(0); }
+.navIconBtn:active { transform: scale(0.93); }
 
-.homeNav { justify-content: flex-end; margin-bottom: 10px; }
-
-@media (max-width: 480px) {
-  .topNav { flex-wrap: wrap; gap: 12px; }
+.navRightGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-/* ===========================================================
-   THEME PALETTES
-   Cycled by the changetheme icon button — see nav-controls.js.
-   Every gradient, button, and progress fill in this file already
-   reads from --accent / --accent-soft / --accent-deep / --shadow-glow,
-   so re-skinning those four variables re-skins the whole site with
-   no per-component overrides needed. "Rose Gold" (no data-theme
-   attribute) is the original default look.
-   =========================================================== */
-
-:root[data-theme="lavender"] {
-  --accent: #b9a4e8;
-  --accent-soft: #cdbdf0;
-  --accent-deep: #9c84d9;
-  --shadow-glow: 0 8px 24px -6px rgba(185,164,232,0.45);
+/* Make the back link not float and sit inline with icon */
+.guestbookV2 .backLink {
+  margin-bottom: 0;
 }
 
-:root[data-theme="ocean"] {
-  --accent: #8fc8e8;
-  --accent-soft: #addcf0;
-  --accent-deep: #6cb0d9;
-  --shadow-glow: 0 8px 24px -6px rgba(143,200,232,0.45);
-}
-
-:root[data-theme="gold"] {
-  --accent: #e8c46a;
-  --accent-soft: #f0d68f;
-  --accent-deep: #d9ad45;
-  --shadow-glow: 0 8px 24px -6px rgba(232,196,106,0.45);
-}
-
-:root[data-theme="mint"] {
-  --accent: #8fe0c0;
-  --accent-soft: #b3eed8;
-  --accent-deep: #5fcf9e;
-  --shadow-glow: 0 8px 24px -6px rgba(143,224,192,0.45);
-}
+/* Fallback: if signout.svg doesn't exist, show a text × instead */
+.navIconBtn[aria-label="Sign out"]:not(:has(.icon)):after { content: "↩"; font-size: 1rem; }
