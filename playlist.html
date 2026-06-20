@@ -30,6 +30,45 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Playlist - For Sora</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .songPlayToggle {
+      appearance: none;
+      -webkit-appearance: none;
+      border: none;
+      background: none;
+      padding: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    .songPlayToggle img {
+      height: 30px;
+      width: auto;
+      display: block;
+    }
+    .songPlayToggle:hover  { transform: translateY(-1px); opacity: 0.8; }
+    .songPlayToggle:active { transform: scale(0.95); opacity: 1; }
+
+    a.songLink {
+      border: none;
+      background: none;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    a.songLink img {
+      height: 28px;
+      width: auto;
+      display: block;
+      filter: invert(1);
+      opacity: 0.6;
+    }
+    a.songLink:hover  { transform: translateY(-1px); }
+    a.songLink:hover img { opacity: 1; }
+    a.songLink:active { transform: scale(0.95); }
+  </style>
 </head>
 <body>
 
@@ -42,9 +81,6 @@
       <div class="navRightGroup">
         <button type="button" id="themeToggleBtn" class="navIconBtn" aria-label="Change theme">
           <span class="icon icon-theme" aria-hidden="true"></span>
-        </button>
-        <button type="button" id="signoutBtn" class="navIconBtn" aria-label="Sign out">
-          <span class="icon icon-signout" aria-hidden="true"></span>
         </button>
       </div>
     </nav>

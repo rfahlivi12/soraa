@@ -101,18 +101,20 @@ function renderSongs() {
 
     if (song.link) {
       if (embed) {
+        // ── Play here image button ──
         const playToggle = document.createElement("button");
         playToggle.type = "button";
         playToggle.className = "songPlayToggle";
-        playToggle.textContent = "Play here";
+        playToggle.innerHTML = `<img src="playhere.png" alt="Play here">`;
         meta.appendChild(playToggle);
 
+        // ── Open image button ──
         const externalLink = document.createElement("a");
         externalLink.className = "songLink";
         externalLink.href = song.link;
         externalLink.target = "_blank";
         externalLink.rel = "noopener";
-        externalLink.textContent = "Open ↗";
+        externalLink.innerHTML = `<img src="open.png" alt="Open">`;
         meta.appendChild(externalLink);
 
         card.appendChild(meta);
@@ -138,20 +140,22 @@ function renderSongs() {
             embedWrap.innerHTML = "";
             embedWrap.appendChild(iframe);
             embedWrap.classList.add("open");
-            playToggle.textContent = "Close player";
+            // swap to a "close" state — still uses the play image but dimmed
+            playToggle.style.opacity = "0.4";
           } else {
             embedWrap.classList.remove("open");
             embedWrap.innerHTML = "";
-            playToggle.textContent = "Play here";
+            playToggle.style.opacity = "1";
           }
         });
       } else {
+        // No embeddable link — just show Open button
         const link = document.createElement("a");
         link.className = "songLink";
         link.href = song.link;
         link.target = "_blank";
         link.rel = "noopener";
-        link.textContent = "Listen";
+        link.innerHTML = `<img src="open.png" alt="Open">`;
         meta.appendChild(link);
         card.appendChild(meta);
       }
