@@ -11,6 +11,7 @@ const addBtn = document.getElementById("addSongBtn");
 const songListEl = document.getElementById("songList");
 const playlistStatus = document.getElementById("playlistStatus");
 const shuffleBtn = document.getElementById("shuffleBtn");
+const sortSelect = document.getElementById("sortSelect");
 
 const playlistDocRef = doc(db, "shared", "playlist");
 let songs = [];
@@ -23,6 +24,42 @@ function isValidUrl(value) {
   } catch {
     return false;
   }
+}
+
+/* TIME FORMAT — "2m", "3h", "5d", or a date for older */
+function formatTimeAgo(timestamp) {
+  if (!timestamp) return "";
+  const diffMs = Date.now() - timestamp;
+  const minutes = Math.floor(diffMs / 60000);
+  if (minutes < 1) return "just now";
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d ago`;
+  return new Date(timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
+/* SORTING */
+function getSortedSongs() {
+  const mode = sortSelect ? sortSelect.value : "newest";
+  const copy = songs.map((song, originalIndex) => ({ song, originalIndex }));
+
+  copy.sort((a, b) => {
+    switch (mode) {
+      case "oldest":
+        return (a.song.addedAt || 0) - (b.song.addedAt || 0);
+      case "title":
+        return a.song.title.localeCompare(b.song.title);
+      case "artist":
+        return (a.song.artist || "").localeCompare(b.song.artist || "");
+      case "newest":
+      default:
+        return (b.song.addedAt || 0) - (a.song.addedAt || 0);
+    }
+  });
+
+  return copy;
 }
 
 /* EMBED DETECTION */
@@ -56,7 +93,9 @@ function getEmbedSrc(link) {
 function renderSongs() {
   songListEl.innerHTML = "";
 
-  songs.forEach((song, index) => {
+  const ordered = getSortedSongs();
+
+  ordered.forEach(({ song, originalIndex }) => {
     const card = document.createElement("div");
     card.className = "songCard";
 
@@ -64,7 +103,7 @@ function renderSongs() {
     del.type = "button";
     del.className = "songDelete";
     del.textContent = "×";
-    del.addEventListener("click", () => deleteSong(index));
+    del.addEventListener("click", () => deleteSong(originalIndex));
     card.appendChild(del);
 
     const title = document.createElement("div");
@@ -91,7 +130,14 @@ function renderSongs() {
 
     const addedBy = document.createElement("span");
     addedBy.className = "songAddedBy";
-    addedBy.textContent = song.addedBy ? `added by ${song.addedBy}` : "";
+    let addedByText = song.addedBy ? `added by ${song.addedBy}` : "";
+    addedBy.textContent = addedByText;
+    if (song.addedAt) {
+      const timeSpan = document.createElement("span");
+      timeSpan.className = "songTime";
+      timeSpan.textContent = formatTimeAgo(song.addedAt);
+      addedBy.appendChild(timeSpan);
+    }
     meta.appendChild(addedBy);
 
     const embed = song.link ? getEmbedSrc(song.link) : null;
@@ -188,7 +234,8 @@ addBtn.addEventListener("click", () => {
     artist: artistInput.value.trim(),
     note: noteInput.value.trim(),
     link: link && isValidUrl(link) ? link : "",
-    addedBy: currentDisplayName
+    addedBy: currentDisplayName,
+    addedAt: Date.now()
   });
 
   titleInput.value = "";
@@ -199,6 +246,11 @@ addBtn.addEventListener("click", () => {
   renderSongs();
   saveSongs();
 });
+
+/* SORT CHANGE */
+if (sortSelect) {
+  sortSelect.addEventListener("change", renderSongs);
+}
 
 /* SHUFFLE */
 shuffleBtn.addEventListener("click", () => {
