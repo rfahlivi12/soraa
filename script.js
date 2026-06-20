@@ -93,20 +93,3 @@ window.addEventListener("click", (event) => {
     event.target.classList.add("hidden");
   }
 });
-
-/* MUSIC TRACKING */
-const music = document.getElementById("bgMusic");
-const musicBtn = document.getElementById("musicBtn");
-let isPlaying = false;
-
-musicBtn.addEventListener("click", () => {
-  if (!isPlaying) {
-    music.play();
-    musicBtn.innerHTML = "❚❚";
-    isPlaying = true;
-  } else {
-    music.pause();
-    musicBtn.innerHTML = "♫";
-    isPlaying = false;
-  }
-});

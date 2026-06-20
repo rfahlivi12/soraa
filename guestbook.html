@@ -40,8 +40,16 @@
 
   <main class="container guestbookPage guestbookV2">
     <nav class="topNav">
-      <a href="index.html" class="backLink">← Back</a>
-      <a href="profile.html" class="backLink editProfileLink">Edit Profile</a>
+      <a href="index.html" class="backLink"><span class="icon icon-back" aria-hidden="true"></span>Back</a>
+      <div class="navRightGroup">
+        <a href="profile.html" class="backLink editProfileLink">Edit Profile</a>
+        <button type="button" id="themeToggleBtn" class="navIconBtn" aria-label="Change theme">
+          <span class="icon icon-theme" aria-hidden="true"></span>
+        </button>
+        <button type="button" id="signoutBtn" class="navIconBtn" aria-label="Sign out">
+          <span class="icon icon-signout" aria-hidden="true"></span>
+        </button>
+      </div>
     </nav>
 
     <header class="gbHeader">
@@ -71,5 +79,6 @@
   </main>
 
   <script type="module" src="app.js"></script>
+  <script type="module" src="nav-controls.js"></script>
 </body>
 </html>

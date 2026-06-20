@@ -38,7 +38,15 @@
   <main class="container gamePage">
 
     <nav class="topNav">
-      <a href="index.html" class="backLink">← Back</a>
+      <a href="index.html" class="backLink"><span class="icon icon-back" aria-hidden="true"></span>Back</a>
+      <div class="navRightGroup">
+        <button type="button" id="themeToggleBtn" class="navIconBtn" aria-label="Change theme">
+          <span class="icon icon-theme" aria-hidden="true"></span>
+        </button>
+        <button type="button" id="signoutBtn" class="navIconBtn" aria-label="Sign out">
+          <span class="icon icon-signout" aria-hidden="true"></span>
+        </button>
+      </div>
     </nav>
 
     <h1 class="pageTitle">Meteor Dodge</h1>
@@ -70,6 +78,7 @@
   </main>
 
   <script src="game.js"></script>
+  <script type="module" src="nav-controls.js"></script>
 
 </body>
 </html>

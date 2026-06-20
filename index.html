@@ -25,6 +25,18 @@
   <!-- SECOND LAYER: MAIN PRIVATE CONTENT (Hidden until logged in) -->
   <main id="mainContent" class="container hidden">
 
+    <!-- TOP ICON ROW: theme switch + sign out -->
+    <nav class="topNav homeNav">
+      <div class="navRightGroup">
+        <button type="button" id="themeToggleBtn" class="navIconBtn" aria-label="Change theme">
+          <span class="icon icon-theme" aria-hidden="true"></span>
+        </button>
+        <button type="button" id="signoutBtn" class="navIconBtn" aria-label="Sign out">
+          <span class="icon icon-signout" aria-hidden="true"></span>
+        </button>
+      </div>
+    </nav>
+
     <!-- HERO -->
     <section class="hero">
       <h1 id="title"></h1>
@@ -39,10 +51,10 @@
     <section class="menu">
       <button id="scanBtn">Scan</button>
       <a href="distance.html" class="menuLink">Distance</a>
-      <a href="future.html" class="menuLink">Future</a>
+      <a href="future.html" class="menuLink"><span class="icon icon-future" aria-hidden="true"></span>Future</a>
       <a href="game.html" class="menuLink">Game</a>
-      <a href="playlist.html" class="menuLink">Playlist</a>
-      <a href="guestbook.html" class="menuLink">Guestbook</a>
+      <a href="playlist.html" class="menuLink"><span class="icon icon-playlist" aria-hidden="true"></span>Playlist</a>
+      <a href="guestbook.html" class="menuLink"><span class="icon icon-guestbook" aria-hidden="true"></span>Guestbook</a>
       <a href="profile.html" class="menuLink">Profile</a>
     </section>
 
@@ -58,16 +70,9 @@
     </div>
   </div>
 
-  <!-- MUSIC -->
-  <audio id="bgMusic" loop>
-    <source src="theme.mp3" type="audio/mpeg">
-  </audio>
-
-  <!-- MUSIC BUTTON -->
-  <button id="musicBtn">♫</button>
-
   <!-- Changed to type="module" to allow Firebase authentication tracking -->
   <script type="module" src="script.js"></script>
+  <script type="module" src="nav-controls.js"></script>
 
 </body>
 </html>
