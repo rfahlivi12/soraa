@@ -1,256 +1,298 @@
 import { auth, db } from "./firebase-init.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
-import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  getDoc,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  increment,
+  query,
+  orderBy,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 /* ELEMENTS */
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const authStatus = document.getElementById("authStatus");
 const authBox = document.getElementById("authBox");
+
 const postBox = document.getElementById("postBox");
-const composeAvatar = document.getElementById("composeAvatar");
 const textInput = document.getElementById("textInput");
 const uploadBtn = document.getElementById("uploadBtn");
+const composeAvatar = document.getElementById("composeAvatar");
+
 const postsList = document.getElementById("postsList");
 
-const guestbookDocRef = doc(db, "shared", "guestbook");
-let posts = [];
+let currentProfile = null;
 let currentUser = null;
-let currentDisplayName = "Someone";
-let currentAvatar = "?";
 
-/* TIME FORMAT */
-function timeAgo(timestamp) {
-  const diff = Date.now() - timestamp;
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "just now";
-  if (mins < 60) return `${mins}m ago`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
-  const days = Math.floor(hrs / 24);
-  return `${days}d ago`;
+/* SIGN UP */
+document.getElementById("signupBtn").addEventListener("click", async () => {
+  authStatus.textContent = "Loading...";
+  try {
+    await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+    authStatus.textContent = "";
+  } catch (err) {
+    authStatus.textContent = err.message;
+  }
+});
+
+/* LOG IN */
+document.getElementById("loginBtn").addEventListener("click", async () => {
+  authStatus.textContent = "Loading...";
+  try {
+    await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
+    authStatus.textContent = "";
+  } catch (err) {
+    authStatus.textContent = err.message;
+  }
+});
+
+/* AUTH STATE MONITOR */
+onAuthStateChanged(auth, async (user) => {
+  currentUser = user;
+
+  if (user) {
+    authBox.classList.add("hidden");
+    postBox.classList.remove("hidden");
+
+    currentProfile = null;
+    try {
+      const snap = await getDoc(doc(db, "users", user.uid));
+      if (snap.exists()) currentProfile = snap.data();
+    } catch (e) {
+      console.error("Profile load error:", e);
+    }
+
+    const name = (currentProfile && currentProfile.displayName) || user.email || "Guest";
+    composeAvatar.textContent = (currentProfile && currentProfile.avatarEmoji) || name.charAt(0).toUpperCase();
+    composeAvatar.style.background = avatarColor(user.email || "guest");
+  } else {
+    authBox.classList.remove("hidden");
+    postBox.classList.add("hidden");
+  }
+  loadPosts();
+});
+
+/* HELPERS */
+function avatarColor(email) {
+  let hash = 0;
+  for (let i = 0; i < email.length; i++) {
+    hash = email.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  const hue = Math.abs(hash) % 360;
+  return `hsl(${hue}, 55%, 42%)`;
 }
 
-/* RENDER */
-function renderPosts() {
-  postsList.innerHTML = "";
+function timeAgo(date) {
+  if (!date) return "now";
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return "now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d`;
+  return date.toLocaleDateString();
+}
 
-  posts
-    .slice()
-    .sort((a, b) => b.createdAt - a.createdAt)
-    .forEach((post) => {
+/* POST A NEW MESSAGE */
+uploadBtn.addEventListener("click", async () => {
+  if (!textInput.value.trim() || !currentUser) return;
+
+  const displayName = (currentProfile && currentProfile.displayName) || currentUser.email;
+  const avatarEmoji = (currentProfile && currentProfile.avatarEmoji) || null;
+
+  uploadBtn.textContent = "Posting...";
+  uploadBtn.disabled = true;
+
+  try {
+    await addDoc(collection(db, "posts"), {
+      text: textInput.value.trim(),
+      user: currentUser.email,
+      displayName: displayName,
+      avatarEmoji: avatarEmoji,
+      likes: [],
+      commentCount: 0,
+      createdAt: serverTimestamp()
+    });
+    textInput.value = "";
+    loadPosts();
+  } catch (err) {
+    console.error("Error creating post:", err);
+  } finally {
+    uploadBtn.textContent = "Post Message";
+    uploadBtn.disabled = false;
+  }
+});
+
+/* LOAD COMMENTS — sorted client-side, no Firestore index needed */
+async function loadComments(postId, commentsList) {
+  try {
+    const csnap = await getDocs(collection(db, "posts", postId, "comments"));
+    const docs = csnap.docs.slice().sort((a, b) => {
+      const aTime = a.data().createdAt ? a.data().createdAt.toMillis() : 0;
+      const bTime = b.data().createdAt ? b.data().createdAt.toMillis() : 0;
+      return aTime - bTime;
+    });
+    commentsList.innerHTML = "";
+    docs.forEach(c => {
+      const data = c.data();
+      const commentName = data.displayName || data.user || "Anonymous";
+      const p = document.createElement("p");
+      p.className = "commentItem";
+      const b = document.createElement("b");
+      b.textContent = commentName + ": ";
+      p.appendChild(b);
+      p.append(data.text);
+      commentsList.appendChild(p);
+    });
+  } catch (e) {
+    console.error("Error loading comments:", e);
+  }
+}
+
+/* FEED LOADER */
+async function loadPosts() {
+  try {
+    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    const snap = await getDocs(q);
+
+    postsList.innerHTML = "";
+
+    snap.docs.forEach(docSnap => {
+      const post = docSnap.data();
+      const postId = docSnap.id;
+      const likes = post.likes || [];
+      const liked = currentUser && post.likes && post.likes.includes(currentUser.email);
+      const name = post.displayName || post.user || "Anonymous";
+      const avatarContent = post.avatarEmoji || name.charAt(0).toUpperCase();
+
       const tweet = document.createElement("div");
       tweet.className = "tweet";
+      tweet.innerHTML = `
+        <div class="tweetHeader">
+          <div class="avatar" style="background:${avatarColor(post.user || "anon")}">${avatarContent}</div>
+          <div class="tweetMeta">
+            <span class="tweetUser"></span>
+            <span class="tweetTime">${timeAgo(post.createdAt ? post.createdAt.toDate() : null)}</span>
+          </div>
+        </div>
+        <p class="tweetText"></p>
+        <div class="tweetActions">
+          <button type="button" class="likeBtn ${liked ? "liked" : ""}">${liked ? "♥" : "♡"} <span class="likeCount">${likes.length}</span></button>
+          <button type="button" class="commentBtn">💬 <span class="commentCount">${post.commentCount || 0}</span></button>
+          <button type="button" class="shareBtn">⤴ Share</button>
+        </div>
+        <div class="commentsSection">
+          <div class="commentsList"></div>
+          <div class="commentCompose">
+            <input type="text" class="commentInput" placeholder="Reply...">
+            <button type="button" class="commentSubmit">Reply</button>
+          </div>
+        </div>
+      `;
 
-      const header = document.createElement("div");
-      header.className = "tweetHeader";
+      tweet.querySelector(".tweetUser").textContent = name;
+      tweet.querySelector(".tweetText").textContent = post.text;
 
-      const avatar = document.createElement("div");
-      avatar.className = "avatar";
-      avatar.textContent = post.authorAvatar || (post.authorName ? post.authorName.charAt(0).toUpperCase() : "?");
+      const commentsList = tweet.querySelector(".commentsList");
+      const commentCountEl = tweet.querySelector(".commentCount");
+      const commentInput = tweet.querySelector(".commentInput");
+      const commentSubmit = tweet.querySelector(".commentSubmit");
+      const commentsSection = tweet.querySelector(".commentsSection");
 
-      const meta = document.createElement("div");
-      meta.className = "tweetMeta";
-
-      const user = document.createElement("span");
-      user.className = "tweetUser";
-      user.textContent = post.authorName || "Someone";
-
-      const time = document.createElement("span");
-      time.className = "tweetTime";
-      time.textContent = timeAgo(post.createdAt);
-
-      meta.appendChild(user);
-      meta.appendChild(time);
-      header.appendChild(avatar);
-      header.appendChild(meta);
-      tweet.appendChild(header);
-
-      const text = document.createElement("p");
-      text.className = "tweetText";
-      text.textContent = post.text;
-      tweet.appendChild(text);
-
-      /* ACTIONS — icon-driven like / comment / share */
-      const actions = document.createElement("div");
-      actions.className = "tweetActions";
-
-      const liked = !!(currentUser && post.likes && post.likes.includes(currentUser.uid));
-      const likeBtn = document.createElement("button");
-      likeBtn.type = "button";
-      likeBtn.className = "likeBtn" + (liked ? " liked" : "");
-      likeBtn.innerHTML = `<span class="icon icon-like" aria-hidden="true"></span><span>${(post.likes || []).length || ""}</span>`;
-      likeBtn.setAttribute("aria-label", "Like");
-      likeBtn.addEventListener("click", () => toggleLike(post.id));
-
-      const commentBtn = document.createElement("button");
-      commentBtn.type = "button";
-      commentBtn.className = "commentBtn";
-      commentBtn.innerHTML = `<span class="icon icon-comment" aria-hidden="true"></span><span>${(post.comments || []).length || ""}</span>`;
-      commentBtn.setAttribute("aria-label", "Comments");
-
-      const shareBtn = document.createElement("button");
-      shareBtn.type = "button";
-      shareBtn.className = "shareBtn";
-      shareBtn.innerHTML = `<span class="icon icon-share" aria-hidden="true"></span>`;
-      shareBtn.setAttribute("aria-label", "Share");
-      shareBtn.addEventListener("click", () => sharePost(post));
-
-      actions.appendChild(likeBtn);
-      actions.appendChild(commentBtn);
-      actions.appendChild(shareBtn);
-      tweet.appendChild(actions);
-
-      /* COMMENTS (collapsed by default, toggled by commentBtn) */
-      const commentsSection = document.createElement("div");
-      commentsSection.className = "commentsSection";
-
-      (post.comments || []).forEach((c) => {
-        const item = document.createElement("div");
-        item.className = "commentItem";
-        item.textContent = `${c.authorName}: ${c.text}`;
-        commentsSection.appendChild(item);
+      /* LIKE ACTION */
+      tweet.querySelector(".likeBtn").addEventListener("click", async () => {
+        if (!currentUser) return;
+        const postRef = doc(db, "posts", postId);
+        if (liked) {
+          await updateDoc(postRef, { likes: arrayRemove(currentUser.email) });
+        } else {
+          await updateDoc(postRef, { likes: arrayUnion(currentUser.email) });
+        }
+        loadPosts();
       });
 
-      const composeRow = document.createElement("div");
-      composeRow.className = "commentCompose";
-
-      const input = document.createElement("input");
-      input.type = "text";
-      input.className = "commentInput";
-      input.placeholder = "Write a comment...";
-
-      const submit = document.createElement("button");
-      submit.type = "button";
-      submit.className = "commentSubmit";
-      submit.textContent = "Reply";
-      submit.disabled = true;
-
-      input.addEventListener("input", () => {
-        submit.disabled = !input.value.trim();
-      });
-      input.addEventListener("keydown", (e) => {
-        if (e.key === "Enter") submit.click();
-      });
-      submit.addEventListener("click", () => {
-        const value = input.value.trim();
-        if (!value) return;
-        addComment(post.id, value);
-        input.value = "";
-        submit.disabled = true;
+      /* COMMENT BUTTON — toggle open/closed, load on first open */
+      let commentsLoaded = false;
+      tweet.querySelector(".commentBtn").addEventListener("click", () => {
+        const isOpen = commentsSection.classList.toggle("open");
+        if (isOpen) {
+          if (!commentsLoaded) {
+            loadComments(postId, commentsList);
+            commentsLoaded = true;
+          }
+          commentInput.focus();
+        }
       });
 
-      composeRow.appendChild(input);
-      composeRow.appendChild(submit);
-      commentsSection.appendChild(composeRow);
-      tweet.appendChild(commentsSection);
+      /* REPLY SUBMIT */
+      commentSubmit.addEventListener("click", async (e) => {
+        e.stopPropagation();
 
-      commentBtn.addEventListener("click", () => {
-        commentsSection.classList.toggle("open");
+        if (!currentUser) {
+          alert("You must be logged in to reply.");
+          return;
+        }
+        if (!commentInput.value.trim()) return;
+
+        const commentDisplayName = (currentProfile && currentProfile.displayName) || currentUser.email;
+        const commentText = commentInput.value.trim();
+
+        commentSubmit.textContent = "...";
+        commentSubmit.disabled = true;
+        commentInput.disabled = true;
+
+        try {
+          await addDoc(collection(db, "posts", postId, "comments"), {
+            text: commentText,
+            user: currentUser.email,
+            displayName: commentDisplayName,
+            createdAt: serverTimestamp()
+          });
+          await updateDoc(doc(db, "posts", postId), { commentCount: increment(1) });
+          commentInput.value = "";
+          commentCountEl.textContent = (parseInt(commentCountEl.textContent) || 0) + 1;
+          await loadComments(postId, commentsList);
+        } catch (e) {
+          console.error("Error posting reply:", e);
+          alert("Failed to post reply. Check console for details.");
+        } finally {
+          commentSubmit.textContent = "Reply";
+          commentSubmit.disabled = false;
+          commentInput.disabled = false;
+        }
+      });
+
+      /* SHARE ACTION */
+      tweet.querySelector(".shareBtn").addEventListener("click", async () => {
+        const shareData = {
+          title: "Guestbook message",
+          text: post.text,
+          url: location.href
+        };
+        if (navigator.share) {
+          try { await navigator.share(shareData); } catch (e) { /* ignored */ }
+        } else {
+          await navigator.clipboard.writeText(`${post.text} — ${location.href}`);
+          alert("Copied to clipboard!");
+        }
       });
 
       postsList.appendChild(tweet);
     });
-}
-
-/* SAVE TO FIRESTORE — shared between both of you */
-async function savePosts() {
-  try {
-    await setDoc(guestbookDocRef, { items: posts });
-  } catch (e) {
-    console.error(e);
+  } catch (err) {
+    console.error("Error loading timeline:", err);
   }
 }
-
-function toggleLike(postId) {
-  if (!currentUser) return;
-  const post = posts.find((p) => p.id === postId);
-  if (!post) return;
-  post.likes = post.likes || [];
-  const idx = post.likes.indexOf(currentUser.uid);
-  if (idx >= 0) post.likes.splice(idx, 1);
-  else post.likes.push(currentUser.uid);
-  renderPosts();
-  savePosts();
-}
-
-function addComment(postId, value) {
-  const post = posts.find((p) => p.id === postId);
-  if (!post) return;
-  post.comments = post.comments || [];
-  post.comments.push({ text: value, authorName: currentDisplayName, createdAt: Date.now() });
-  renderPosts();
-  savePosts();
-}
-
-function sharePost(post) {
-  const url = window.location.href;
-  if (navigator.share) {
-    navigator.share({ title: "Guestbook message", text: post.text, url }).catch(() => {});
-  } else if (navigator.clipboard) {
-    navigator.clipboard.writeText(`"${post.text}" — ${url}`);
-  }
-}
-
-/* COMPOSE A NEW MESSAGE */
-uploadBtn.addEventListener("click", () => {
-  const value = textInput.value.trim();
-  if (!value || !currentUser) return;
-
-  posts.push({
-    id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    text: value,
-    authorName: currentDisplayName,
-    authorAvatar: currentAvatar,
-    authorUid: currentUser.uid,
-    createdAt: Date.now(),
-    likes: [],
-    comments: []
-  });
-
-  textInput.value = "";
-  renderPosts();
-  savePosts();
-});
-
-textInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) uploadBtn.click();
-});
-
-/* AUTH + LOAD
-   guestbook.html already redirects logged-out visitors at the top
-   of the page, so by the time this runs the user is confirmed —
-   #authBox is just hidden as a safety fallback. */
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "index.html";
-    return;
-  }
-  currentUser = user;
-
-  authBox.classList.add("hidden");
-  postBox.classList.remove("hidden");
-
-  try {
-    const profileSnap = await getDoc(doc(db, "users", user.uid));
-    if (profileSnap.exists()) {
-      const data = profileSnap.data();
-      currentDisplayName = data.displayName || user.email;
-      currentAvatar = data.avatarEmoji || currentDisplayName.charAt(0).toUpperCase();
-    } else {
-      currentDisplayName = user.email;
-      currentAvatar = user.email.charAt(0).toUpperCase();
-    }
-  } catch (e) {
-    currentDisplayName = user.email;
-    currentAvatar = user.email.charAt(0).toUpperCase();
-  }
-
-  composeAvatar.textContent = currentAvatar;
-
-  try {
-    const snap = await getDoc(guestbookDocRef);
-    posts = (snap.exists() && Array.isArray(snap.data().items)) ? snap.data().items : [];
-  } catch (e) {
-    posts = [];
-  }
-
-  renderPosts();
-});
