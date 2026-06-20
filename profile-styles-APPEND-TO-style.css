@@ -1,0 +1,74 @@
+/* ===========================================================
+   PROFILE PAGE — Photo Upload
+   Append these rules to the bottom of style.css
+   =========================================================== */
+
+/* Wrapper centers the avatar + positions the pencil button */
+.avatarUploadWrap {
+  position: relative;
+  width: 110px;
+  height: 110px;
+  margin: 0 auto 8px;
+}
+
+/* The circle — shows photo (via background-image) or initials */
+#avatarPreview {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: var(--glass-3);
+  border: 2px solid var(--hairline);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: white;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  transition: border-color 0.3s var(--ease);
+}
+
+.avatarUploadWrap:hover #avatarPreview {
+  border-color: var(--accent);
+}
+
+/* Pencil edit button — sits bottom-right of the circle */
+.avatarEditBtn {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--hairline);
+  background: linear-gradient(135deg, var(--accent-soft), var(--accent-deep));
+  color: #2a1410;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-rest);
+  transition: transform 0.25s var(--ease-snap), box-shadow 0.25s var(--ease);
+}
+
+.avatarEditBtn:hover {
+  transform: scale(1.15);
+  box-shadow: var(--shadow-glow);
+}
+
+.avatarEditBtn:active {
+  transform: scale(0.95);
+}
+
+/* Small hint text below avatar */
+.avatarHint {
+  display: block;
+  text-align: center;
+  font-size: 0.78rem;
+  opacity: 0.45;
+  margin-bottom: 20px;
+  min-height: 1.2em;
+}
