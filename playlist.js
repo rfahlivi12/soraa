@@ -46,7 +46,7 @@ function getEmbedSrc(link) {
   }
   if (host === "open.spotify.com") {
     const match = url.pathname.match(/^\/(track|album|playlist|episode)\/([a-zA-Z0-9]+)/);
-    if (match) return { type: "spotify", src: `https://open.spotify.com/embed/${match[1]}/${match[2]}?utm_source=generator` };
+    if (match) return { type: "spotify", src: `https://open.spotify.com/embed/${match[1]}/${match[2]}?autoplay=1` };
   }
 
   return null;
@@ -59,7 +59,6 @@ function renderSongs() {
   songs.forEach((song, index) => {
     const card = document.createElement("div");
     card.className = "songCard";
-    card.setAttribute("data-index", index + 1);
 
     const del = document.createElement("button");
     del.type = "button";
@@ -99,21 +98,19 @@ function renderSongs() {
 
     if (song.link) {
       if (embed) {
-        // Play here button
+        // Play here image button
         const playToggle = document.createElement("button");
         playToggle.type = "button";
         playToggle.className = "songPlayToggle";
-        playToggle.setAttribute("aria-label", "Play song");
         playToggle.innerHTML = `<img src="icon/playhere.png" alt="Play here">`;
         meta.appendChild(playToggle);
 
-        // Open button
+        // Open image button
         const externalLink = document.createElement("a");
         externalLink.className = "songLink";
         externalLink.href = song.link;
         externalLink.target = "_blank";
-        externalLink.rel = "noopener noreferrer";
-        externalLink.setAttribute("aria-label", "Open in new window");
+        externalLink.rel = "noopener";
         externalLink.innerHTML = `<img src="icon/open.png" alt="Open">`;
         meta.appendChild(externalLink);
 
@@ -124,19 +121,16 @@ function renderSongs() {
         card.appendChild(embedWrap);
 
         let expanded = false;
-        playToggle.addEventListener("click", (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          
+        playToggle.addEventListener("click", () => {
           expanded = !expanded;
           if (expanded) {
             const iframe = document.createElement("iframe");
             iframe.src = embed.src;
-            iframe.allow = "autoplay; encrypted-media; fullscreen; picture-in-picture; clipboard-write";
+            iframe.allow = "autoplay; encrypted-media; fullscreen; picture-in-picture";
             iframe.loading = "lazy";
             iframe.frameBorder = "0";
             if (embed.type === "spotify") {
-              iframe.setAttribute("allow", "autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture");
+              iframe.allow += "; clipboard-write";
             } else {
               iframe.allowFullscreen = true;
             }
@@ -156,8 +150,7 @@ function renderSongs() {
         link.className = "songLink";
         link.href = song.link;
         link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        link.setAttribute("aria-label", "Open in new window");
+        link.rel = "noopener";
         link.innerHTML = `<img src="icon/open.png" alt="Open">`;
         meta.appendChild(link);
         card.appendChild(meta);
@@ -189,10 +182,7 @@ function deleteSong(index) {
 /* ADD SONG */
 addBtn.addEventListener("click", () => {
   const title = titleInput.value.trim();
-  if (!title) {
-    playlistStatus.textContent = "Please enter a song title";
-    return;
-  }
+  if (!title) return;
 
   const link = linkInput.value.trim();
 
@@ -208,28 +198,20 @@ addBtn.addEventListener("click", () => {
   artistInput.value = "";
   noteInput.value = "";
   linkInput.value = "";
-  playlistStatus.textContent = "Song added! 🎵";
 
   renderSongs();
   saveSongs();
-
-  setTimeout(() => {
-    playlistStatus.textContent = "";
-  }, 2000);
 });
 
 /* SHUFFLE */
 shuffleBtn.addEventListener("click", () => {
   if (!songs.length) {
     playlistStatus.textContent = "Add a song first!";
-    setTimeout(() => {
-      playlistStatus.textContent = "";
-    }, 2000);
     return;
   }
   const pick = songs[Math.floor(Math.random() * songs.length)];
   if (pick.link) {
-    window.open(pick.link, "_blank", "noopener,noreferrer");
+    window.open(pick.link, "_blank", "noopener");
   } else {
     alert(`🎵 ${pick.title}${pick.artist ? " — " + pick.artist : ""}`);
   }

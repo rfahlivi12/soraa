@@ -71,16 +71,13 @@
     </section>
 
     <!-- MENU -->
-    <!-- FIX: Future, Playlist, Guestbook were using <span class="icon icon-xxx"> which
-         fails on GitHub Pages due to SVG CORS restrictions with CSS mask-image.
-         Changed to <img> tags to match the working icons (scan, distance, game, profile). -->
     <section class="menu">
       <button id="scanBtn"><img src="icon/scan.png" alt="">Scan</button>
       <a href="distance.html" class="menuLink"><img src="icon/distance.png" alt="">Distance</a>
-      <a href="future.html" class="menuLink"><img src="icon/future.svg" alt="">Future</a>
+      <a href="future.html" class="menuLink"><span class="icon icon-future" aria-hidden="true"></span>Future</a>
       <a href="game.html" class="menuLink"><img src="icon/game.png" alt="">Game</a>
-      <a href="playlist.html" class="menuLink"><img src="icon/playlist.svg" alt="">Playlist</a>
-      <a href="guestbook.html" class="menuLink"><img src="icon/guestbook.svg" alt="">Guestbook</a>
+      <a href="playlist.html" class="menuLink"><span class="icon icon-playlist" aria-hidden="true"></span>Playlist</a>
+      <a href="guestbook.html" class="menuLink"><span class="icon icon-guestbook" aria-hidden="true"></span>Guestbook</a>
       <a href="profile.html" class="menuLink"><img src="icon/profile.png" alt="">Profile</a>
     </section>
 
