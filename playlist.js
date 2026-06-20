@@ -98,14 +98,12 @@ function renderSongs() {
 
     if (song.link) {
       if (embed) {
-        // Play here image button
         const playToggle = document.createElement("button");
         playToggle.type = "button";
         playToggle.className = "songPlayToggle";
         playToggle.innerHTML = `<img src="icon/playhere.svg" alt="Play here">`;
         meta.appendChild(playToggle);
 
-        // Open image button
         const externalLink = document.createElement("a");
         externalLink.className = "songLink";
         externalLink.href = song.link;
@@ -145,7 +143,6 @@ function renderSongs() {
           }
         });
       } else {
-        // No embeddable link — just Open button
         const link = document.createElement("a");
         link.className = "songLink";
         link.href = song.link;
