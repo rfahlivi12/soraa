@@ -69,7 +69,12 @@
   margin-bottom: 10px;
 }
 
-.pinnedLabel svg { width: 11px; height: 11px; }
+.pinnedLabel .icon { width: 11px; height: 11px; }
+
+/* Pin and delete icons — masked from icon/pin.svg and icon/delete.svg,
+   following the same pattern as the rest of the icon system. */
+.icon-pin    { -webkit-mask-image: url('icon/pin.svg');    mask-image: url('icon/pin.svg'); }
+.icon-delete { -webkit-mask-image: url('icon/delete.svg'); mask-image: url('icon/delete.svg'); }
 
 /* Top-right card controls — pin and delete */
 .cardControls {
@@ -95,7 +100,7 @@
   transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease;
 }
 
-.cardIconBtn svg { width: 14px; height: 14px; }
+.cardIconBtn .icon { width: 14px; height: 14px; }
 
 .pinToggle:hover { color: var(--accent-soft); background: rgba(232,180,160,0.14); }
 .pinToggle.active { color: var(--accent-soft); }
