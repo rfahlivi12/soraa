@@ -78,9 +78,21 @@
     <section id="postBox" class="hidden">
       <div class="composeRow">
         <div class="avatar" id="composeAvatar"></div>
-        <textarea id="textInput" placeholder="Write a message for Sora..."></textarea>
+        <div class="composeMain">
+          <textarea id="textInput" placeholder="Write a message for Sora..."></textarea>
+          <div id="imagePreviewWrap" class="imagePreviewWrap hidden">
+            <img id="imagePreview" alt="Selected photo preview">
+            <button type="button" id="removeImageBtn" class="removeImageBtn" aria-label="Remove photo">&times;</button>
+          </div>
+        </div>
       </div>
-      <button id="uploadBtn">Post Message</button>
+      <input type="file" id="imageInput" accept="image/*" class="hidden">
+      <div class="composeFooter">
+        <button type="button" id="addPhotoBtn" class="composeIconBtn" aria-label="Add photo">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h3l1.5-2h7L17 7h3a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        </button>
+        <button id="uploadBtn">Post Message</button>
+      </div>
     </section>
 
     <section id="postsList" class="gbFeed"></section>

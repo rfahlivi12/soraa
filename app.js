@@ -1,4 +1,4 @@
-import { auth, db } from "./firebase-init.js";
+import { auth, db, storage } from "./firebase-init.js";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -7,6 +7,7 @@ import {
 import {
   collection,
   addDoc,
+  deleteDoc,
   getDocs,
   getDoc,
   doc,
@@ -18,6 +19,12 @@ import {
   orderBy,
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject
+} from "https://www.gstatic.com/firebasejs/12.15.0/firebase-storage.js";
 
 /* ELEMENTS */
 const emailInput = document.getElementById("email");
@@ -30,10 +37,21 @@ const textInput = document.getElementById("textInput");
 const uploadBtn = document.getElementById("uploadBtn");
 const composeAvatar = document.getElementById("composeAvatar");
 
+const addPhotoBtn = document.getElementById("addPhotoBtn");
+const imageInput = document.getElementById("imageInput");
+const imagePreviewWrap = document.getElementById("imagePreviewWrap");
+const imagePreview = document.getElementById("imagePreview");
+const removeImageBtn = document.getElementById("removeImageBtn");
+
 const postsList = document.getElementById("postsList");
 
 let currentProfile = null;
 let currentUser = null;
+let selectedImageFile = null;
+
+/* ICONS — inline so no extra SVG assets are needed */
+const ICON_PIN = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 6 4 4v2H6v-2l4-4-1-6z"/><line x1="12" y1="16" x2="12" y2="22"/></svg>`;
+const ICON_TRASH = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13a2 2 0 002 2h6a2 2 0 002-2l1-13"/></svg>`;
 
 /* SIGN UP */
 document.getElementById("signupBtn").addEventListener("click", async () => {
@@ -106,33 +124,88 @@ function timeAgo(date) {
   return date.toLocaleDateString();
 }
 
+/* PHOTO PICKER */
+addPhotoBtn.addEventListener("click", () => imageInput.click());
+
+imageInput.addEventListener("change", () => {
+  const file = imageInput.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith("image/")) {
+    alert("Please choose an image file.");
+    imageInput.value = "";
+    return;
+  }
+  if (file.size > 8 * 1024 * 1024) {
+    alert("That image is a bit large — please pick one under 8MB.");
+    imageInput.value = "";
+    return;
+  }
+
+  selectedImageFile = file;
+  imagePreview.src = URL.createObjectURL(file);
+  imagePreviewWrap.classList.remove("hidden");
+  addPhotoBtn.classList.add("hasImage");
+});
+
+function clearImageSelection() {
+  selectedImageFile = null;
+  imageInput.value = "";
+  imagePreview.src = "";
+  imagePreviewWrap.classList.add("hidden");
+  addPhotoBtn.classList.remove("hasImage");
+}
+
+removeImageBtn.addEventListener("click", clearImageSelection);
+
 /* POST A NEW MESSAGE */
 uploadBtn.addEventListener("click", async () => {
-  if (!textInput.value.trim() || !currentUser) return;
+  if ((!textInput.value.trim() && !selectedImageFile) || !currentUser) return;
 
   const displayName = (currentProfile && currentProfile.displayName) || currentUser.email;
   const avatarEmoji = (currentProfile && currentProfile.avatarEmoji) || null;
 
-  uploadBtn.textContent = "Posting...";
   uploadBtn.disabled = true;
+  addPhotoBtn.disabled = true;
+
+  let imageUrl = null;
+  let imagePath = null;
 
   try {
+    if (selectedImageFile) {
+      uploadBtn.textContent = "Uploading photo...";
+      imagePath = `guestbook/${currentUser.uid}_${Date.now()}_${selectedImageFile.name}`;
+      const storageRef = ref(storage, imagePath);
+      await uploadBytes(storageRef, selectedImageFile);
+      imageUrl = await getDownloadURL(storageRef);
+    }
+
+    uploadBtn.textContent = "Posting...";
+
     await addDoc(collection(db, "posts"), {
       text: textInput.value.trim(),
       user: currentUser.email,
+      uid: currentUser.uid,
       displayName: displayName,
       avatarEmoji: avatarEmoji,
       likes: [],
       commentCount: 0,
+      pinned: false,
+      imageUrl: imageUrl,
+      imagePath: imagePath,
       createdAt: serverTimestamp()
     });
+
     textInput.value = "";
+    clearImageSelection();
     loadPosts();
   } catch (err) {
     console.error("Error creating post:", err);
+    alert("Something went wrong posting that. Please try again.");
   } finally {
     uploadBtn.textContent = "Post Message";
     uploadBtn.disabled = false;
+    addPhotoBtn.disabled = false;
   }
 });
 
@@ -162,26 +235,49 @@ async function loadComments(postId, commentsList) {
   }
 }
 
+/* LIGHTBOX for tapping a photo */
+function openLightbox(src) {
+  const box = document.createElement("div");
+  box.className = "imgLightbox";
+  box.innerHTML = `<img src="${src}" alt="">`;
+  box.addEventListener("click", () => box.remove());
+  document.body.appendChild(box);
+}
+
 /* FEED LOADER */
 async function loadPosts() {
   try {
     const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
 
+    /* Pinned messages float to the top; order is otherwise unchanged
+       since Array.sort is stable, so newest-first ordering is preserved
+       within both the pinned and unpinned groups. */
+    const docs = snap.docs.slice().sort((a, b) => {
+      return (b.data().pinned ? 1 : 0) - (a.data().pinned ? 1 : 0);
+    });
+
     postsList.innerHTML = "";
 
-    snap.docs.forEach(docSnap => {
+    docs.forEach(docSnap => {
       const post = docSnap.data();
       const postId = docSnap.id;
       const likes = post.likes || [];
       const liked = currentUser && likes.includes(currentUser.email);
       const name = post.displayName || post.user || "Anonymous";
       const avatarContent = post.avatarEmoji || name.charAt(0).toUpperCase();
+      const isOwner = currentUser && (post.uid === currentUser.uid || post.user === currentUser.email);
+      const isPinned = !!post.pinned;
 
       const tweet = document.createElement("div");
-      tweet.className = "tweet";
+      tweet.className = "tweet" + (isPinned ? " pinned" : "");
 
       tweet.innerHTML = `
+        ${isPinned ? `<div class="pinnedLabel">${ICON_PIN}Pinned</div>` : ""}
+        <div class="cardControls">
+          <button type="button" class="cardIconBtn pinToggle ${isPinned ? "active" : ""}" aria-label="${isPinned ? "Unpin" : "Pin"} message">${ICON_PIN}</button>
+          ${isOwner ? `<button type="button" class="cardIconBtn deleteToggle" aria-label="Delete message">${ICON_TRASH}</button>` : ""}
+        </div>
         <div class="tweetHeader">
           <div class="avatar" style="background:${avatarColor(post.user || "anon")}">${avatarContent}</div>
           <div class="tweetMeta">
@@ -190,6 +286,7 @@ async function loadPosts() {
           </div>
         </div>
         <p class="tweetText"></p>
+        ${post.imageUrl ? `<img class="postImage" src="${post.imageUrl}" alt="Attached photo" loading="lazy">` : ""}
         <div class="tweetActions">
           <button type="button" class="likeBtn ${liked ? "liked" : ""}" aria-label="Like">
             <span class="icon icon-like" aria-hidden="true"></span>
@@ -220,6 +317,41 @@ async function loadPosts() {
       const commentInput = tweet.querySelector(".commentInput");
       const commentSubmit = tweet.querySelector(".commentSubmit");
       const commentsSection = tweet.querySelector(".commentsSection");
+
+      /* PIN / UNPIN — any signed-in guest can highlight a favorite */
+      tweet.querySelector(".pinToggle").addEventListener("click", async () => {
+        if (!currentUser) return;
+        try {
+          await updateDoc(doc(db, "posts", postId), { pinned: !isPinned });
+          loadPosts();
+        } catch (e) {
+          console.error("Error toggling pin:", e);
+        }
+      });
+
+      /* DELETE — owner only */
+      const deleteBtn = tweet.querySelector(".deleteToggle");
+      if (deleteBtn) {
+        deleteBtn.addEventListener("click", async () => {
+          if (!confirm("Delete this message? This can't be undone.")) return;
+          try {
+            await deleteDoc(doc(db, "posts", postId));
+            if (post.imagePath) {
+              try { await deleteObject(ref(storage, post.imagePath)); } catch (e) { /* image cleanup best-effort */ }
+            }
+            loadPosts();
+          } catch (e) {
+            console.error("Error deleting post:", e);
+            alert("Couldn't delete that message. Please try again.");
+          }
+        });
+      }
+
+      /* TAP PHOTO TO EXPAND */
+      const img = tweet.querySelector(".postImage");
+      if (img) {
+        img.addEventListener("click", () => openLightbox(post.imageUrl));
+      }
 
       /* LIKE ACTION */
       tweet.querySelector(".likeBtn").addEventListener("click", async () => {
