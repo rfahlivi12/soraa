@@ -21,33 +21,63 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
 /* ELEMENTS */
-const emailInput = document.getElementById("email");
+const emailInput    = document.getElementById("email");
 const passwordInput = document.getElementById("password");
-const authStatus = document.getElementById("authStatus");
-const authBox = document.getElementById("authBox");
+const authStatus    = document.getElementById("authStatus");
+const authBox       = document.getElementById("authBox");
 
-const postBox = document.getElementById("postBox");
-const textInput = document.getElementById("textInput");
-const uploadBtn = document.getElementById("uploadBtn");
+const postBox       = document.getElementById("postBox");
+const textInput     = document.getElementById("textInput");
+const uploadBtn     = document.getElementById("uploadBtn");
 const composeAvatar = document.getElementById("composeAvatar");
 
-const addPhotoBtn = document.getElementById("addPhotoBtn");
-const imageInput = document.getElementById("imageInput");
-const imagePreviewWrap = document.getElementById("imagePreviewWrap");
-const imagePreview = document.getElementById("imagePreview");
-const removeImageBtn = document.getElementById("removeImageBtn");
+const addPhotoBtn       = document.getElementById("addPhotoBtn");
+const imageInput        = document.getElementById("imageInput");
+const imagePreviewWrap  = document.getElementById("imagePreviewWrap");
+const imagePreview      = document.getElementById("imagePreview");
+const removeImageBtn    = document.getElementById("removeImageBtn");
 
 const postsList = document.getElementById("postsList");
 
-let currentProfile = null;
-let currentUser = null;
+let currentProfile   = null;
+let currentUser      = null;
 let selectedImageFile = null;
 
-/* ICONS — use the project's existing masked-icon system.
-   Requires icon/pin.svg and icon/delete.svg to exist in the repo,
-   plus the matching .icon-pin / .icon-delete CSS rules. */
-const ICON_PIN = `<span class="icon icon-pin" aria-hidden="true"></span>`;
+const ICON_PIN    = `<span class="icon icon-pin" aria-hidden="true"></span>`;
 const ICON_DELETE = `<span class="icon icon-delete" aria-hidden="true"></span>`;
+
+/* ── AVATAR HELPERS ──────────────────────────────────────────
+   setAvatar(el, photoBase64, name, email)
+     Renders a photo avatar OR a coloured-initial fallback.
+   avatarColor(email)
+     Deterministic hue from email — used only when no photo.
+   ────────────────────────────────────────────────────────── */
+function avatarColor(email) {
+  let hash = 0;
+  for (let i = 0; i < email.length; i++) {
+    hash = email.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return `hsl(${Math.abs(hash) % 360}, 55%, 42%)`;
+}
+
+function setAvatar(el, photoBase64, name, email) {
+  if (photoBase64) {
+    el.textContent = "";
+    el.style.backgroundImage   = `url(${photoBase64})`;
+    el.style.backgroundSize    = "cover";
+    el.style.backgroundPosition = "center";
+    el.style.background        = ""; // clear colour fallback
+    // Re-apply bg-image because shorthand "background" clears it
+    el.style.backgroundImage   = `url(${photoBase64})`;
+    el.style.backgroundSize    = "cover";
+    el.style.backgroundPosition = "center";
+  } else {
+    const label = (name || email || "?").charAt(0).toUpperCase();
+    el.textContent = label;
+    el.style.backgroundImage = "";
+    el.style.background = avatarColor(email || "guest");
+  }
+}
 
 /* SIGN UP */
 document.getElementById("signupBtn").addEventListener("click", async () => {
@@ -55,9 +85,7 @@ document.getElementById("signupBtn").addEventListener("click", async () => {
   try {
     await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
     authStatus.textContent = "";
-  } catch (err) {
-    authStatus.textContent = err.message;
-  }
+  } catch (err) { authStatus.textContent = err.message; }
 });
 
 /* LOG IN */
@@ -66,9 +94,7 @@ document.getElementById("loginBtn").addEventListener("click", async () => {
   try {
     await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
     authStatus.textContent = "";
-  } catch (err) {
-    authStatus.textContent = err.message;
-  }
+  } catch (err) { authStatus.textContent = err.message; }
 });
 
 /* AUTH STATE MONITOR */
@@ -83,13 +109,11 @@ onAuthStateChanged(auth, async (user) => {
     try {
       const snap = await getDoc(doc(db, "users", user.uid));
       if (snap.exists()) currentProfile = snap.data();
-    } catch (e) {
-      console.error("Profile load error:", e);
-    }
+    } catch (e) { console.error("Profile load error:", e); }
 
-    const name = (currentProfile && currentProfile.displayName) || user.email || "Guest";
-    composeAvatar.textContent = (currentProfile && currentProfile.avatarEmoji) || name.charAt(0).toUpperCase();
-    composeAvatar.style.background = avatarColor(user.email || "guest");
+    const name  = (currentProfile?.displayName) || user.email || "Guest";
+    const photo = currentProfile?.photoBase64 || null;
+    setAvatar(composeAvatar, photo, name, user.email);
   } else {
     authBox.classList.remove("hidden");
     postBox.classList.add("hidden");
@@ -97,36 +121,12 @@ onAuthStateChanged(auth, async (user) => {
   loadPosts();
 });
 
-/* HELPERS */
-function avatarColor(email) {
-  let hash = 0;
-  for (let i = 0; i < email.length; i++) {
-    hash = email.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const hue = Math.abs(hash) % 360;
-  return `hsl(${hue}, 55%, 42%)`;
-}
-
-function timeAgo(date) {
-  if (!date) return "now";
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (seconds < 60) return "now";
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}h`;
-  const days = Math.floor(hours / 24);
-  if (days < 7) return `${days}d`;
-  return date.toLocaleDateString();
-}
-
-/* PHOTO PICKER */
+/* PHOTO PICKER (post image) */
 addPhotoBtn.addEventListener("click", () => imageInput.click());
 
 imageInput.addEventListener("change", () => {
   const file = imageInput.files[0];
   if (!file) return;
-
   if (!file.type.startsWith("image/")) {
     alert("Please choose an image file.");
     imageInput.value = "";
@@ -137,27 +137,23 @@ imageInput.addEventListener("change", () => {
     imageInput.value = "";
     return;
   }
-
   selectedImageFile = file;
-  imagePreview.src = URL.createObjectURL(file);
+  imagePreview.src  = URL.createObjectURL(file);
   imagePreviewWrap.classList.remove("hidden");
   addPhotoBtn.classList.add("hasImage");
 });
 
 function clearImageSelection() {
   selectedImageFile = null;
-  imageInput.value = "";
-  imagePreview.src = "";
+  imageInput.value  = "";
+  imagePreview.src  = "";
   imagePreviewWrap.classList.add("hidden");
   addPhotoBtn.classList.remove("hasImage");
 }
 
 removeImageBtn.addEventListener("click", clearImageSelection);
 
-/* Compress + shrink the photo in-browser, then return it as a small
-   base64 data URL — this avoids needing Firebase Storage (which now
-   requires a paid Blaze plan) by storing the photo as text directly
-   inside the Firestore message document instead. */
+/* Compress post image */
 function compressImage(file, maxDim = 900, quality = 0.7) {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -166,15 +162,12 @@ function compressImage(file, maxDim = 900, quality = 0.7) {
       img.onload = () => {
         let { width, height } = img;
         if (width > height && width > maxDim) {
-          height = Math.round(height * (maxDim / width));
-          width = maxDim;
+          height = Math.round(height * (maxDim / width)); width = maxDim;
         } else if (height > maxDim) {
-          width = Math.round(width * (maxDim / height));
-          height = maxDim;
+          width = Math.round(width * (maxDim / height)); height = maxDim;
         }
         const canvas = document.createElement("canvas");
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = width; canvas.height = height;
         canvas.getContext("2d").drawImage(img, 0, 0, width, height);
         resolve(canvas.toDataURL("image/jpeg", quality));
       };
@@ -190,26 +183,22 @@ function compressImage(file, maxDim = 900, quality = 0.7) {
 uploadBtn.addEventListener("click", async () => {
   if ((!textInput.value.trim() && !selectedImageFile) || !currentUser) return;
 
-  const displayName = (currentProfile && currentProfile.displayName) || currentUser.email;
-  const avatarEmoji = (currentProfile && currentProfile.avatarEmoji) || null;
+  const displayName  = currentProfile?.displayName || currentUser.email;
+  const photoBase64  = currentProfile?.photoBase64 || null;   // ← save photo ref with post
 
-  uploadBtn.disabled = true;
-  addPhotoBtn.disabled = true;
+  uploadBtn.disabled    = true;
+  addPhotoBtn.disabled  = true;
 
   let imageUrl = null;
-
   try {
     if (selectedImageFile) {
       uploadBtn.textContent = "Processing photo...";
       imageUrl = await compressImage(selectedImageFile);
-
-      /* Firestore documents are capped at 1MB total, so keep the
-         encoded photo well under that to leave room for other fields. */
       if (imageUrl.length > 850000) {
         alert("That photo is too large even after compression. Try a smaller or simpler photo.");
         uploadBtn.textContent = "Post Message";
-        uploadBtn.disabled = false;
-        addPhotoBtn.disabled = false;
+        uploadBtn.disabled    = false;
+        addPhotoBtn.disabled  = false;
         return;
       }
     }
@@ -217,16 +206,16 @@ uploadBtn.addEventListener("click", async () => {
     uploadBtn.textContent = "Posting...";
 
     await addDoc(collection(db, "posts"), {
-      text: textInput.value.trim(),
-      user: currentUser.email,
-      uid: currentUser.uid,
-      displayName: displayName,
-      avatarEmoji: avatarEmoji,
-      likes: [],
+      text:         textInput.value.trim(),
+      user:         currentUser.email,
+      uid:          currentUser.uid,
+      displayName:  displayName,
+      photoBase64:  photoBase64,   // ← store profile photo snapshot with post
+      likes:        [],
       commentCount: 0,
-      pinned: false,
-      imageUrl: imageUrl,
-      createdAt: serverTimestamp()
+      pinned:       false,
+      imageUrl:     imageUrl,
+      createdAt:    serverTimestamp()
     });
 
     textInput.value = "";
@@ -237,16 +226,16 @@ uploadBtn.addEventListener("click", async () => {
     alert("Something went wrong posting that. Please try again.");
   } finally {
     uploadBtn.textContent = "Post Message";
-    uploadBtn.disabled = false;
-    addPhotoBtn.disabled = false;
+    uploadBtn.disabled    = false;
+    addPhotoBtn.disabled  = false;
   }
 });
 
-/* LOAD COMMENTS — sorted client-side, no Firestore index needed */
+/* LOAD COMMENTS */
 async function loadComments(postId, commentsList) {
   try {
     const csnap = await getDocs(collection(db, "posts", postId, "comments"));
-    const docs = csnap.docs.slice().sort((a, b) => {
+    const docs  = csnap.docs.slice().sort((a, b) => {
       const aTime = a.data().createdAt ? a.data().createdAt.toMillis() : 0;
       const bTime = b.data().createdAt ? b.data().createdAt.toMillis() : 0;
       return aTime - bTime;
@@ -263,17 +252,14 @@ async function loadComments(postId, commentsList) {
       p.append(data.text);
       commentsList.appendChild(p);
     });
-  } catch (e) {
-    console.error("Error loading comments:", e);
-  }
+  } catch (e) { console.error("Error loading comments:", e); }
 }
 
-/* LIGHTBOX for tapping a photo — markup/positioning lives in
-   guestbook-v3-additions.css (.imgLightbox), not inline here. */
+/* LIGHTBOX */
 function openLightbox(src) {
   const box = document.createElement("div");
-  box.className = "imgLightbox";
-  box.innerHTML = `<img src="${src}" alt="">`;
+  box.style.cssText = "position:fixed;inset:0;background:rgba(0,0,0,0.88);display:flex;align-items:center;justify-content:center;z-index:1000;padding:24px;cursor:zoom-out;";
+  box.innerHTML = `<img src="${src}" style="max-width:100%;max-height:100%;border-radius:12px;display:block;" alt="">`;
   box.addEventListener("click", () => box.remove());
   document.body.appendChild(box);
 }
@@ -281,31 +267,28 @@ function openLightbox(src) {
 /* FEED LOADER */
 async function loadPosts() {
   try {
-    const q = query(collection(db, "posts"), orderBy("createdAt", "desc"));
+    const q    = query(collection(db, "posts"), orderBy("createdAt", "desc"));
     const snap = await getDocs(q);
 
-    /* Pinned messages float to the top; order is otherwise unchanged
-       since Array.sort is stable, so newest-first ordering is preserved
-       within both the pinned and unpinned groups. */
-    const docs = snap.docs.slice().sort((a, b) => {
-      return (b.data().pinned ? 1 : 0) - (a.data().pinned ? 1 : 0);
-    });
+    const docs = snap.docs.slice().sort((a, b) =>
+      (b.data().pinned ? 1 : 0) - (a.data().pinned ? 1 : 0)
+    );
 
     postsList.innerHTML = "";
 
     docs.forEach(docSnap => {
-      const post = docSnap.data();
-      const postId = docSnap.id;
-      const likes = post.likes || [];
-      const liked = currentUser && likes.includes(currentUser.email);
-      const name = post.displayName || post.user || "Anonymous";
-      const avatarContent = post.avatarEmoji || name.charAt(0).toUpperCase();
-      const isOwner = currentUser && (post.uid === currentUser.uid || post.user === currentUser.email);
-      const isPinned = !!post.pinned;
+      const post      = docSnap.data();
+      const postId    = docSnap.id;
+      const likes     = post.likes || [];
+      const liked     = currentUser && likes.includes(currentUser.email);
+      const name      = post.displayName || post.user || "Anonymous";
+      const isOwner   = currentUser && (post.uid === currentUser.uid || post.user === currentUser.email);
+      const isPinned  = !!post.pinned;
 
       const tweet = document.createElement("div");
       tweet.className = "tweet" + (isPinned ? " pinned" : "");
 
+      // Build avatar element separately so we can call setAvatar on it
       tweet.innerHTML = `
         ${isPinned ? `<div class="pinnedLabel">${ICON_PIN}Pinned</div>` : ""}
         <div class="cardControls">
@@ -313,7 +296,7 @@ async function loadPosts() {
           ${isOwner ? `<button type="button" class="cardIconBtn deleteToggle" aria-label="Delete message">${ICON_DELETE}</button>` : ""}
         </div>
         <div class="tweetHeader">
-          <div class="avatar" style="background:${avatarColor(post.user || "anon")}">${avatarContent}</div>
+          <div class="avatar postAvatar"></div>
           <div class="tweetMeta">
             <span class="tweetUser"></span>
             <span class="tweetTime">${timeAgo(post.createdAt ? post.createdAt.toDate() : null)}</span>
@@ -343,29 +326,33 @@ async function loadPosts() {
         </div>
       `;
 
-      const tweetUserEl = tweet.querySelector(".tweetUser");
-      tweetUserEl.textContent = name;
-      tweetUserEl.title = name;
+      // Render avatar — photo if available, else coloured initial
+      setAvatar(
+        tweet.querySelector(".postAvatar"),
+        post.photoBase64 || null,
+        name,
+        post.user || "anon"
+      );
+
+      tweet.querySelector(".tweetUser").textContent = name;
       tweet.querySelector(".tweetText").textContent = post.text;
 
-      const commentsList = tweet.querySelector(".commentsList");
+      const commentsList   = tweet.querySelector(".commentsList");
       const commentCountEl = tweet.querySelector(".commentCount");
-      const commentInput = tweet.querySelector(".commentInput");
-      const commentSubmit = tweet.querySelector(".commentSubmit");
+      const commentInput   = tweet.querySelector(".commentInput");
+      const commentSubmit  = tweet.querySelector(".commentSubmit");
       const commentsSection = tweet.querySelector(".commentsSection");
 
-      /* PIN / UNPIN — any signed-in guest can highlight a favorite */
+      /* PIN / UNPIN */
       tweet.querySelector(".pinToggle").addEventListener("click", async () => {
         if (!currentUser) return;
         try {
           await updateDoc(doc(db, "posts", postId), { pinned: !isPinned });
           loadPosts();
-        } catch (e) {
-          console.error("Error toggling pin:", e);
-        }
+        } catch (e) { console.error("Error toggling pin:", e); }
       });
 
-      /* DELETE — owner only */
+      /* DELETE */
       const deleteBtn = tweet.querySelector(".deleteToggle");
       if (deleteBtn) {
         deleteBtn.addEventListener("click", async () => {
@@ -382,11 +369,9 @@ async function loadPosts() {
 
       /* TAP PHOTO TO EXPAND */
       const img = tweet.querySelector(".postImage");
-      if (img) {
-        img.addEventListener("click", () => openLightbox(post.imageUrl));
-      }
+      if (img) img.addEventListener("click", () => openLightbox(post.imageUrl));
 
-      /* LIKE ACTION */
+      /* LIKE */
       tweet.querySelector(".likeBtn").addEventListener("click", async () => {
         if (!currentUser) return;
         const postRef = doc(db, "posts", postId);
@@ -398,42 +383,35 @@ async function loadPosts() {
         loadPosts();
       });
 
-      /* COMMENT BUTTON — toggle open/closed, load on first open */
+      /* COMMENTS TOGGLE */
       let commentsLoaded = false;
       tweet.querySelector(".commentBtn").addEventListener("click", () => {
         const isOpen = commentsSection.classList.toggle("open");
         if (isOpen) {
-          if (!commentsLoaded) {
-            loadComments(postId, commentsList);
-            commentsLoaded = true;
-          }
+          if (!commentsLoaded) { loadComments(postId, commentsList); commentsLoaded = true; }
           commentInput.focus();
         }
       });
 
-      /* REPLY SUBMIT */
+      /* REPLY */
       commentSubmit.addEventListener("click", async (e) => {
         e.stopPropagation();
-
-        if (!currentUser) {
-          alert("You must be logged in to reply.");
-          return;
-        }
+        if (!currentUser) { alert("You must be logged in to reply."); return; }
         if (!commentInput.value.trim()) return;
 
-        const commentDisplayName = (currentProfile && currentProfile.displayName) || currentUser.email;
+        const commentDisplayName = currentProfile?.displayName || currentUser.email;
         const commentText = commentInput.value.trim();
 
         commentSubmit.textContent = "...";
-        commentSubmit.disabled = true;
-        commentInput.disabled = true;
+        commentSubmit.disabled    = true;
+        commentInput.disabled     = true;
 
         try {
           await addDoc(collection(db, "posts", postId, "comments"), {
-            text: commentText,
-            user: currentUser.email,
+            text:        commentText,
+            user:        currentUser.email,
             displayName: commentDisplayName,
-            createdAt: serverTimestamp()
+            createdAt:   serverTimestamp()
           });
           await updateDoc(doc(db, "posts", postId), { commentCount: increment(1) });
           commentInput.value = "";
@@ -444,23 +422,19 @@ async function loadPosts() {
           alert("Failed to post reply. Check console for details.");
         } finally {
           commentSubmit.textContent = "Reply";
-          commentSubmit.disabled = false;
-          commentInput.disabled = false;
+          commentSubmit.disabled    = false;
+          commentInput.disabled     = false;
         }
       });
 
-      /* ENTER KEY on comment input */
+      /* ENTER KEY on comment */
       commentInput.addEventListener("keydown", (e) => {
         if (e.key === "Enter") commentSubmit.click();
       });
 
-      /* SHARE ACTION */
+      /* SHARE */
       tweet.querySelector(".shareBtn").addEventListener("click", async () => {
-        const shareData = {
-          title: "Guestbook message",
-          text: post.text,
-          url: location.href
-        };
+        const shareData = { title: "Guestbook message", text: post.text, url: location.href };
         if (navigator.share) {
           try { await navigator.share(shareData); } catch (e) { /* ignored */ }
         } else {
@@ -471,7 +445,18 @@ async function loadPosts() {
 
       postsList.appendChild(tweet);
     });
-  } catch (err) {
-    console.error("Error loading timeline:", err);
-  }
+  } catch (err) { console.error("Error loading timeline:", err); }
+}
+
+function timeAgo(date) {
+  if (!date) return "now";
+  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
+  if (seconds < 60) return "now";
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}d`;
+  return date.toLocaleDateString();
 }
