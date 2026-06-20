@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <style>
+    /* Hide everything until auth resolves — prevents login flash */
     body > .stars,
     body > main { opacity: 0; transition: opacity 0.3s ease; }
     body.auth-ready > .stars,
@@ -37,10 +38,8 @@
 
   <main class="container guestbookPage guestbookV2">
     <nav class="topNav">
-      <a href="index.html" class="backLink"><span class="icon icon-back" aria-hidden="true"></span>Back</a>
-      <div class="navRightGroup">
-        <a href="profile.html" class="backLink editProfileLink">Edit Profile</a>
-      </div>
+      <a href="index.html" class="backLink">← Back</a>
+      <a href="profile.html" class="backLink editProfileLink">Edit Profile</a>
     </nav>
 
     <header class="gbHeader">
@@ -70,6 +69,5 @@
   </main>
 
   <script type="module" src="app.js"></script>
-  <script type="module" src="nav-controls.js"></script>
 </body>
 </html>
