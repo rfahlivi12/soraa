@@ -174,12 +174,13 @@ async function loadPosts() {
       const post = docSnap.data();
       const postId = docSnap.id;
       const likes = post.likes || [];
-      const liked = currentUser && post.likes && post.likes.includes(currentUser.email);
+      const liked = currentUser && likes.includes(currentUser.email);
       const name = post.displayName || post.user || "Anonymous";
       const avatarContent = post.avatarEmoji || name.charAt(0).toUpperCase();
 
       const tweet = document.createElement("div");
       tweet.className = "tweet";
+
       tweet.innerHTML = `
         <div class="tweetHeader">
           <div class="avatar" style="background:${avatarColor(post.user || "anon")}">${avatarContent}</div>
@@ -190,14 +191,22 @@ async function loadPosts() {
         </div>
         <p class="tweetText"></p>
         <div class="tweetActions">
-          <button type="button" class="likeBtn ${liked ? "liked" : ""}">${liked ? "♥" : "♡"} <span class="likeCount">${likes.length}</span></button>
-          <button type="button" class="commentBtn">💬 <span class="commentCount">${post.commentCount || 0}</span></button>
-          <button type="button" class="shareBtn">⤴ Share</button>
+          <button type="button" class="likeBtn ${liked ? "liked" : ""}" aria-label="Like">
+            <span class="icon icon-like" aria-hidden="true"></span>
+            <span class="likeCount">${likes.length || ""}</span>
+          </button>
+          <button type="button" class="commentBtn" aria-label="Comments">
+            <span class="icon icon-comment" aria-hidden="true"></span>
+            <span class="commentCount">${post.commentCount || ""}</span>
+          </button>
+          <button type="button" class="shareBtn" aria-label="Share">
+            <span class="icon icon-share" aria-hidden="true"></span>
+          </button>
         </div>
         <div class="commentsSection">
           <div class="commentsList"></div>
           <div class="commentCompose">
-            <input type="text" class="commentInput" placeholder="Reply...">
+            <input type="text" class="commentInput" placeholder="Write a comment...">
             <button type="button" class="commentSubmit">Reply</button>
           </div>
         </div>
@@ -273,6 +282,11 @@ async function loadPosts() {
           commentSubmit.disabled = false;
           commentInput.disabled = false;
         }
+      });
+
+      /* ENTER KEY on comment input */
+      commentInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") commentSubmit.click();
       });
 
       /* SHARE ACTION */
