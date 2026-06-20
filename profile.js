@@ -2,81 +2,158 @@ import { auth, db } from "./firebase-init.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js";
 import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore.js";
 
-/* ELEMENTS */
-const profileBox = document.getElementById("profileBox");
-const avatarPreview = document.getElementById("avatarPreview");
+/* ── ELEMENTS ── */
+const profileBox       = document.getElementById("profileBox");
+const avatarPreview    = document.getElementById("avatarPreview");
+const avatarEditBtn    = document.getElementById("avatarEditBtn");
+const photoInput       = document.getElementById("photoInput");
 const displayNameInput = document.getElementById("displayNameInput");
-const emojiButtons = document.querySelectorAll(".emojiOption");
-const saveProfileBtn = document.getElementById("saveProfileBtn");
-const profileStatus = document.getElementById("profileStatus");
+const saveProfileBtn   = document.getElementById("saveProfileBtn");
+const profileStatus    = document.getElementById("profileStatus");
+const avatarHint       = document.getElementById("avatarHint");
 
-let selectedEmoji = null;
+let photoBase64 = null;   // base64 string of the new/existing photo
+let photoChanged = false; // track if user picked a new photo
 
-/* UPDATE LIVE PREVIEW */
-function updatePreview() {
-  if (selectedEmoji) {
-    avatarPreview.textContent = selectedEmoji;
+/* ── RENDER AVATAR ──
+   Shows photo if available, otherwise shows initial letter */
+function renderAvatar(base64, name, email) {
+  avatarPreview.innerHTML = "";
+  avatarPreview.style.backgroundImage = "";
+
+  if (base64) {
+    avatarPreview.style.backgroundImage = `url(${base64})`;
+    avatarPreview.style.backgroundSize  = "cover";
+    avatarPreview.style.backgroundPosition = "center";
+    avatarPreview.textContent = "";
   } else {
-    const name = displayNameInput.value.trim() || (auth.currentUser ? auth.currentUser.email : "");
-    avatarPreview.textContent = name ? name.charAt(0).toUpperCase() : "?";
+    const label = name || email || "?";
+    avatarPreview.textContent = label.charAt(0).toUpperCase();
+    avatarPreview.style.backgroundImage = "";
   }
 }
 
-/* LISTENERS */
-displayNameInput.addEventListener("input", updatePreview);
+/* ── COMPRESS IMAGE to base64 (max ~150KB output) ── */
+function compressImage(file) {
+  return new Promise((resolve, reject) => {
+    const MAX_SIZE = 600; // px — enough for a crisp avatar
+    const QUALITY  = 0.75;
 
-emojiButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    selectedEmoji = btn.dataset.emoji;
-    emojiButtons.forEach(b => b.classList.remove("selected"));
-    btn.classList.add("selected");
-    updatePreview();
-  });
-});
+    const img = new Image();
+    const url = URL.createObjectURL(file);
 
-/* RE-LOAD PROFILE INFO */
-onAuthStateChanged(auth, async (user) => {
-  if (user) {
-    if (profileBox) profileBox.classList.remove("hidden");
+    img.onload = () => {
+      URL.revokeObjectURL(url);
 
-    try {
-      const snap = await getDoc(doc(db, "users", user.uid));
-      if (snap.exists()) {
-        const data = snap.data();
-        displayNameInput.value = data.displayName || "";
-        selectedEmoji = data.avatarEmoji || null;
-
-        if (selectedEmoji) {
-          emojiButtons.forEach(b => {
-            b.classList.toggle("selected", b.dataset.emoji === selectedEmoji);
-          });
+      let { width, height } = img;
+      if (width > MAX_SIZE || height > MAX_SIZE) {
+        if (width > height) {
+          height = Math.round((height / width) * MAX_SIZE);
+          width  = MAX_SIZE;
+        } else {
+          width  = Math.round((width / height) * MAX_SIZE);
+          height = MAX_SIZE;
         }
       }
-    } catch (e) {
-      console.error(e);
-    }
-    updatePreview();
-  } else {
-    // Safety redirect if someone stumbles onto profile without logging in
-    window.location.href = "index.html";
+
+      const canvas = document.createElement("canvas");
+      canvas.width  = width;
+      canvas.height = height;
+      canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+
+      const base64 = canvas.toDataURL("image/jpeg", QUALITY);
+
+      // Safety: Firestore doc limit is 1 MB — base64 of 600px JPEG is ~50-100 KB
+      if (base64.length > 900_000) {
+        // Re-compress harder if still too big
+        resolve(canvas.toDataURL("image/jpeg", 0.45));
+      } else {
+        resolve(base64);
+      }
+    };
+
+    img.onerror = () => reject(new Error("Could not load image"));
+    img.src = url;
+  });
+}
+
+/* ── PHOTO PICK ── */
+avatarEditBtn.addEventListener("click", () => photoInput.click());
+
+photoInput.addEventListener("change", async () => {
+  const file = photoInput.files[0];
+  if (!file) return;
+
+  avatarHint.textContent = "Processing…";
+
+  try {
+    photoBase64  = await compressImage(file);
+    photoChanged = true;
+    renderAvatar(photoBase64, displayNameInput.value.trim(), auth.currentUser?.email);
+    avatarHint.textContent = "Photo ready — tap Save Profile";
+  } catch (e) {
+    avatarHint.textContent = "Could not load image, try another.";
+    console.error(e);
   }
+
+  photoInput.value = ""; // reset so same file can be re-picked
 });
 
-/* SAVE ACTION */
+/* ── LIVE NAME PREVIEW (only when no photo) ── */
+displayNameInput.addEventListener("input", () => {
+  if (!photoBase64) renderAvatar(null, displayNameInput.value.trim(), auth.currentUser?.email);
+});
+
+/* ── LOAD EXISTING PROFILE ── */
+onAuthStateChanged(auth, async (user) => {
+  if (!user) {
+    window.location.href = "index.html";
+    return;
+  }
+
+  profileBox.classList.remove("hidden");
+
+  try {
+    const snap = await getDoc(doc(db, "users", user.uid));
+    if (snap.exists()) {
+      const data = snap.data();
+      displayNameInput.value = data.displayName || "";
+      photoBase64 = data.photoBase64 || null;
+    }
+  } catch (e) {
+    console.error(e);
+  }
+
+  renderAvatar(photoBase64, displayNameInput.value.trim(), user.email);
+});
+
+/* ── SAVE ── */
 saveProfileBtn.addEventListener("click", async () => {
   if (!auth.currentUser) return;
 
-  profileStatus.textContent = "Saving...";
+  saveProfileBtn.disabled = true;
+  profileStatus.textContent = "Saving…";
 
   try {
-    await setDoc(doc(db, "users", auth.currentUser.uid), {
+    const payload = {
       displayName: displayNameInput.value.trim() || auth.currentUser.email,
-      avatarEmoji: selectedEmoji || null,
-      email: auth.currentUser.email
-    }, { merge: true });
+      email: auth.currentUser.email,
+    };
 
-    profileStatus.textContent = "Profile Saved Successfully!";
+    // Only write photoBase64 if changed (saves Firestore write size)
+    if (photoChanged) {
+      payload.photoBase64 = photoBase64;
+    }
+
+    await setDoc(doc(db, "users", auth.currentUser.uid), payload, { merge: true });
+
+    photoChanged = false;
+    profileStatus.textContent = "✓ Profile saved!";
+    avatarHint.textContent = "Tap the pencil to change photo";
   } catch (e) {
-    profileStatus.textContent = e.message;
+    profileStatus.textContent = "Error: " + e.message;
+    console.error(e);
+  } finally {
+    saveProfileBtn.disabled = false;
   }
 });
