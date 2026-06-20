@@ -25,7 +25,7 @@ function isValidUrl(value) {
   }
 }
 
-/* EMBED DETECTION — returns an embeddable iframe src for YouTube/Spotify links, or null */
+/* EMBED DETECTION */
 function getEmbedSrc(link) {
   if (!link) return null;
   let url;
@@ -36,7 +36,6 @@ function getEmbedSrc(link) {
   }
   const host = url.hostname.replace(/^www\./, "");
 
-  // YouTube: youtube.com/watch?v=ID, youtu.be/ID, youtube.com/shorts/ID
   if (host === "youtube.com" || host === "m.youtube.com") {
     const videoId = url.searchParams.get("v") || (url.pathname.includes("/shorts/") ? url.pathname.split("/shorts/")[1] : null);
     if (videoId) return { type: "youtube", src: `https://www.youtube.com/embed/${videoId.split("/")[0]}?autoplay=1` };
@@ -45,8 +44,6 @@ function getEmbedSrc(link) {
     const videoId = url.pathname.slice(1);
     if (videoId) return { type: "youtube", src: `https://www.youtube.com/embed/${videoId}?autoplay=1` };
   }
-
-  // Spotify: open.spotify.com/track|album|playlist|episode/ID
   if (host === "open.spotify.com") {
     const match = url.pathname.match(/^\/(track|album|playlist|episode)\/([a-zA-Z0-9]+)/);
     if (match) return { type: "spotify", src: `https://open.spotify.com/embed/${match[1]}/${match[2]}?autoplay=1` };
@@ -101,14 +98,14 @@ function renderSongs() {
 
     if (song.link) {
       if (embed) {
-        // ── Play here image button ──
+        // Play here image button
         const playToggle = document.createElement("button");
         playToggle.type = "button";
         playToggle.className = "songPlayToggle";
         playToggle.innerHTML = `<img src="icon/playhere.png" alt="Play here">`;
         meta.appendChild(playToggle);
 
-        // ── Open image button ──
+        // Open image button
         const externalLink = document.createElement("a");
         externalLink.className = "songLink";
         externalLink.href = song.link;
@@ -140,7 +137,6 @@ function renderSongs() {
             embedWrap.innerHTML = "";
             embedWrap.appendChild(iframe);
             embedWrap.classList.add("open");
-            // swap to a "close" state — still uses the play image but dimmed
             playToggle.style.opacity = "0.4";
           } else {
             embedWrap.classList.remove("open");
@@ -149,7 +145,7 @@ function renderSongs() {
           }
         });
       } else {
-        // No embeddable link — just show Open button
+        // No embeddable link — just Open button
         const link = document.createElement("a");
         link.className = "songLink";
         link.href = song.link;
@@ -167,7 +163,7 @@ function renderSongs() {
   });
 }
 
-/* SAVE TO FIRESTORE — shared between both of you */
+/* SAVE */
 async function saveSongs() {
   try {
     await setDoc(playlistDocRef, { items: songs });
@@ -207,7 +203,7 @@ addBtn.addEventListener("click", () => {
   saveSongs();
 });
 
-/* SHUFFLE PLAY */
+/* SHUFFLE */
 shuffleBtn.addEventListener("click", () => {
   if (!songs.length) {
     playlistStatus.textContent = "Add a song first!";
