@@ -1427,7 +1427,7 @@ textarea:focus {
   align-items: center;
   gap: 8px;
   margin: 6px auto 30px;
-  padding: 12px 28px;
+  padding: 13px 30px;
   border-radius: var(--radius-pill);
   border: 1px solid var(--hairline);
   background: linear-gradient(180deg, var(--glass-2), var(--glass-1));
@@ -1435,6 +1435,7 @@ textarea:focus {
   cursor: pointer;
   font-family: Helvetica, Arial, sans-serif;
   font-size: 0.95rem;
+  letter-spacing: 0.01em;
   box-shadow: var(--shadow-rest);
 }
 
@@ -1448,33 +1449,42 @@ textarea:focus {
 
 .shuffleBtn:active { transform: translateY(0); }
 
+/* ── Add-song form ── */
 .formCard {
-  max-width: 480px;
-  margin: 0 auto 16px;
-  padding: 26px;
-  border-radius: 22px;
-  background: rgba(255,255,255,0.035);
-  border: 1px solid rgba(255,255,255,0.07);
+  max-width: 520px;
+  margin: 0 auto 20px;
+  padding: 22px 22px 18px;
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.045);
+  border: 1px solid rgba(255,255,255,0.09);
   text-align: left;
 }
 
 .formCard input,
 .formCard textarea {
   width: 100%;
-  padding: 12px 14px;
+  padding: 13px 15px;
   margin-top: 10px;
-  border: none;
+  border: 1px solid rgba(255,255,255,0.07);
   outline: none;
-  border-radius: 14px;
-  background: rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.055);
   color: white;
   font-size: 0.95rem;
   font-family: Helvetica, Arial, sans-serif;
+  transition: background 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.formCard input:focus,
+.formCard textarea:focus {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(232,180,160,0.35);
+  box-shadow: 0 0 0 3px rgba(232,180,160,0.1);
 }
 
 .formCard textarea {
   resize: vertical;
-  min-height: 50px;
+  min-height: 54px;
 }
 
 .formCard button {
@@ -1485,7 +1495,9 @@ textarea:focus {
   border-radius: var(--radius-sm);
   background: linear-gradient(135deg, var(--accent-soft), var(--accent-deep));
   color: #2a1410;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 0.97rem;
+  letter-spacing: 0.02em;
   cursor: pointer;
   font-family: Helvetica, Arial, sans-serif;
   box-shadow: var(--shadow-rest);
@@ -1506,129 +1518,217 @@ textarea:focus {
   font-size: 0.85rem;
 }
 
+/* ── Song list ── */
 .songList {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  max-width: 600px;
+  gap: 10px;
+  max-width: 560px;
   margin: 0 auto;
   text-align: left;
 }
 
 .songCard {
   position: relative;
-  padding: 18px 20px;
-  border-radius: 18px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  transition: transform 0.2s ease, background 0.2s ease;
-  animation: fadeIn 0.4s ease;
+  padding: 16px 18px 14px;
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.055);
+  border: 1px solid rgba(255,255,255,0.1);
+  transition: transform 0.22s var(--ease),
+              background 0.22s var(--ease),
+              box-shadow 0.22s var(--ease);
+  animation: fadeIn 0.35s ease;
 }
 
 .songCard:hover {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255,0.08);
   transform: translateY(-2px);
   box-shadow: var(--shadow-lift);
+  border-color: rgba(255,255,255,0.15);
+}
+
+/* number badge */
+.songCard::before {
+  content: attr(data-index);
+  position: absolute;
+  top: 16px;
+  left: 18px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  opacity: 0.22;
+  letter-spacing: 0.05em;
 }
 
 .songTitle {
-  font-size: 1.05rem;
-  font-weight: bold;
-  padding-right: 24px;
+  font-size: 1rem;
+  font-weight: 700;
+  padding-right: 32px;
+  padding-left: 0;
+  line-height: 1.35;
+  color: rgba(255,255,255,0.95);
 }
 
 .songArtist {
-  font-size: 0.85rem;
-  opacity: 0.6;
-  margin-top: 2px;
+  font-size: 0.82rem;
+  opacity: 0.55;
+  margin-top: 3px;
+  font-weight: 400;
 }
 
 .songNote {
-  margin-top: 10px;
-  font-size: 0.9rem;
-  line-height: 1.6;
-  opacity: 0.85;
+  margin-top: 9px;
+  font-size: 0.88rem;
+  line-height: 1.65;
+  color: var(--accent-soft);
+  opacity: 0.9;
   font-style: italic;
 }
 
+/* ── Meta row: addedBy left, buttons right ── */
 .songMeta {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 12px;
+  margin-top: 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255,255,255,0.06);
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .songAddedBy {
-  font-size: 0.75rem;
-  opacity: 0.45;
+  font-size: 0.72rem;
+  opacity: 0.38;
+  letter-spacing: 0.01em;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* button group on the right */
+.songMeta > .songPlayToggle,
+.songMeta > .songLink,
+.songMeta > a.songLink {
+  flex-shrink: 0;
 }
 
 .songPlayToggle {
   appearance: none;
   -webkit-appearance: none;
-  border: 1px solid var(--hairline);
-  background: var(--glass-2);
-  color: white;
+  border: 1px solid rgba(232,180,160,0.4);
+  background: linear-gradient(135deg, rgba(232,180,160,0.14), rgba(217,154,130,0.08));
+  color: var(--accent-soft);
   font-size: 0.78rem;
-  font-weight: 600;
+  font-weight: 700;
   font-family: Helvetica, Arial, sans-serif;
-  padding: 7px 16px;
+  padding: 7px 18px;
   border-radius: var(--radius-pill);
   cursor: pointer;
   white-space: nowrap;
   outline: none;
+  letter-spacing: 0.02em;
+  transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
 }
 
 .songPlayToggle:hover {
-  background: linear-gradient(180deg, var(--accent-soft), var(--accent));
+  background: linear-gradient(135deg, var(--accent-soft), var(--accent-deep));
   color: #2a1410;
   border-color: var(--accent);
+  transform: translateY(-1px);
 }
 
 .songPlayToggle:active { transform: scale(0.96); }
 
 .songLink {
-  font-size: 0.8rem;
-  color: white;
-  opacity: 0.65;
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.5);
   text-decoration: none;
-  border-bottom: 1px solid rgba(255,255,255,0.25);
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
   white-space: nowrap;
-  padding-bottom: 1px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
 
 .songLink:hover {
-  opacity: 1;
-  border-color: var(--accent-soft);
-  color: var(--accent-soft);
+  color: white;
+  border-color: rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.08);
 }
 
+/* ── Delete button ── */
 .songDelete {
   position: absolute;
-  top: 14px;
-  right: 16px;
-  width: 28px;
-  height: 28px;
+  top: 12px;
+  right: 14px;
+  width: 26px;
+  height: 26px;
   background: transparent;
   border: none;
   border-radius: 50%;
-  color: rgba(255,255,255,0.3);
-  font-size: 1.2rem;
+  color: rgba(255,255,255,0.22);
+  font-size: 1.15rem;
   cursor: pointer;
   line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.2s;
 }
 
 .songDelete:hover {
   color: #f91880;
-  background: rgba(249,24,128,0.1);
+  background: rgba(249,24,128,0.12);
 }
 
+/* ── Embedded player ── */
+.songEmbed {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.4s var(--ease);
+  border-radius: var(--radius-sm);
+  margin-top: 0;
+}
+
+.songEmbed.open {
+  max-height: 200px;
+  margin-top: 12px;
+}
+
+.songEmbed-youtube.open {
+  max-height: 230px;
+}
+
+.songEmbed iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 80px;
+  border: none;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+.songEmbed-spotify iframe  { min-height: 80px; }
+.songEmbed-youtube iframe  { min-height: 200px; }
+
+/* ── Empty state ── */
 #songList:empty::after {
   content: "No songs yet — add the first one 🎵";
   display: block;
   text-align: center;
-  opacity: 0.4;
-  padding: 40px 0;
+  opacity: 0.35;
+  padding: 48px 0;
   font-size: 0.95rem;
+}
+
+/* ── Mobile tweaks ── */
+@media (max-width: 500px) {
+  .formCard { padding: 18px 16px 14px; }
+  .songCard { padding: 14px 16px 12px; }
+  .songMeta { gap: 8px; }
+  .songPlayToggle { padding: 6px 14px; }
+  .songLink { padding: 6px 12px; }
 }
