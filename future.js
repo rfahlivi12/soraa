@@ -5,6 +5,7 @@ import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/12.15.0/
 /* ELEMENTS */
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
+const questionCard = document.querySelector(".questionCard");
 const thankYouSection = document.getElementById("thankYouSection");
 
 const bucketListEl = document.getElementById("bucketList");
@@ -35,6 +36,7 @@ noBtn.addEventListener("mouseover", () => {
 });
 
 yesBtn.addEventListener("click", () => {
+  questionCard.classList.add("hidden");
   thankYouSection.classList.remove("hidden");
   thankYouSection.scrollIntoView({ behavior: "smooth", block: "center" });
 });

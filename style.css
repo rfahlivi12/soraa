@@ -52,6 +52,9 @@ body {
 button {
   font-family: inherit;
   -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  outline: none;
 }
 
 button,
@@ -1562,6 +1565,8 @@ textarea:focus {
 }
 
 .songPlayToggle {
+  appearance: none;
+  -webkit-appearance: none;
   border: 1px solid var(--hairline);
   background: var(--glass-2);
   color: white;
@@ -1572,6 +1577,7 @@ textarea:focus {
   border-radius: var(--radius-pill);
   cursor: pointer;
   white-space: nowrap;
+  outline: none;
 }
 
 .songPlayToggle:hover {
