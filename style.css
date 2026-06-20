@@ -650,12 +650,18 @@ textarea:focus {
   display: flex;
   flex-direction: column;
   line-height: 1.25;
+  flex: 1;
+  min-width: 0;
 }
 
 .tweetUser {
   font-weight: bold;
   font-size: 0.92rem;
-  word-break: break-all;
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tweetTime {
