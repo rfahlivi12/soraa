@@ -6,18 +6,25 @@
   <title>For Sora</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    .menuLink img,
-    .menu button img {
-      width: 20px;
-      height: 20px;
+    /* All menu items: icon + text centered together */
+    .menu button,
+    .menu .menuLink {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    .menu button img,
+    .menu .menuLink img {
+      width: 18px;
+      height: 18px;
       object-fit: contain;
-      display: inline-block;
-      vertical-align: middle;
       filter: invert(1);
       opacity: 0.85;
+      flex-shrink: 0;
     }
-    .menuLink:hover img,
-    .menu button:hover img {
+    .menu button:hover img,
+    .menu .menuLink:hover img {
       opacity: 1;
     }
   </style>
