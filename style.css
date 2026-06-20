@@ -1548,11 +1548,12 @@ textarea:focus {
 
 .songNote {
   margin-top: 9px;
-  font-size: 0.88rem;
-  line-height: 1.65;
+  font-size: 0.86rem;
+  line-height: 1.7;
   color: var(--accent-soft);
   opacity: 0.9;
-  font-style: italic;
+  font-family: 'Special Elite', 'Courier New', Courier, monospace;
+  letter-spacing: 0.02em;
 }
 
 /* ── Meta row: addedBy left, buttons right ── */
@@ -1590,7 +1591,7 @@ textarea:focus {
   -webkit-appearance: none;
   border: 1px solid rgba(232,180,160,0.4);
   background: linear-gradient(135deg, rgba(232,180,160,0.14), rgba(217,154,130,0.08));
-  color: var(--accent-soft);
+  color: white;
   font-size: 0.78rem;
   font-weight: 700;
   font-family: Helvetica, Arial, sans-serif;
@@ -1600,6 +1601,9 @@ textarea:focus {
   white-space: nowrap;
   outline: none;
   letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: background 0.2s, color 0.2s, border-color 0.2s, transform 0.15s;
 }
 
@@ -1614,13 +1618,16 @@ textarea:focus {
 
 .songLink {
   font-size: 0.78rem;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.85);
   text-decoration: none;
   padding: 7px 14px;
   border-radius: var(--radius-pill);
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.04);
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
 
@@ -1739,11 +1746,15 @@ textarea:focus {
 .icon-guestbook { -webkit-mask-image: url('icon/guestbook.svg');   mask-image: url('icon/guestbook.svg'); }
 .icon-theme     { -webkit-mask-image: url('icon/changetheme.svg'); mask-image: url('icon/changetheme.svg'); }
 .icon-signout   { -webkit-mask-image: url('icon/signout.svg');     mask-image: url('icon/signout.svg'); }
+.icon-playhere  { -webkit-mask-image: url('icon/playhere.svg');    mask-image: url('icon/playhere.svg'); }
+.icon-open      { -webkit-mask-image: url('icon/open.svg');        mask-image: url('icon/open.svg'); }
 
 .backLink { gap: 8px; }
 .backLink .icon { width: 14px; height: 14px; }
 .menuLink .icon { width: 16px; height: 16px; }
 .tweetActions .icon { width: 16px; height: 16px; }
+.songPlayToggle .icon,
+.songLink .icon { width: 14px; height: 14px; }
 
 /* ===========================================================
    TOP NAV — right-side icon group (theme switch + sign out)
