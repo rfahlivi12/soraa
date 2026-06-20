@@ -7,6 +7,19 @@
     body > main { opacity: 0; transition: opacity 0.3s ease; }
     body.auth-ready > .stars,
     body.auth-ready > main { opacity: 1; }
+
+    /* Tidy navbar — scoped to this page only */
+    .guestbookPage .topNav .backLink {
+      margin-bottom: 0;
+      float: none;
+    }
+    .guestbookPage .topNav {
+      flex-wrap: nowrap;
+      gap: 12px;
+    }
+    .guestbookPage .navRightGroup {
+      flex-wrap: nowrap;
+    }
   </style>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js";
@@ -43,9 +56,6 @@
         <a href="profile.html" class="backLink editProfileLink">Edit Profile</a>
         <button type="button" id="themeToggleBtn" class="navIconBtn" aria-label="Change theme">
           <span class="icon icon-theme" aria-hidden="true"></span>
-        </button>
-        <button type="button" id="signoutBtn" class="navIconBtn" aria-label="Sign out">
-          <span class="icon icon-signout" aria-hidden="true"></span>
         </button>
       </div>
     </nav>
