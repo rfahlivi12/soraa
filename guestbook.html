@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <style>
-    /* Hide everything until auth resolves — prevents login flash */
     body > .stars,
     body > main { opacity: 0; transition: opacity 0.3s ease; }
     body.auth-ready > .stars,
@@ -23,7 +22,6 @@
       if (!user) {
         window.location.href = "index.html";
       } else {
-        // Auth confirmed — fade content in smoothly
         document.body.classList.add("auth-ready");
       }
     });
@@ -31,7 +29,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Guestbook - For Sora</title>
-
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -43,12 +40,6 @@
       <a href="index.html" class="backLink"><span class="icon icon-back" aria-hidden="true"></span>Back</a>
       <div class="navRightGroup">
         <a href="profile.html" class="backLink editProfileLink">Edit Profile</a>
-        <button type="button" id="themeToggleBtn" class="navIconBtn" aria-label="Change theme">
-          <span class="icon icon-theme" aria-hidden="true"></span>
-        </button>
-        <button type="button" id="signoutBtn" class="navIconBtn" aria-label="Sign out">
-          <span class="icon icon-signout" aria-hidden="true"></span>
-        </button>
       </div>
     </nav>
 
