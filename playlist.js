@@ -102,7 +102,7 @@ function renderSongs() {
         const playToggle = document.createElement("button");
         playToggle.type = "button";
         playToggle.className = "songPlayToggle";
-        playToggle.innerHTML = `<img src="icon/playhere.png" alt="Play here">`;
+        playToggle.innerHTML = `<img src="icon/playhere.svg" alt="Play here">`;
         meta.appendChild(playToggle);
 
         // Open image button
@@ -111,7 +111,7 @@ function renderSongs() {
         externalLink.href = song.link;
         externalLink.target = "_blank";
         externalLink.rel = "noopener";
-        externalLink.innerHTML = `<img src="icon/open.png" alt="Open">`;
+        externalLink.innerHTML = `<img src="icon/open.svg" alt="Open">`;
         meta.appendChild(externalLink);
 
         card.appendChild(meta);
@@ -151,7 +151,7 @@ function renderSongs() {
         link.href = song.link;
         link.target = "_blank";
         link.rel = "noopener";
-        link.innerHTML = `<img src="icon/open.png" alt="Open">`;
+        link.innerHTML = `<img src="icon/open.svg" alt="Open">`;
         meta.appendChild(link);
         card.appendChild(meta);
       }
