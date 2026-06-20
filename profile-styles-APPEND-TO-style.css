@@ -1,9 +1,8 @@
 /* ===========================================================
-   PROFILE PAGE — Photo Upload
-   Append these rules to the bottom of style.css
+   PROFILE PAGE — Photo Upload  (append to bottom of style.css)
    =========================================================== */
 
-/* Wrapper centers the avatar + positions the pencil button */
+/* Wrapper: fixed size, relative so pencil can be absolute inside */
 .avatarUploadWrap {
   position: relative;
   width: 110px;
@@ -11,12 +10,15 @@
   margin: 0 auto 8px;
 }
 
-/* The circle — shows photo (via background-image) or initials */
-#avatarPreview {
+/* Override the old .avatarPreview margin so it sits INSIDE the wrapper */
+.avatarUploadWrap #avatarPreview {
   width: 110px;
   height: 110px;
+  margin: 0;               /* ← removes the old "0 auto 20px" */
   border-radius: 50%;
-  background: var(--glass-3);
+  background-color: var(--glass-3);
+  background-size: cover;
+  background-position: center;
   border: 2px solid var(--hairline);
   display: flex;
   align-items: center;
@@ -25,8 +27,6 @@
   font-weight: 700;
   color: white;
   overflow: hidden;
-  background-size: cover;
-  background-position: center;
   transition: border-color 0.3s var(--ease);
 }
 
@@ -34,7 +34,7 @@
   border-color: var(--accent);
 }
 
-/* Pencil edit button — sits bottom-right of the circle */
+/* Pencil button — pinned to bottom-right of the circle */
 .avatarEditBtn {
   position: absolute;
   bottom: 2px;
@@ -42,16 +42,18 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 1px solid var(--hairline);
+  border: 2px solid rgba(0,0,0,0.3);
   background: linear-gradient(135deg, var(--accent-soft), var(--accent-deep));
   color: #2a1410;
   font-size: 1rem;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: var(--shadow-rest);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
   transition: transform 0.25s var(--ease-snap), box-shadow 0.25s var(--ease);
+  z-index: 10;
 }
 
 .avatarEditBtn:hover {
@@ -63,7 +65,7 @@
   transform: scale(0.95);
 }
 
-/* Small hint text below avatar */
+/* Hint text below the avatar */
 .avatarHint {
   display: block;
   text-align: center;
