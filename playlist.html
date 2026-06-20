@@ -80,7 +80,7 @@
     a.songLink:hover img { opacity: 1; }
     a.songLink:active { transform: scale(0.92); }
 
-    /* Embed container — smaller */
+    /* Embed container — fits each platform exactly, no leftover gap */
     .songEmbed {
       width: 100%;
       max-height: 0;
@@ -88,24 +88,27 @@
       border-radius: 10px;
       transition: max-height 0.3s ease;
     }
-    .songEmbed.open {
-      max-height: 280px;
-      margin-top: 10px;
-    }
     .songEmbed iframe {
       width: 100%;
       border: none;
       display: block;
     }
+
+    .songEmbed-youtube.open {
+      max-height: 500px;
+      margin-top: 10px;
+    }
     .songEmbed-youtube iframe {
       aspect-ratio: 16 / 9;
       height: auto;
     }
-    .songEmbed-spotify iframe {
-      height: 120px;
-    }
+
     .songEmbed-spotify.open {
-      max-height: 140px;
+      max-height: 152px;
+      margin-top: 10px;
+    }
+    .songEmbed-spotify iframe {
+      height: 152px;
     }
   </style>
 </head>
