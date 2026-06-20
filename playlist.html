@@ -80,7 +80,6 @@
     a.songLink:hover img { opacity: 1; }
     a.songLink:active { transform: scale(0.92); }
 
-    /* Embed container — fits each platform exactly, no leftover gap */
     .songEmbed {
       width: 100%;
       max-height: 0;
@@ -93,7 +92,6 @@
       border: none;
       display: block;
     }
-
     .songEmbed-youtube.open {
       max-height: 500px;
       margin-top: 10px;
@@ -102,13 +100,51 @@
       aspect-ratio: 16 / 9;
       height: auto;
     }
-
     .songEmbed-spotify.open {
       max-height: 152px;
       margin-top: 10px;
     }
     .songEmbed-spotify iframe {
       height: 152px;
+    }
+
+    /* Gap between form and list + sort row */
+    .formCard {
+      margin-bottom: 30px;
+    }
+    .sortRow {
+      max-width: 560px;
+      margin: 0 auto 18px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+    }
+    .sortRow label {
+      font-size: 0.8rem;
+      opacity: 0.55;
+    }
+    .sortRow select {
+      padding: 7px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.05);
+      color: white;
+      font-size: 0.82rem;
+      font-family: Helvetica, Arial, sans-serif;
+      outline: none;
+      cursor: pointer;
+    }
+    .sortRow select:focus {
+      border-color: rgba(232,180,160,0.4);
+    }
+
+    /* Timestamp next to "added by" */
+    .songTime {
+      font-size: 0.72rem;
+      opacity: 0.38;
+      white-space: nowrap;
+      margin-left: 6px;
     }
   </style>
 </head>
@@ -140,6 +176,16 @@
       <button id="addSongBtn" type="button">Add Song</button>
     </section>
     <small id="playlistStatus"></small>
+
+    <div class="sortRow">
+      <label for="sortSelect">Sort by</label>
+      <select id="sortSelect">
+        <option value="newest">Newest first</option>
+        <option value="oldest">Oldest first</option>
+        <option value="title">Title (A–Z)</option>
+        <option value="artist">Artist (A–Z)</option>
+      </select>
+    </div>
 
     <div id="songList" class="songList"></div>
 
