@@ -5,6 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>For Sora</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    .menuLink img,
+    .menu button img {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+      display: inline-block;
+      vertical-align: middle;
+      filter: invert(1);
+      opacity: 0.85;
+    }
+    .menuLink:hover img,
+    .menu button:hover img {
+      opacity: 1;
+    }
+  </style>
 </head>
 <body>
 
@@ -49,13 +65,13 @@
 
     <!-- MENU -->
     <section class="menu">
-      <button id="scanBtn">Scan</button>
-      <a href="distance.html" class="menuLink">Distance</a>
+      <button id="scanBtn"><img src="icon/scan.png" alt="">Scan</button>
+      <a href="distance.html" class="menuLink"><img src="icon/distance.png" alt="">Distance</a>
       <a href="future.html" class="menuLink"><span class="icon icon-future" aria-hidden="true"></span>Future</a>
-      <a href="game.html" class="menuLink">Game</a>
+      <a href="game.html" class="menuLink"><img src="icon/game.png" alt="">Game</a>
       <a href="playlist.html" class="menuLink"><span class="icon icon-playlist" aria-hidden="true"></span>Playlist</a>
       <a href="guestbook.html" class="menuLink"><span class="icon icon-guestbook" aria-hidden="true"></span>Guestbook</a>
-      <a href="profile.html" class="menuLink">Profile</a>
+      <a href="profile.html" class="menuLink"><img src="icon/profile.png" alt="">Profile</a>
     </section>
 
   </main>
@@ -70,7 +86,6 @@
     </div>
   </div>
 
-  <!-- Changed to type="module" to allow Firebase authentication tracking -->
   <script type="module" src="script.js"></script>
   <script type="module" src="nav-controls.js"></script>
 
