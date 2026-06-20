@@ -26,7 +26,6 @@ function isValidUrl(value) {
   }
 }
 
-/* TIME FORMAT — "2m", "3h", "5d", or a date for older */
 function formatTimeAgo(timestamp) {
   if (!timestamp) return "";
   const diffMs = Date.now() - timestamp;
@@ -40,7 +39,6 @@ function formatTimeAgo(timestamp) {
   return new Date(timestamp).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
-/* SORTING */
 function getSortedSongs() {
   const mode = sortSelect ? sortSelect.value : "newest";
   const copy = songs.map((song, originalIndex) => ({ song, originalIndex }));
@@ -62,7 +60,6 @@ function getSortedSongs() {
   return copy;
 }
 
-/* EMBED DETECTION */
 function getEmbedSrc(link) {
   if (!link) return null;
   let url;
@@ -89,7 +86,6 @@ function getEmbedSrc(link) {
   return null;
 }
 
-/* RENDER */
 function renderSongs() {
   songListEl.innerHTML = "";
 
@@ -130,8 +126,7 @@ function renderSongs() {
 
     const addedBy = document.createElement("span");
     addedBy.className = "songAddedBy";
-    let addedByText = song.addedBy ? `added by ${song.addedBy}` : "";
-    addedBy.textContent = addedByText;
+    addedBy.textContent = song.addedBy ? `added by ${song.addedBy}` : "";
     if (song.addedAt) {
       const timeSpan = document.createElement("span");
       timeSpan.className = "songTime";
@@ -206,7 +201,6 @@ function renderSongs() {
   });
 }
 
-/* SAVE */
 async function saveSongs() {
   try {
     await setDoc(playlistDocRef, { items: songs });
@@ -222,7 +216,6 @@ function deleteSong(index) {
   saveSongs();
 }
 
-/* ADD SONG */
 addBtn.addEventListener("click", () => {
   const title = titleInput.value.trim();
   if (!title) return;
@@ -247,12 +240,10 @@ addBtn.addEventListener("click", () => {
   saveSongs();
 });
 
-/* SORT CHANGE */
 if (sortSelect) {
   sortSelect.addEventListener("change", renderSongs);
 }
 
-/* SHUFFLE */
 shuffleBtn.addEventListener("click", () => {
   if (!songs.length) {
     playlistStatus.textContent = "Add a song first!";
@@ -266,7 +257,6 @@ shuffleBtn.addEventListener("click", () => {
   }
 });
 
-/* AUTH + LOAD */
 onAuthStateChanged(auth, async (user) => {
   if (!user) {
     window.location.href = "index.html";
