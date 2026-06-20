@@ -12,67 +12,44 @@ const saveProfileBtn   = document.getElementById("saveProfileBtn");
 const profileStatus    = document.getElementById("profileStatus");
 const avatarHint       = document.getElementById("avatarHint");
 
-let photoBase64 = null;   // base64 string of the new/existing photo
-let photoChanged = false; // track if user picked a new photo
+let currentPhoto = null;  // base64 loaded from Firestore
+let newPhoto     = null;  // base64 of newly picked image
 
-/* ── RENDER AVATAR ──
-   Shows photo if available, otherwise shows initial letter */
+/* ── RENDER AVATAR ── */
 function renderAvatar(base64, name, email) {
-  avatarPreview.innerHTML = "";
-  avatarPreview.style.backgroundImage = "";
-
+  const label = (name || email || "?").charAt(0).toUpperCase();
   if (base64) {
-    avatarPreview.style.backgroundImage = `url(${base64})`;
-    avatarPreview.style.backgroundSize  = "cover";
-    avatarPreview.style.backgroundPosition = "center";
     avatarPreview.textContent = "";
+    avatarPreview.style.backgroundImage = `url(${base64})`;
   } else {
-    const label = name || email || "?";
-    avatarPreview.textContent = label.charAt(0).toUpperCase();
     avatarPreview.style.backgroundImage = "";
+    avatarPreview.textContent = label;
   }
 }
 
-/* ── COMPRESS IMAGE to base64 (max ~150KB output) ── */
+/* ── COMPRESS IMAGE → base64 ── */
 function compressImage(file) {
   return new Promise((resolve, reject) => {
-    const MAX_SIZE = 600; // px — enough for a crisp avatar
-    const QUALITY  = 0.75;
-
+    const MAX_PX  = 600;
+    const QUALITY = 0.78;
     const img = new Image();
     const url = URL.createObjectURL(file);
 
     img.onload = () => {
       URL.revokeObjectURL(url);
-
       let { width, height } = img;
-      if (width > MAX_SIZE || height > MAX_SIZE) {
-        if (width > height) {
-          height = Math.round((height / width) * MAX_SIZE);
-          width  = MAX_SIZE;
-        } else {
-          width  = Math.round((width / height) * MAX_SIZE);
-          height = MAX_SIZE;
-        }
+      if (width > MAX_PX || height > MAX_PX) {
+        if (width >= height) { height = Math.round(height / width * MAX_PX); width = MAX_PX; }
+        else                 { width  = Math.round(width / height * MAX_PX); height = MAX_PX; }
       }
-
       const canvas = document.createElement("canvas");
-      canvas.width  = width;
-      canvas.height = height;
+      canvas.width = width; canvas.height = height;
       canvas.getContext("2d").drawImage(img, 0, 0, width, height);
-
-      const base64 = canvas.toDataURL("image/jpeg", QUALITY);
-
-      // Safety: Firestore doc limit is 1 MB — base64 of 600px JPEG is ~50-100 KB
-      if (base64.length > 900_000) {
-        // Re-compress harder if still too big
-        resolve(canvas.toDataURL("image/jpeg", 0.45));
-      } else {
-        resolve(base64);
-      }
+      const b64 = canvas.toDataURL("image/jpeg", QUALITY);
+      // If still huge, compress harder
+      resolve(b64.length > 900_000 ? canvas.toDataURL("image/jpeg", 0.45) : b64);
     };
-
-    img.onerror = () => reject(new Error("Could not load image"));
+    img.onerror = () => reject(new Error("Image load failed"));
     img.src = url;
   });
 }
@@ -83,33 +60,28 @@ avatarEditBtn.addEventListener("click", () => photoInput.click());
 photoInput.addEventListener("change", async () => {
   const file = photoInput.files[0];
   if (!file) return;
-
   avatarHint.textContent = "Processing…";
-
   try {
-    photoBase64  = await compressImage(file);
-    photoChanged = true;
-    renderAvatar(photoBase64, displayNameInput.value.trim(), auth.currentUser?.email);
-    avatarHint.textContent = "Photo ready — tap Save Profile";
+    newPhoto = await compressImage(file);
+    renderAvatar(newPhoto, displayNameInput.value.trim(), auth.currentUser?.email);
+    avatarHint.textContent = "Photo ready — tap Save Profile ✓";
   } catch (e) {
     avatarHint.textContent = "Could not load image, try another.";
     console.error(e);
   }
-
-  photoInput.value = ""; // reset so same file can be re-picked
+  photoInput.value = "";
 });
 
-/* ── LIVE NAME PREVIEW (only when no photo) ── */
+/* ── NAME PREVIEW (only when no photo selected yet) ── */
 displayNameInput.addEventListener("input", () => {
-  if (!photoBase64) renderAvatar(null, displayNameInput.value.trim(), auth.currentUser?.email);
+  if (!newPhoto && !currentPhoto) {
+    renderAvatar(null, displayNameInput.value.trim(), auth.currentUser?.email);
+  }
 });
 
 /* ── LOAD EXISTING PROFILE ── */
 onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    window.location.href = "index.html";
-    return;
-  }
+  if (!user) { window.location.href = "index.html"; return; }
 
   profileBox.classList.remove("hidden");
 
@@ -118,13 +90,11 @@ onAuthStateChanged(auth, async (user) => {
     if (snap.exists()) {
       const data = snap.data();
       displayNameInput.value = data.displayName || "";
-      photoBase64 = data.photoBase64 || null;
+      currentPhoto = data.photoBase64 || null;
     }
-  } catch (e) {
-    console.error(e);
-  }
+  } catch (e) { console.error(e); }
 
-  renderAvatar(photoBase64, displayNameInput.value.trim(), user.email);
+  renderAvatar(currentPhoto, displayNameInput.value.trim(), user.email);
 });
 
 /* ── SAVE ── */
@@ -140,16 +110,18 @@ saveProfileBtn.addEventListener("click", async () => {
       email: auth.currentUser.email,
     };
 
-    // Only write photoBase64 if changed (saves Firestore write size)
-    if (photoChanged) {
-      payload.photoBase64 = photoBase64;
+    if (newPhoto) {
+      payload.photoBase64 = newPhoto;
+      currentPhoto = newPhoto;  // update local state
+      newPhoto = null;
     }
 
     await setDoc(doc(db, "users", auth.currentUser.uid), payload, { merge: true });
 
-    photoChanged = false;
-    profileStatus.textContent = "✓ Profile saved!";
+    // Re-render to confirm photo is set
+    renderAvatar(currentPhoto, displayNameInput.value.trim(), auth.currentUser.email);
     avatarHint.textContent = "Tap the pencil to change photo";
+    profileStatus.textContent = "✓ Profile saved!";
   } catch (e) {
     profileStatus.textContent = "Error: " + e.message;
     console.error(e);
