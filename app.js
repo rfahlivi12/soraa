@@ -343,7 +343,9 @@ async function loadPosts() {
         </div>
       `;
 
-      tweet.querySelector(".tweetUser").textContent = name;
+      const tweetUserEl = tweet.querySelector(".tweetUser");
+      tweetUserEl.textContent = name;
+      tweetUserEl.title = name;
       tweet.querySelector(".tweetText").textContent = post.text;
 
       const commentsList = tweet.querySelector(".commentsList");
