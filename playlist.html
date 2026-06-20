@@ -38,48 +38,59 @@
       background: none;
       padding: 0;
       cursor: pointer;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
       display: inline-flex;
       align-items: center;
-      transition: transform 0.15s, opacity 0.15s;
+      justify-content: center;
+      overflow: hidden;
+      transition: transform 0.15s, opacity 0.15s, background 0.15s;
     }
     .songPlayToggle img {
-      height: 30px;
-      width: auto;
+      height: 22px;
+      width: 22px;
       display: block;
+      object-fit: contain;
     }
-    .songPlayToggle:hover  { transform: translateY(-1px); opacity: 0.8; }
-    .songPlayToggle:active { transform: scale(0.95); opacity: 1; }
+    .songPlayToggle:hover  { transform: translateY(-1px); opacity: 0.8; background: rgba(255,255,255,0.06); }
+    .songPlayToggle:active { transform: scale(0.92); opacity: 1; }
 
     a.songLink {
       border: none;
       background: none;
       padding: 0;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
       display: inline-flex;
       align-items: center;
-      transition: transform 0.15s, opacity 0.15s;
+      justify-content: center;
+      transition: transform 0.15s, opacity 0.15s, background 0.15s;
     }
     a.songLink img {
-      height: 28px;
-      width: auto;
+      height: 18px;
+      width: 18px;
       display: block;
+      object-fit: contain;
       filter: invert(1);
       opacity: 0.6;
     }
-    a.songLink:hover  { transform: translateY(-1px); }
+    a.songLink:hover  { transform: translateY(-1px); background: rgba(255,255,255,0.06); }
     a.songLink:hover img { opacity: 1; }
-    a.songLink:active { transform: scale(0.95); }
+    a.songLink:active { transform: scale(0.92); }
 
-    /* Embed container fix */
+    /* Embed container — smaller */
     .songEmbed {
       width: 100%;
       max-height: 0;
       overflow: hidden;
-      border-radius: 12px;
+      border-radius: 10px;
       transition: max-height 0.3s ease;
     }
     .songEmbed.open {
-      max-height: 400px;
-      margin-top: 12px;
+      max-height: 280px;
+      margin-top: 10px;
     }
     .songEmbed iframe {
       width: 100%;
@@ -91,10 +102,10 @@
       height: auto;
     }
     .songEmbed-spotify iframe {
-      height: 152px;
+      height: 120px;
     }
     .songEmbed-spotify.open {
-      max-height: 180px;
+      max-height: 140px;
     }
   </style>
 </head>
